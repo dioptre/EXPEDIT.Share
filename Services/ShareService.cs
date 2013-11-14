@@ -55,26 +55,95 @@ namespace EXPEDIT.Share.Services {
 
         public string GetRedirect(string routeURL)
         {
-            var statName = "Routes";
-            var application = _users.ApplicationID;
-            using (new TransactionScope(TransactionScopeOption.Suppress))
+            try
             {
-                var d = new XODBC(_users.ApplicationConnectionString, null, false);
-                var route = (from o in d.ApplicationRoutes where o.ApplicationID == application && o.RouteURL == routeURL orderby o.Sequence descending select o).FirstOrDefault();
-                var routeTable = d.GetTableName(route.GetType());
-                if (route.IsCapturingStatistic.HasValue && route.IsCapturingStatistic.Value) {
-                    var stat = (from o in d.StatisticDatas 
-                                where o.ReferenceID==route.ApplicationRouteID && o.TableType==routeTable
-                                && o.StatisticDataName==statName select o).FirstOrDefault();
+                var statName = "Routes";
+                var application = _users.ApplicationID;
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    var route = (from o in d.ApplicationRoutes where o.ApplicationID == application && o.RouteURL == routeURL orderby o.Sequence descending select o).FirstOrDefault();
+                    var routeTable = d.GetTableName(route.GetType());
+                    if (route.IsCapturingStatistic.HasValue && route.IsCapturingStatistic.Value)
+                    {
+                        var stat = (from o in d.StatisticDatas
+                                    where o.ReferenceID == route.ApplicationRouteID && o.TableType == routeTable
+                                    && o.StatisticDataName == statName
+                                    select o).FirstOrDefault();
+                        if (stat == null)
+                        {
+                            stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = routeTable, ReferenceID = route.ApplicationRouteID, StatisticDataName = statName, Count = 0 };
+                            d.StatisticDatas.AddObject(stat);
+                        }
+                        stat.Count++;
+                        d.SaveChanges();
+                    }
+                    if (route.IsExternal.HasValue && route.IsExternal.Value)
+                        return route.RedirectURL;
+                    else
+                        return VirtualPathUtility.ToAbsolute(route.RedirectURL);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public FileData GetDownload(string downloadID, string requestIPAddress)
+        {
+            try
+            {
+                var statName = "Downloads";
+                var application = _users.ApplicationID;
+                var contact = _users.ContactID;                
+                var company = _users.CompanyID;
+                var server = _users.ServerID;                
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    var download = (from o in d.Downloads where o.DownloadID==new Guid(downloadID) select o).First();
+                    var downloadTable = d.GetTableName(download.GetType());
+                    if (download.FilterApplicationID.HasValue && download.FilterApplicationID.Value != application)
+                        throw new OrchardSecurityException(T("Application {0} not permitted to download {1}", application, downloadID));
+                    if (download.FilterContactID.HasValue && download.FilterContactID.Value != contact)
+                        throw new OrchardSecurityException(T("Contact {0} not permitted to download {1}", contact, downloadID));
+                    if (download.FilterCompanyID.HasValue && download.FilterCompanyID.Value != company)
+                        throw new OrchardSecurityException(T("Company {0} not permitted to download {1}", company, downloadID));
+                    if (download.FilterServerID.HasValue && download.FilterServerID.Value != company)
+                        throw new OrchardSecurityException(T("Server {0} not permitted to upload {1}", server, downloadID));
+                    if (!string.IsNullOrWhiteSpace(download.FilterClientIP) && string.Format("{0}", requestIPAddress).Trim().ToUpperInvariant() != download.FilterClientIP.Trim().ToUpperInvariant())
+                        throw new OrchardSecurityException(T("IP {0} not permitted to download {1}", requestIPAddress, downloadID));
+                    if (download.RemainingDownloads < 1)
+                        throw new OrchardSecurityException(T("No more remaining downloads for {0}.", downloadID));
+                    if (download.ValidFrom.HasValue && download.ValidFrom.Value > DateTime.Now)
+                        throw new OrchardSecurityException(T("Download {0} not yet valid.", downloadID));
+                    if (download.ValidUntil.HasValue && download.ValidUntil.Value < DateTime.Now)
+                        throw new OrchardSecurityException(T("Download {0} no longer valid.", downloadID));
+                    var stat = (from o in d.StatisticDatas
+                                where o.ReferenceID == download.DownloadID && o.TableType == downloadTable
+                                && o.StatisticDataName == statName
+                                select o).FirstOrDefault();
                     if (stat == null)
                     {
-                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = routeTable, ReferenceID=route.ApplicationRouteID, StatisticDataName = statName, Count = 0 };
+                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = downloadTable, ReferenceID = download.DownloadID, StatisticDataName = statName, Count = 0 };
                         d.StatisticDatas.AddObject(stat);
                     }
                     stat.Count++;
-                    d.SaveChanges();                    
+                    FileData file;
+                    if (!string.IsNullOrWhiteSpace(download.FileChecksum))
+                        file = d.FileDatas.First(f => f.VersionAntecedentID == download.FileDataID && f.FileChecksum == download.FileChecksum); //version aware download
+                    else
+                        file = d.FileDatas.First(f => f.FileDataID == download.FileDataID);
+                    if (file != null)
+                        download.RemainingDownloads--;
+                    d.SaveChanges();
+                    return file;
                 }
-                return route.RedirectURL;
+            }
+            catch
+            {
+                return null;
             }
         }
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Web;
 using Orchard;
 using System.ServiceModel;
+using XODB.Module.BusinessObjects;
 
 namespace EXPEDIT.Share.Services
 {
@@ -12,7 +13,9 @@ namespace EXPEDIT.Share.Services
     {
          [OperationContract]
          string GetRedirect(string routeURL);
-         
+
+         [OperationContract]
+         FileData GetDownload(string downloadID, string requestIPAddress);
 
     }
 }
