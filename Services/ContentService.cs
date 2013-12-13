@@ -25,6 +25,7 @@ using EXPEDIT.Utils.DAL.Models;
 #endif
 using XODB.Services;
 using Orchard.Media.Services;
+using EXPEDIT.Share.Helpers;
 
 namespace EXPEDIT.Share.Services {
     
@@ -52,7 +53,7 @@ namespace EXPEDIT.Share.Services {
 
         public Localizer T { get; set; }
 
-        public FileData GetInvoice(Guid invoiceID, string requestIPAddress)
+        public Guid? GetInvoice(Guid invoiceID, string requestIPAddress)
         {
             try
             {
@@ -64,47 +65,17 @@ namespace EXPEDIT.Share.Services {
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
                     var d = new XODBC(_users.ApplicationConnectionString, null, false);
-                    //TODO: check contact owner
+                    var invoice = (from o in d.Invoices where o.InvoiceID == invoiceID select o).Single();
+                    if (contact != invoice.CustomerContactID) //TODO: check other contact owner/company etc
+                        throw new OrchardSecurityException(T("Not authorized to view invoice"));
                     var download = (from o in d.Downloads join f in d.FileDatas on o.FileDataID equals f.FileDataID where f.ReferenceID == invoiceID && f.TableType == d.GetTableName(typeof(Invoice), true) select o).FirstOrDefault();
-                    //TODO:Generate file if not exist
+                    if (download != null)
+                        return download.DownloadID;
+                    var file = (from o in d.FileDatas select o);
+                    Stream stream = new MemoryStream();
+                    PdfHelper.Html2Pdf("<h1>hi</h1>", ref stream);
                     throw new NotImplementedException();
-                    var downloadID = download.DownloadID;
-                    var downloadTable = d.GetTableName(download.GetType());
-                    if (download.FilterApplicationID.HasValue && download.FilterApplicationID.Value != application)
-                        throw new OrchardSecurityException(T("Application {0} not permitted to download {1}", application, downloadID));
-                    if (download.FilterContactID.HasValue && download.FilterContactID.Value != contact)
-                        throw new OrchardSecurityException(T("Contact {0} not permitted to download {1}", contact, downloadID));
-                    if (download.FilterCompanyID.HasValue && download.FilterCompanyID.Value != company)
-                        throw new OrchardSecurityException(T("Company {0} not permitted to download {1}", company, downloadID));
-                    if (download.FilterServerID.HasValue && download.FilterServerID.Value != company)
-                        throw new OrchardSecurityException(T("Server {0} not permitted to upload {1}", server, downloadID));
-                    if (!string.IsNullOrWhiteSpace(download.FilterClientIP) && string.Format("{0}", requestIPAddress).Trim().ToUpperInvariant() != download.FilterClientIP.Trim().ToUpperInvariant())
-                        throw new OrchardSecurityException(T("IP {0} not permitted to download {1}", requestIPAddress, downloadID));
-                    if (download.RemainingDownloads < 1)
-                        throw new OrchardSecurityException(T("No more remaining downloads for {0}.", downloadID));
-                    if (download.ValidFrom.HasValue && download.ValidFrom.Value > DateTime.Now)
-                        throw new OrchardSecurityException(T("Download {0} not yet valid.", downloadID));
-                    if (download.ValidUntil.HasValue && download.ValidUntil.Value < DateTime.Now)
-                        throw new OrchardSecurityException(T("Download {0} no longer valid.", downloadID));
-                    var stat = (from o in d.StatisticDatas
-                                where o.ReferenceID == download.DownloadID && o.TableType == downloadTable
-                                && o.StatisticDataName == statName
-                                select o).FirstOrDefault();
-                    if (stat == null)
-                    {
-                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = downloadTable, ReferenceID = download.DownloadID, StatisticDataName = statName, Count = 0 };
-                        d.StatisticDatas.AddObject(stat);
-                    }
-                    stat.Count++;
-                    FileData file;
-                    if (!string.IsNullOrWhiteSpace(download.FileChecksum))
-                        file = d.FileDatas.First(f => f.VersionAntecedentID == download.FileDataID && f.FileChecksum == download.FileChecksum); //version aware download
-                    else
-                        file = d.FileDatas.First(f => f.FileDataID == download.FileDataID);
-                    if (file != null)
-                        download.RemainingDownloads--;
-                    d.SaveChanges();
-                    return file;
+                   
                 }
             }
             catch

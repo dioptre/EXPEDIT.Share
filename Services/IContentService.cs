@@ -11,8 +11,14 @@ namespace EXPEDIT.Share.Services
      [ServiceContract]
     public interface IContentService : IDependency 
     {
+         /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="invoiceID"></param>
+         /// <param name="requestIPAddress"></param>
+         /// <returns>DownloadID</returns>
          [OperationContract]
-         FileData GetInvoice(Guid invoiceID, string requestIPAddress);
+         Guid? GetInvoice(Guid invoiceID, string requestIPAddress);
 
     }
 }

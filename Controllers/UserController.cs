@@ -30,7 +30,7 @@ namespace EXPEDIT.Share.Controllers {
         /// <returns></returns>
         [ValidateInput(false)]
         [Themed(true)]
-        public ActionResult go(string id) 
+        public ActionResult Go(string id) 
         {
             var redirect = _share.GetRedirect(id);
             if (!string.IsNullOrWhiteSpace(redirect))
@@ -47,7 +47,7 @@ namespace EXPEDIT.Share.Controllers {
         /// <returns></returns>
         [ValidateInput(false)]
         [Themed(true)]
-        public ActionResult download(string id)
+        public ActionResult Download(string id)
         {
 
             var file = _share.GetDownload(id, Request.GetIPAddress());
@@ -65,12 +65,9 @@ namespace EXPEDIT.Share.Controllers {
         /// <returns></returns>
         [ValidateInput(false)]
         [Themed(true)]
-        public ActionResult getinvoice(string id)
+        public ActionResult GetInvoice(string id)
         {
-            var file = _content.GetInvoice(new Guid(id), Request.GetIPAddress());
-            if (file != null)
-                return new XODB.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}", id, XODB.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "application/octet", stream => PdfHelper.Html2Pdf("<h1>hi</h1>", ref stream));
-            return new HttpNotFoundResult();
+            return Download(string.Format("{0}",_content.GetInvoice(new Guid(id), Request.GetIPAddress())));
         }
     }
 }
