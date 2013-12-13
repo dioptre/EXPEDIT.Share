@@ -56,6 +56,30 @@
       <HintPath>..\..\..\..\lib\EntityFramework\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MigraDoc.DocumentObjectModel">
+      <HintPath>..\..\..\..\lib\pdfsharp\MigraDoc.DocumentObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Extensions">
+      <HintPath>..\..\..\..\lib\MigraDoc.Extensions\MigraDoc.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Extensions.Html">
+      <HintPath>..\..\..\..\lib\MigraDoc.Extensions\MigraDoc.Extensions.Html.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Extensions.Markdown">
+      <HintPath>..\..\..\..\lib\MigraDoc.Extensions\MigraDoc.Extensions.Markdown.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Rendering">
+      <HintPath>..\..\..\..\lib\pdfsharp\MigraDoc.Rendering.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.RtfRendering">
+      <HintPath>..\..\..\..\lib\pdfsharp\MigraDoc.RtfRendering.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp">
+      <HintPath>..\..\..\..\lib\pdfsharp\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting">
+      <HintPath>..\..\..\..\lib\pdfsharp\PdfSharp.Charting.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -63,6 +87,7 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -112,7 +137,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Helpers\PdfHelper.cs" />
     <Compile Include="Route.cs" />
+    <Compile Include="Services\ContentService.cs" />
+    <Compile Include="Services\IContentService.cs" />
     <Compile Include="Services\IShareService.cs" />
     <Compile Include="Services\ShareService.cs" />
   </ItemGroup>
