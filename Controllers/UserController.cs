@@ -29,7 +29,7 @@ namespace EXPEDIT.Share.Controllers {
         /// </summary>
         /// <returns></returns>
         [ValidateInput(false)]
-        [Themed(true)]
+        [Themed(false)]
         public ActionResult Go(string id) 
         {
             var redirect = _share.GetRedirect(id);
@@ -46,7 +46,8 @@ namespace EXPEDIT.Share.Controllers {
         /// <param name="contactid"></param>
         /// <returns></returns>
         [ValidateInput(false)]
-        [Themed(true)]
+        [ValidateAntiForgeryToken]
+        [Themed(false)]
         public ActionResult Download(string id)
         {
 
@@ -64,10 +65,21 @@ namespace EXPEDIT.Share.Controllers {
         /// <param name="contactid"></param>
         /// <returns></returns>
         [ValidateInput(false)]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         [Themed(true)]
         public ActionResult GetInvoice(string id)
         {
             return Download(string.Format("{0}",_content.GetInvoice(new Guid(id), Request.GetIPAddress())));
         }
+
+        [ValidateInput(false)]
+        [Authorize]
+        [Themed(false)]
+        public JsonResult GetCountries(string id)
+        {                       
+            return Json(_content.GetCountries(id), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

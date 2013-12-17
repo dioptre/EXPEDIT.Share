@@ -5,7 +5,7 @@ using System.Web;
 using Orchard;
 using System.ServiceModel;
 using XODB.Module.BusinessObjects;
-
+using System.Web.Mvc;
 namespace EXPEDIT.Share.Services
 {
      [ServiceContract]
@@ -20,5 +20,7 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          Guid? GetInvoice(Guid invoiceID, string requestIPAddress);
 
+         [OperationContract]
+         SelectListItem[] GetCountries(string startsWith);
     }
 }

@@ -26,6 +26,7 @@ using EXPEDIT.Utils.DAL.Models;
 using XODB.Services;
 using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
+using System.Web.Mvc;
 
 namespace EXPEDIT.Share.Services {
     
@@ -84,7 +85,17 @@ namespace EXPEDIT.Share.Services {
             }
         }
 
-
+        public SelectListItem[] GetCountries(string startsWith)
+        {
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.DictionaryCountries
+                        where o.StandardCountryName.StartsWith(startsWith)
+                        select new SelectListItem { Text = o.StandardCountryName, Value = o.CountryID }).ToArray();
+            }
+        }
         
        
     }

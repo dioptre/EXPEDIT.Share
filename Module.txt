@@ -1,5 +1,5 @@
 ﻿Name: EXPEDIT Share
-AntiForgery: enabled
+AntiForgery: disabled
 Author: The EXPEDIT Team
 Website: http://expedit.com.au
 Version: 1.0
