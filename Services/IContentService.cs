@@ -20,6 +20,15 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          Guid? GetInvoice(Guid invoiceID, string requestIPAddress);
 
+         /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="invoiceID"></param>
+         /// <param name="requestIPAddress"></param>
+         /// <returns>DownloadID</returns>
+         [OperationContract]
+         Guid? GetOrderInvoice(Guid orderID, string requestIPAddress);
+
          [OperationContract]
          SelectListItem[] GetCountries(string startsWith);
     }

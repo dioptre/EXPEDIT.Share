@@ -20,7 +20,7 @@ namespace EXPEDIT.Share.Helpers
     public static class PdfHelper
     {
        
-        public static void Html2Pdf(this string html, ref Stream stream)
+        public static void Html2Pdf(this string html, ref Stream stream, params string[] replaceTags)
         {
               DateTime now = DateTime.Now;
               string filename = "MixMigraDocAndPdfSharp.pdf";
@@ -34,7 +34,8 @@ namespace EXPEDIT.Share.Helpers
               //SamplePage2(document);
               Debug.WriteLine("seconds=" + (DateTime.Now - now).TotalSeconds.ToString());
               // Save the document...
-              document.Save(stream);
+              document.Save(stream, false);
+
 
         }
         static void SamplePage1(PdfDocument document)

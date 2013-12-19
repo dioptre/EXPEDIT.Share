@@ -29,7 +29,7 @@ namespace EXPEDIT.Share.Controllers {
         /// </summary>
         /// <returns></returns>
         [ValidateInput(false)]
-        [Themed(false)]
+        //[Themed(false)]
         public ActionResult Go(string id) 
         {
             var redirect = _share.GetRedirect(id);
@@ -46,8 +46,9 @@ namespace EXPEDIT.Share.Controllers {
         /// <param name="contactid"></param>
         /// <returns></returns>
         [ValidateInput(false)]
-        [ValidateAntiForgeryToken]
-        [Themed(false)]
+        //[ValidateAntiForgeryToken]
+        //[Themed(false)]
+        [Authorize]
         public ActionResult Download(string id)
         {
 
@@ -57,20 +58,23 @@ namespace EXPEDIT.Share.Controllers {
             return new HttpNotFoundResult();
         }
 
-        /// <summary>
-        /// Download a file (can use a sqlfilestream eventually) TODO:
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="contactid"></param>
-        /// <returns></returns>
+
         [ValidateInput(false)]
         [Authorize]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Themed(true)]
         public ActionResult GetInvoice(string id)
         {
             return Download(string.Format("{0}",_content.GetInvoice(new Guid(id), Request.GetIPAddress())));
+        }
+
+        [ValidateInput(false)]
+        [Authorize]
+        //[ValidateAntiForgeryToken]
+        [Themed(true)]
+        public ActionResult GetOrderInvoice(string id)
+        {
+            return Download(string.Format("{0}", _content.GetOrderInvoice(new Guid(id), Request.GetIPAddress())));
         }
 
         [ValidateInput(false)]

@@ -27,6 +27,8 @@ using XODB.Services;
 using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
 using System.Web.Mvc;
+using XODB.Helpers;
+using EXPEDIT.Share.Helpers;
 
 namespace EXPEDIT.Share.Services {
     
@@ -54,6 +56,33 @@ namespace EXPEDIT.Share.Services {
 
         public Localizer T { get; set; }
 
+        public Guid? GetOrderInvoice(Guid orderID, string requestIPAddress)
+        {
+            try
+            {
+                var contact = _users.ContactID;
+                var invoiceID = default(Guid?);
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    invoiceID = (from o in d.Supplies
+                                 join i in d.Invoices on o.SupplyID equals i.SupplyID
+                                 where o.CustomerPurchaseOrderID == orderID && o.PurchaseOrderCustomer.CustomerContactID == contact
+                                 && o.Version == 0 && o.VersionDeletedBy == null
+                                 && i.Version == 0 && i.VersionDeletedBy == null
+                                 orderby i.VersionUpdated descending 
+                                 select i.InvoiceID).FirstOrDefault();
+                }
+                if (invoiceID.HasValue)
+                    return GetInvoice(invoiceID.Value, requestIPAddress);
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public Guid? GetInvoice(Guid invoiceID, string requestIPAddress)
         {
             try
@@ -62,21 +91,53 @@ namespace EXPEDIT.Share.Services {
                 var application = _users.ApplicationID;
                 var contact = _users.ContactID;                
                 var company = _users.CompanyID;
-                var server = _users.ServerID;                
+                var server = _users.ServerID;
+                var now = DateTime.UtcNow;
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
                     var d = new XODBC(_users.ApplicationConnectionString, null, false);
-                    var invoice = (from o in d.Invoices where o.InvoiceID == invoiceID select o).Single();
+                    var invoiceTableType = d.GetTableName(typeof(Invoice), true);
+                    var invoice = (from o in d.Invoices 
+                                   where o.InvoiceID == invoiceID
+                                   && o.Version == 0 && o.VersionDeletedBy == null 
+                                   select o).Single();
                     if (contact != invoice.CustomerContactID) //TODO: check other contact owner/company etc
-                        throw new OrchardSecurityException(T("Not authorized to view invoice"));
-                    var download = (from o in d.Downloads join f in d.FileDatas on o.FileDataID equals f.FileDataID where f.ReferenceID == invoiceID && f.TableType == d.GetTableName(typeof(Invoice), true) select o).FirstOrDefault();
+                        throw new OrchardSecurityException(T(string.Format("Not authorized to view invoice contact: {0} invoice: {1}", contact, invoiceID)));
+                    var download = (from o in d.Downloads join f in d.FileDatas on o.FileDataID equals f.FileDataID 
+                                    where f.ReferenceID == invoiceID && f.TableType == invoiceTableType
+                                    && f.VersionDeletedBy == null && f.Version == 0 && o.VersionDeletedBy == null && o.Version == 0
+                                    select o).FirstOrDefault();
                     if (download != null)
                         return download.DownloadID;
-                    var file = (from o in d.FileDatas select o);
                     Stream stream = new MemoryStream();
                     PdfHelper.Html2Pdf("<h1>hi</h1>", ref stream);
-                    throw new NotImplementedException();
-                   
+                    stream.Seek(0, SeekOrigin.Begin);
+                    var bytes = stream.ToByteArray();
+                    
+                    var file = new FileData
+                    {
+                        FileDataID = Guid.NewGuid()
+                        ,TableType = invoiceTableType
+                        ,ReferenceID = invoiceID
+                        ,FileBytes = bytes
+                        ,FileTypeID = ConstantsHelper.FILE_TYPE_INVOICE
+                        ,FileName = string.Format("Invoice-[{0}].pdf", invoiceID)
+                        ,FileChecksum = bytes.ComputeHash()
+                    };
+                    stream.Close();
+                    download = new Download
+                    {
+                        DownloadID = Guid.NewGuid(),
+                        FileAllocated = now,
+                        FilterContactID = contact,
+                        RemainingDownloads = ConstantsHelper.DOWNLOADS_REMAINING_DEFAULT,
+                        FileDataID = file.FileDataID,
+                        ValidFrom = now,
+                    };
+                    download.FileData = file;
+                    d.Downloads.AddObject(download);
+                    d.SaveChanges();
+                    return download.DownloadID;
                 }
             }
             catch
