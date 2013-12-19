@@ -29,6 +29,10 @@ using EXPEDIT.Share.Helpers;
 using System.Web.Mvc;
 using XODB.Helpers;
 using EXPEDIT.Share.Helpers;
+using PdfSharp.Pdf;
+using EXPEDIT.Share.Services.PDF;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
 
 namespace EXPEDIT.Share.Services {
     
@@ -110,7 +114,11 @@ namespace EXPEDIT.Share.Services {
                     if (download != null)
                         return download.DownloadID;
                     Stream stream = new MemoryStream();
-                    PdfHelper.Html2Pdf("<h1>hi</h1>", ref stream);
+                    //PdfDocument document = new PdfDocument();
+                    var pdfRenderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
+                    pdfRenderer.Document = invoice.CreatePDF();
+                    pdfRenderer.RenderDocument();
+                    pdfRenderer.Save(stream, false);
                     stream.Seek(0, SeekOrigin.Begin);
                     var bytes = stream.ToByteArray();
                     

@@ -12,25 +12,25 @@ namespace InvoicePDF
     {
         static void Main()
         {
-            try
-            {
+            //try
+            //{
                 var d = new XODBC(null, null, true);
-                var i = (from o in d.Invoices where o.InvoiceID==new Guid("F716BCD8-0581-4BB6-8257-A299002ED613") select o).Single();
+                var i = (from o in d.Invoices where o.InvoiceID == new Guid("42452AD5-207C-4D14-9A17-A299004A5AEE") select o).Single();
                 
 
-                PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(true);
+                PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.None);
                 pdfRenderer.Document = i.CreatePDF();
                 pdfRenderer.RenderDocument();
 
                 string filename = "Invoice-" + Guid.NewGuid().ToString("N").ToUpper() + ".pdf";
                 pdfRenderer.Save(filename);
                 Process.Start(filename);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.ReadLine();
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //    Console.ReadLine();
+            //}
         }
     }
 }

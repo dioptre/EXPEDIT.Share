@@ -148,6 +148,7 @@
     <Compile Include="Services\ContentService.cs" />
     <Compile Include="Services\IContentService.cs" />
     <Compile Include="Services\IShareService.cs" />
+    <Compile Include="Services\PDF\InvoicePDF\InvoicePDF.cs" />
     <Compile Include="Services\ShareService.cs" />
   </ItemGroup>
   <ItemGroup>
