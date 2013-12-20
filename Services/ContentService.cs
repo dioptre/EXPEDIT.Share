@@ -28,9 +28,7 @@ using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
 using System.Web.Mvc;
 using XODB.Helpers;
-using EXPEDIT.Share.Helpers;
 using PdfSharp.Pdf;
-using EXPEDIT.Share.Services.PDF;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 
@@ -44,9 +42,17 @@ namespace EXPEDIT.Share.Services {
         private readonly IScheduledTaskManager _taskManager;
         private readonly IUsersService _users;
         private readonly IMediaService _media;
+        private readonly IStorageProvider _storage;
         public ILogger Logger { get; set; }
 
-        public ContentService(IContentManager contentManager, IOrchardServices orchardServices, IMessageManager messageManager, IScheduledTaskManager taskManager, IUsersService users, IMediaService media)
+        public ContentService(
+            IContentManager contentManager, 
+            IOrchardServices orchardServices, 
+            IMessageManager messageManager, 
+            IScheduledTaskManager taskManager, 
+            IUsersService users, 
+            IMediaService media,
+            IStorageProvider storage)
         {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
@@ -56,6 +62,7 @@ namespace EXPEDIT.Share.Services {
             _users = users;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
+            _storage = storage;
         }
 
         public Localizer T { get; set; }
@@ -91,10 +98,9 @@ namespace EXPEDIT.Share.Services {
         {
             try
             {
-                var statName = "Downloads";
                 var application = _users.ApplicationID;
                 var contact = _users.ContactID;                
-                var company = _users.CompanyID;
+                var company = _users.ApplicationCompanyID;
                 var server = _users.ServerID;
                 var now = DateTime.UtcNow;
                 using (new TransactionScope(TransactionScopeOption.Suppress))
@@ -114,14 +120,9 @@ namespace EXPEDIT.Share.Services {
                     if (download != null)
                         return download.DownloadID;
                     Stream stream = new MemoryStream();
-                    //PdfDocument document = new PdfDocument();
-                    var pdfRenderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
-                    pdfRenderer.Document = invoice.CreatePDF();
-                    pdfRenderer.RenderDocument();
-                    pdfRenderer.Save(stream, false);
+                    invoice.GetPDF(ref stream, _storage.GetAbsolutePath(ConstantsHelper.PDF_LOGO));
                     stream.Seek(0, SeekOrigin.Begin);
-                    var bytes = stream.ToByteArray();
-                    
+                    var bytes = stream.ToByteArray();                    
                     var file = new FileData
                     {
                         FileDataID = Guid.NewGuid()

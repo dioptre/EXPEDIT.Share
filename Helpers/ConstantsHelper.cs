@@ -28,6 +28,16 @@ namespace EXPEDIT.Share.Helpers
         public static Guid FILE_TYPE_GLOBAL= new Guid("3e3ebe72-3a3d-4ad5-946b-52befb8b483f");
         public static Guid FILE_TYPE_INVOICE= new Guid("26c6a363-1a75-4530-ad44-cd18a47b69f1");
         public static Guid FILE_TYPE_INTERNAL= new Guid("b8491f60-8ab2-444d-8d88-e0a34cddeafe");
+        public static string ADDRESS_APP_OWNER =
+                "EXPEDIT SOLUTIONS PTY LTD - MiningAppstore\r\n" +
+                "ABN 93152456374\r\n" +
+                "3 Fincastle Street, Moorooka, Brisbane\r\n" +
+                "QLD, 4105 Australia\r\n\r\n" +
+                "P: +61733460727\r\n" +
+                "E: accounts@miningappstore.com\r\n" +
+                "U: http://miningappstore.com";
+        public static string APP_OWNER = "MINING APPSTORE";
+        public static string PDF_LOGO = @"EXPEDIT.Share\Images\pdfheader.jpg";        
 
     }
 }

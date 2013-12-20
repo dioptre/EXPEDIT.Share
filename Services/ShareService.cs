@@ -97,7 +97,7 @@ namespace EXPEDIT.Share.Services {
                 var statName = "Downloads";
                 var application = _users.ApplicationID;
                 var contact = _users.ContactID;                
-                var company = _users.CompanyID;
+                var company = _users.ApplicationCompanyID;
                 var server = _users.ServerID;                
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
