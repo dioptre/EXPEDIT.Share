@@ -25,6 +25,9 @@ using EXPEDIT.Utils.DAL.Models;
 #endif
 using XODB.Services;
 using Orchard.Media.Services;
+using EXPEDIT.Share.ViewModels;
+using EXPEDIT.Share.Helpers;
+using Orchard.DisplayManagement;
 
 namespace EXPEDIT.Share.Services {
     
@@ -38,7 +41,13 @@ namespace EXPEDIT.Share.Services {
         private readonly IMediaService _media;
         public ILogger Logger { get; set; }
 
-        public ShareService(IContentManager contentManager, IOrchardServices orchardServices, IMessageManager messageManager, IScheduledTaskManager taskManager, IUsersService users, IMediaService media)
+        public ShareService(
+            IContentManager contentManager, 
+            IOrchardServices orchardServices, 
+            IMessageManager messageManager, 
+            IScheduledTaskManager taskManager, 
+            IUsersService users, 
+            IMediaService media)
         {
             _orchardServices = orchardServices;
             _contentManager = contentManager;
@@ -147,6 +156,72 @@ namespace EXPEDIT.Share.Services {
             }
         }
 
+        /// <summary>
+        /// Returns search within XODB. Only search products for now.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="supplierModelID"></param>
+        /// <param name="startRowIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public IEnumerable<IHtmlString> GetSearchResults(string text = null, Guid? supplierModelID = null, int? startRowIndex = null, int? pageSize = null)
+        {
+            var supplier = _users.ApplicationCompanyID;
+            var application = _users.ApplicationID;
+            var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new XODBC(_users.ApplicationConnectionString, null);
+                return (from o in d.E_SP_GetProductModels(text, application, supplier, ConstantsHelper.DEVICE_TYPE_SOFTWARE, supplierModelID, startRowIndex, pageSize)
+                        select GetSearchResultShape(new SearchViewModel
+                        {
+                            SupplierModelID = o.SupplierModelID,
+                            ModelID = o.ModelID,
+                            CompanyID = o.CompanyID,
+                            MediaDirectory = directory,
+                            PricePerUnit = o.PricePerUnit,
+                            PriceUnitID = o.PriceUnitID,
+                            CostUnit = o.CostUnit,
+                            SupplierID = supplier,
+                            Title = o.Title,
+                            Subtitle = o.Subtitle,
+                            HTML = o.HTML,
+                            Manufacturer = o.Manufacturer,
+                            CurrencyID = o.CurrencyID,
+                            CurrencyPostfix = o.CurrencyPostfix,
+                            CurrencyPrefix = o.CurrencyPrefix,
+                            FreeDownloadID = o.FreeDownloadID,
+                            Downloads = o.Downloads,
+                            PaymentProviderID = o.ApplicationPaymentProviderID,
+                            PaymentProviderProductID = o.ApplicationPaymentProviderProductID,
+                            PaymentProviderProductName = o.PaymentProviderProductName,
+                            ProductID = o.ProductID,
+                            ProductUnitID = o.ProductUnitID,
+                            ProductUnitName = o.UnitName,
+                            ProductUnitNamePaymentProvider = o.PaymentProviderUnitName,
+                            IsRecurring = o.IsRecurring,
+                            KitUnitDefault = o.KitDefault,
+                            KitUnitMaximum = o.KitMaximum,
+                            KitUnitMinimum = o.KitMinimum,
+                            UnitDefault = o.UnitDefault,
+                            UnitMaximum = o.UnitMaximum,
+                            UnitMinimum = o.UnitMinimum,
+                            LastUpdated = DateTime.Now,
+                            Rating = o.Rating,
+                            RatingScale = o.RatingScale,
+                            UrlExternal = o.ExternalURL,
+                            UrlInternal = o.InternalURL
+                        })
+                            ).ToArray();
+            }
+        }
+
+
+        [Shape]
+        public IHtmlString GetSearchResultShape(SearchViewModel model)
+        {
+            return new HtmlString(string.Format("<a href='/share/go/{0}'><h2>{1}</h2>{2}</a>", model.UrlInternal, model.Title, model.HTML));
+        }
 
         
        

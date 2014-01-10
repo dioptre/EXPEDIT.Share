@@ -17,5 +17,8 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          FileData GetDownload(string downloadID, string requestIPAddress);
 
+         [OperationContract]
+         IEnumerable<IHtmlString> GetSearchResults(string text = null, Guid? supplierModelID = null, int? startRowIndex = null, int? pageSize = null);
+
     }
 }

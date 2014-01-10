@@ -87,6 +87,21 @@ namespace EXPEDIT.Share
                             {"controller", "User"}
                         },
                         new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                        Priority = 5,
+                        Route = new Route(
+                            "share/search",
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"},
+                                {"controller", "User"},
+                                {"action", "search"}
+                            },
+                            null,
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"}
+                            },
+                            new MvcRouteHandler())
                 }
 
             };

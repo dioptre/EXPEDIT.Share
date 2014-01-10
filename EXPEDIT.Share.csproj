@@ -134,6 +134,10 @@
       <Project>{d9a7b330-cd22-4da1-a95a-8de1982ad8eb}</Project>
       <Name>Orchard.Media</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Search\Orchard.Search.csproj">
+      <Project>{4be4eb01-ac56-4048-924e-2ca77f509aba}</Project>
+      <Name>Orchard.Search</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XODB\XODB.csproj">
       <Project>{1b5a2a6b-28e0-4a54-9ca4-147c925f3bbb}</Project>
       <Name>XODB</Name>
@@ -146,15 +150,20 @@
     <Compile Include="Helpers\PdfHelper.cs" />
     <Compile Include="Route.cs" />
     <Compile Include="Services\ContentService.cs" />
+    <Compile Include="Services\SecureSearchService.cs" />
     <Compile Include="Services\IContentService.cs" />
     <Compile Include="Services\IShareService.cs" />
     <Compile Include="Services\ShareService.cs" />
+    <Compile Include="ViewModels\SearchViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Search.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
