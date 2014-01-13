@@ -166,53 +166,26 @@ namespace EXPEDIT.Share.Services {
         /// <returns></returns>
         public IEnumerable<IHtmlString> GetSearchResults(string text = null, Guid? supplierModelID = null, int? startRowIndex = null, int? pageSize = null)
         {
-            var supplier = _users.ApplicationCompanyID;
+            var contact = _users.ContactID;
             var application = _users.ApplicationID;
             var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new XODBC(_users.ApplicationConnectionString, null);
-                return (from o in d.E_SP_GetProductModels(text, application, supplier, ConstantsHelper.DEVICE_TYPE_SOFTWARE, supplierModelID, startRowIndex, pageSize)
+                var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
+                var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
+                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, null, startRowIndex, pageSize, verified, found)
                         select GetSearchResultShape(new SearchViewModel
                         {
-                            SupplierModelID = o.SupplierModelID,
-                            ModelID = o.ModelID,
-                            CompanyID = o.CompanyID,
-                            MediaDirectory = directory,
-                            PricePerUnit = o.PricePerUnit,
-                            PriceUnitID = o.PriceUnitID,
-                            CostUnit = o.CostUnit,
-                            SupplierID = supplier,
+                            ReferenceID = o.ReferenceID,
+                            TableType = o.TableType,
                             Title = o.Title,
-                            Subtitle = o.Subtitle,
-                            HTML = o.HTML,
-                            Manufacturer = o.Manufacturer,
-                            CurrencyID = o.CurrencyID,
-                            CurrencyPostfix = o.CurrencyPostfix,
-                            CurrencyPrefix = o.CurrencyPrefix,
-                            FreeDownloadID = o.FreeDownloadID,
-                            Downloads = o.Downloads,
-                            PaymentProviderID = o.ApplicationPaymentProviderID,
-                            PaymentProviderProductID = o.ApplicationPaymentProviderProductID,
-                            PaymentProviderProductName = o.PaymentProviderProductName,
-                            ProductID = o.ProductID,
-                            ProductUnitID = o.ProductUnitID,
-                            ProductUnitName = o.UnitName,
-                            ProductUnitNamePaymentProvider = o.PaymentProviderUnitName,
-                            IsRecurring = o.IsRecurring,
-                            KitUnitDefault = o.KitDefault,
-                            KitUnitMaximum = o.KitMaximum,
-                            KitUnitMinimum = o.KitMinimum,
-                            UnitDefault = o.UnitDefault,
-                            UnitMaximum = o.UnitMaximum,
-                            UnitMinimum = o.UnitMinimum,
-                            LastUpdated = DateTime.Now,
-                            Rating = o.Rating,
-                            RatingScale = o.RatingScale,
-                            UrlExternal = o.ExternalURL,
+                            Description = o.Description,
+                            Sequence = o.Row,
+                            Total = o.TotalRows,
                             UrlInternal = o.InternalURL
                         })
-                            ).ToArray();
+                       ).ToArray();
             }
         }
 
@@ -220,7 +193,7 @@ namespace EXPEDIT.Share.Services {
         [Shape]
         public IHtmlString GetSearchResultShape(SearchViewModel model)
         {
-            return new HtmlString(string.Format("<a href='/share/go/{0}'><h2>{1}</h2>{2}</a>", model.UrlInternal, model.Title, model.HTML));
+            return new HtmlString(string.Format("<a href='/share/go/{0}'><h2>{1}</h2>{2}</a>", model.UrlInternal, model.Title, model.Description)); //TODO:Extend search different object types
         }
 
         
