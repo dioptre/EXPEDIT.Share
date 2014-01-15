@@ -7,17 +7,20 @@ namespace EXPEDIT.Share.Helpers
 {
     public class ConstantsHelper
     {
+        public static Guid COMPANY_DEFAULT = new Guid("6887ABC9-E2D8-4A2D-B143-6C3E5245C565");
         public static Guid ACCOUNT_TYPE_ONLINE = new Guid("5C329B8D-007D-435E-8261-4FA72D7DF28A");
         public static Guid DEVICE_TYPE_SOFTWARE = new Guid("3f526009-827a-41b0-a633-14b422bdf27f");
         public static Guid ROUTE_TYPE_STORE_INTERNAL = new Guid("1a01fc89-c014-433f-be04-39c2f956aeb2");
         public static Guid ROUTE_TYPE_STORE_EXTERNAL = new Guid("7c9f3a25-011b-4f5e-8b1e-d345da13f8b1");
-        public static Guid UNIT_SI_SECONDS = new Guid("5AF72C77-A76E-4234-A16E-3F7898799EEA"); 
+        public static Guid UNIT_SI_SECONDS = new Guid("5AF72C77-A76E-4234-A16E-3F7898799EEA");
+        public static Guid CONTRACT_PARTNER = new Guid("e8ed2f94-1100-43a2-90cd-206d228090e2");
         public static int SQL_MAX_INT = 2147483647;
         public static string STAT_NAME_DOWNLOADS = "Downloads";
         public static string STAT_NAME_CLICKS_BUY = "ClicksBuy";
         public static string STAT_NAME_CLICKS_CONFIRM = "ClicksConfirm";
         public static string METADATA_ANTIFORGERY = "E_ANTIFORGERY";
         public static string REFERENCE_TYPE_LABOUR = "E_LABOUR";
+        public static string REFERENCE_TYPE_CONTRACT = "X_Contract";
         public const decimal GST_AU = 0.1m;
         public static decimal TAX_DEFAULT = GST_AU;
         public static string LICENSE_SERVER_AUTH_METHOD = "Simple";
