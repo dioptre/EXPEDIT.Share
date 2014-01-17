@@ -22,7 +22,7 @@ using Orchard.Collections;
 using Orchard.ContentManagement;
 using System.Collections.Generic;
 using System.Linq;
-
+using Orchard.Mvc;
 
 namespace EXPEDIT.Share.Controllers {
     
@@ -31,21 +31,21 @@ namespace EXPEDIT.Share.Controllers {
         public IOrchardServices Services { get; set; }
         private IShareService _share { get; set; }
         private IContentService _content { get; set; }
-        
         public ILogger Logger { get; set; }
         private readonly ISearchService _searchService;
         private readonly IContentManager _contentManager;
         private readonly ISiteService _siteService;
 
         public UserController(
-            IOrchardServices services, 
-            IShareService share, 
+            IOrchardServices services,
+            IShareService share,
             IContentService content,
             ISearchService searchService,
             IContentManager contentManager,
             ISiteService siteService,
             IShapeFactory shapeFactory
-            ) {
+            )
+        {
             _share = share;
             Services = services;
             _content = content;
@@ -69,7 +69,7 @@ namespace EXPEDIT.Share.Controllers {
         {
             var redirect = _share.GetRedirect(id);
             if (!string.IsNullOrWhiteSpace(redirect))
-                Response.Redirect(redirect);
+                return new RedirectResult(redirect);
             return new HttpNotFoundResult();
         }
 
@@ -178,6 +178,28 @@ namespace EXPEDIT.Share.Controllers {
             return View(searchViewModel);
         }
 
+        [ValidateInput(false)]
+        public ActionResult Refer(string id, string name)
+        {
+            try
+            {
+                _content.UpdateAffiliateRequest(new Guid(id), Request.GetIPAddress());
+            }
+            catch { }
+            if (string.IsNullOrWhiteSpace(name))
+                return new RedirectResult(VirtualPathUtility.ToAbsolute("~/"));
+            else
+            {
+                try
+                {
+                    return new RedirectResult(VirtualPathUtility.ToAbsolute(string.Format("~/{0}", Server.UrlDecode(name)).ToLowerInvariant().Replace("/refer/", "/")));
+                }
+                catch
+                {
+                    return HttpNotFound();
+                }
+            }
+        }
 
     }
 }
