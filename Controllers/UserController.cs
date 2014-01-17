@@ -93,6 +93,26 @@ namespace EXPEDIT.Share.Controllers {
             return new HttpNotFoundResult();
         }
 
+        /// <summary>
+        /// Download a file (can use a sqlfilestream eventually) TODO:
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="contactid"></param>
+        /// <returns></returns>
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        //[Themed(false)]
+        [Authorize]
+        public ActionResult File(string id)
+        {
+            var file = _share.GetFile(new Guid(id));
+            if (file != null)
+                return new XODB.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}", id, XODB.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "application/octet", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
+            return new HttpNotFoundResult();
+        }
+
+
 
         [ValidateInput(false)]
         [Authorize]
@@ -183,7 +203,7 @@ namespace EXPEDIT.Share.Controllers {
         {
             try
             {
-                _content.UpdateAffiliateRequest(new Guid(id), Request.GetIPAddress());
+                _content.UpdateAffiliate(null, new Guid(id), Request.GetIPAddress());
             }
             catch { }
             if (string.IsNullOrWhiteSpace(name))

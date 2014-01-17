@@ -59,6 +59,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\htmlagilitypack\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="ImpromptuInterface, Version=6.1.3.0, Culture=neutral, PublicKeyToken=0b1781c923b2975b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\impromptu-interface-bin\ImpromptuInterface.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MigraDoc.DocumentObjectModel">
       <HintPath>..\..\..\..\lib\pdfsharp\MigraDoc.DocumentObjectModel.dll</HintPath>
@@ -137,6 +141,10 @@
     <ProjectReference Include="..\Orchard.Search\Orchard.Search.csproj">
       <Project>{4be4eb01-ac56-4048-924e-2ca77f509aba}</Project>
       <Name>Orchard.Search</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
     </ProjectReference>
     <ProjectReference Include="..\XODB\XODB.csproj">
       <Project>{1b5a2a6b-28e0-4a54-9ca4-147c925f3bbb}</Project>

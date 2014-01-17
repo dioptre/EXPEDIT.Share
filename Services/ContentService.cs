@@ -31,12 +31,13 @@ using XODB.Helpers;
 using PdfSharp.Pdf;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using Orchard.Users.Events;
 
 namespace EXPEDIT.Share.Services
 {
 
     [UsedImplicitly]
-    public class ContentService : IContentService
+    public class ContentService : IContentService, Orchard.Users.Events.IUserEventHandler
     {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
@@ -141,6 +142,10 @@ namespace EXPEDIT.Share.Services
                         FileName = string.Format("Invoice-[{0}].pdf", invoiceID)
                         ,
                         FileChecksum = bytes.ComputeHash()
+                        ,
+                        VersionOwnerContactID = contact
+                        ,
+                        VersionOwnerCompanyID = company
                     };
                     stream.Close();
                     download = new Download
@@ -177,59 +182,76 @@ namespace EXPEDIT.Share.Services
         }
 
 
-        public Guid? GetAffiliateID(string requestIPAddress)
+
+
+        public Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null)
         {
             var contact = _users.ContactID;
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new XODBC(_users.ApplicationConnectionString, null, false);
-                Affiliate a = null;
-                if (contact.HasValue)
-                    a = (from o in d.Affiliates where o.AffiliateContactID == contact && o.Version == 0 && o.VersionDeletedBy == null select o).FirstOrDefault();
-                else if (!string.IsNullOrWhiteSpace(requestIPAddress))
-                    a = (from o in d.Affiliates where o.InitialIP == requestIPAddress && o.AffiliateContactID == null && o.Version == 0 && o.VersionDeletedBy == null orderby o.VersionUpdated ascending select o).FirstOrDefault();
-                if (a == null && (contact.HasValue || !string.IsNullOrWhiteSpace(requestIPAddress))) //Create new ID
+                Guid? parent = null;
+                if (parentAffiliateID.HasValue)
+                    parent = (from o in d.Affiliates where o.AffiliateID == parentAffiliateID && o.AffiliateContactID != null && o.Version == 0 && o.VersionDeletedBy == null select o.AffiliateContactID).FirstOrDefault();
+                Affiliate child = null;
+                if (!childAffiliateID.HasValue)
+                    child = (from o in d.Affiliates where o.AffiliateID == childAffiliateID && o.Version == 0 && o.VersionDeletedBy == null select o).FirstOrDefault();
+                if (child == null)
                 {
-                    a = new Affiliate
+                    if (contact.HasValue)
+                        child = (from o in d.Affiliates where o.AffiliateContactID == contact && o.Version == 0 && o.VersionDeletedBy == null select o).FirstOrDefault();
+                    else if (!string.IsNullOrWhiteSpace(requestIPAddress))
+                        child = (from o in d.Affiliates where o.InitialIP == requestIPAddress && o.AffiliateContactID == null && o.Version == 0 && o.VersionDeletedBy == null orderby o.VersionUpdated ascending select o).FirstOrDefault();
+                    if (child == null && (contact.HasValue || !string.IsNullOrWhiteSpace(requestIPAddress))) //Create new ID
                     {
-                        AffiliateID = Guid.NewGuid(),
-                        AffiliateContactID = contact,
-                        InitialIP = requestIPAddress
-                    };
-                    d.Affiliates.AddObject(a);
-                    d.SaveChanges();
+                        child = new Affiliate
+                        {
+                            AffiliateID = Guid.NewGuid(),
+                            AffiliateContactID = contact,
+                            InitialIP = requestIPAddress
+                        };
+                        d.Affiliates.AddObject(child);
+                    }
                 }
-                if (a == null)
+                if (child == null)
                     return null;
-                return a.AffiliateID;
+                //Now try and update
+                if (string.IsNullOrWhiteSpace(child.InitialIP) && !string.IsNullOrWhiteSpace(requestIPAddress))
+                    child.InitialIP = requestIPAddress;
+                if (parent.HasValue && !child.ParentContactID.HasValue)
+                    child.ParentContactID = parent.Value;
+                d.SaveChanges();
+                return child;
             }
 
         }
 
 
-        public void UpdateAffiliateChild(Guid parentAffiliateID, Guid childAffiliateID)
-        {
-            using (new TransactionScope(TransactionScopeOption.Suppress))
-            {
-                var d = new XODBC(_users.ApplicationConnectionString, null, false);
-                var parent = (from o in d.Affiliates where o.AffiliateID == parentAffiliateID && o.AffiliateContactID != null && o.Version == 0 && o.VersionDeletedBy == null select o.AffiliateContactID).FirstOrDefault();
-                if (!parent.HasValue)
-                    return;
-                var a = (from o in d.Affiliates where o.AffiliateID == childAffiliateID && o.ParentContactID == null && o.Version == 0 && o.VersionDeletedBy == null select o).FirstOrDefault();
-                if (a != null)
-                {
-                    a.ParentContactID = parent.Value;
-                    d.SaveChanges();
-                }
-            }
+        public void Creating(UserContext context) { }
 
+        public void Created(UserContext context)
+        {
+            UpdateAffiliate();          
         }
 
-        public void UpdateAffiliateRequest(Guid parentAffiliateID, string requestIPAddress)
+        public void LoggedIn(IUser user)
         {
-            var child = GetAffiliateID(requestIPAddress);
-            if (child.HasValue)
-                UpdateAffiliateChild(parentAffiliateID, child.Value);
+            UpdateAffiliate();            
+        }
+
+        public void LoggedOut(IUser user) { }
+
+        public void AccessDenied(IUser user) { }
+
+        public void ChangedPassword(IUser user) { }
+
+        public void SentChallengeEmail(IUser user) { }
+
+        public void ConfirmedEmail(IUser user) { }
+
+        public void Approved(IUser user)
+        {
+            
         }
 
     }

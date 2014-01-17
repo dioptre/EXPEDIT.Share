@@ -32,18 +32,8 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          SelectListItem[] GetCountries(string startsWith);
 
-         /// <summary>
-         /// Gets &/or creates new affiliate ID
-         /// </summary>
-         /// <param name="requestIPAddress"></param>
-         /// <returns></returns>
          [OperationContract]
-         Guid? GetAffiliateID(string requestIPAddress);
+         Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null);
 
-         [OperationContract]
-         void UpdateAffiliateChild(Guid parentAffiliateID, Guid childAffiliateID);
-
-         [OperationContract]
-         void UpdateAffiliateRequest(Guid parentAffiliateID, string requestIPAddress);
     }
 }

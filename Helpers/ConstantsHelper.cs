@@ -16,6 +16,7 @@ namespace EXPEDIT.Share.Helpers
         public static Guid CONTRACT_PARTNER = new Guid("e8ed2f94-1100-43a2-90cd-206d228090e2");
         public static int SQL_MAX_INT = 2147483647;
         public static string STAT_NAME_DOWNLOADS = "Downloads";
+        public static string STAT_NAME_ROUTES = "Routes";
         public static string STAT_NAME_CLICKS_BUY = "ClicksBuy";
         public static string STAT_NAME_CLICKS_CONFIRM = "ClicksConfirm";
         public static string METADATA_ANTIFORGERY = "E_ANTIFORGERY";

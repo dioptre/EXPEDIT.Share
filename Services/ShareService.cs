@@ -28,6 +28,8 @@ using Orchard.Media.Services;
 using EXPEDIT.Share.ViewModels;
 using EXPEDIT.Share.Helpers;
 using Orchard.DisplayManagement;
+using ImpromptuInterface;
+using XODB.Models;
 
 namespace EXPEDIT.Share.Services {
     
@@ -66,7 +68,6 @@ namespace EXPEDIT.Share.Services {
         {
             try
             {
-                var statName = "Routes";
                 var application = _users.ApplicationID;
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
@@ -77,11 +78,11 @@ namespace EXPEDIT.Share.Services {
                     {
                         var stat = (from o in d.StatisticDatas
                                     where o.ReferenceID == route.ApplicationRouteID && o.TableType == routeTable
-                                    && o.StatisticDataName == statName
+                                    && o.StatisticDataName == ConstantsHelper.STAT_NAME_ROUTES
                                     select o).FirstOrDefault();
                         if (stat == null)
                         {
-                            stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = routeTable, ReferenceID = route.ApplicationRouteID, StatisticDataName = statName, Count = 0 };
+                            stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = routeTable, ReferenceID = route.ApplicationRouteID, StatisticDataName = ConstantsHelper.STAT_NAME_ROUTES, Count = 0 };
                             d.StatisticDatas.AddObject(stat);
                         }
                         stat.Count++;
@@ -102,8 +103,7 @@ namespace EXPEDIT.Share.Services {
         public FileData GetDownload(string downloadID, string requestIPAddress)
         {
             try
-            {
-                var statName = "Downloads";
+            {        
                 var application = _users.ApplicationID;
                 var contact = _users.ContactID;                
                 var company = _users.ApplicationCompanyID;
@@ -131,11 +131,11 @@ namespace EXPEDIT.Share.Services {
                         throw new OrchardSecurityException(T("Download {0} no longer valid.", downloadID));
                     var stat = (from o in d.StatisticDatas
                                 where o.ReferenceID == download.DownloadID && o.TableType == downloadTable
-                                && o.StatisticDataName == statName
+                                && o.StatisticDataName == ConstantsHelper.STAT_NAME_DOWNLOADS
                                 select o).FirstOrDefault();
                     if (stat == null)
                     {
-                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = downloadTable, ReferenceID = download.DownloadID, StatisticDataName = statName, Count = 0 };
+                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = downloadTable, ReferenceID = download.DownloadID, StatisticDataName = ConstantsHelper.STAT_NAME_DOWNLOADS, Count = 0 };
                         d.StatisticDatas.AddObject(stat);
                     }
                     stat.Count++;
@@ -147,6 +147,59 @@ namespace EXPEDIT.Share.Services {
                     if (file != null)
                         download.RemainingDownloads--;
                     d.SaveChanges();
+                    return file;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public FileData GetFile(Guid fileDataID)
+        {
+            try
+            {
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    var table = d.GetTableName(typeof(FileData));
+                    var root = (from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select new { o.VersionAntecedentID, o.VersionOwnerCompanyID, o.VersionOwnerContactID }).FirstOrDefault(); 
+                    var verified = false;
+                    if (root == null)
+                        return null;
+                    else if (!root.VersionOwnerCompanyID.HasValue && !root.VersionOwnerContactID.HasValue)
+                        verified = true;
+                    else if (root.VersionAntecedentID.HasValue)
+                        verified = _users.CheckPermission(new SecuredBasic
+                        {
+                            AccessorApplicationID = _users.ApplicationID,
+                            AccessorContactID = _users.ContactID,
+                            OwnerReferenceID = root.VersionAntecedentID.Value,
+                            OwnerTableType = table
+                        }, XODB.Models.ActionPermission.Read);
+                    else
+                        verified = _users.CheckPermission(new SecuredBasic
+                        {
+                            AccessorApplicationID = _users.ApplicationID,
+                            AccessorContactID = _users.ContactID,
+                            OwnerReferenceID = fileDataID,
+                            OwnerTableType = table
+                        }, XODB.Models.ActionPermission.Read);
+                    if (!verified)
+                        throw new AuthorityException(string.Format("Can not download file: {0} Unauthorised access by contact: {1}", fileDataID, _users.ContactID));                  
+                    var stat = (from o in d.StatisticDatas
+                                where o.ReferenceID == fileDataID && o.TableType == table
+                                && o.StatisticDataName == ConstantsHelper.STAT_NAME_DOWNLOADS
+                                select o).FirstOrDefault();
+                    if (stat == null)
+                    {
+                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = table, ReferenceID = fileDataID, StatisticDataName = ConstantsHelper.STAT_NAME_DOWNLOADS, Count = 0 };
+                        d.StatisticDatas.AddObject(stat);
+                    }
+                    stat.Count++;
+                    d.SaveChanges();
+                    var file = (from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select o).Single(); 
                     return file;
                 }
             }
