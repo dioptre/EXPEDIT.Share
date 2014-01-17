@@ -146,6 +146,8 @@ namespace EXPEDIT.Share.Services
                         VersionOwnerContactID = contact
                         ,
                         VersionOwnerCompanyID = company
+                        ,
+                        DocumentType = ConstantsHelper.DOCUMENT_TYPE_INVOICE
                     };
                     stream.Close();
                     download = new Download

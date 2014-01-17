@@ -7,6 +7,9 @@ namespace EXPEDIT.Share.Helpers
 {
     public class ConstantsHelper
     {
+        public static string DOCUMENT_TYPE_SOFTWARE_SUBMISSION = "Software Submission";
+        public static string DOCUMENT_TYPE_INVOICE = "Invoice";
+
         public static Guid COMPANY_DEFAULT = new Guid("6887ABC9-E2D8-4A2D-B143-6C3E5245C565");
         public static Guid ACCOUNT_TYPE_ONLINE = new Guid("5C329B8D-007D-435E-8261-4FA72D7DF28A");
         public static Guid DEVICE_TYPE_SOFTWARE = new Guid("3f526009-827a-41b0-a633-14b422bdf27f");
@@ -31,7 +34,7 @@ namespace EXPEDIT.Share.Helpers
         public static Guid FILE_TYPE_SOFTWARE= new Guid("b2df1ccc-cd61-4d80-859a-40dd06b10e63");
         public static Guid FILE_TYPE_GLOBAL= new Guid("3e3ebe72-3a3d-4ad5-946b-52befb8b483f");
         public static Guid FILE_TYPE_INVOICE= new Guid("26c6a363-1a75-4530-ad44-cd18a47b69f1");
-        public static Guid FILE_TYPE_INTERNAL= new Guid("b8491f60-8ab2-444d-8d88-e0a34cddeafe");
+        public static Guid FILE_TYPE_INTERNAL= new Guid("b8491f60-8ab2-444d-8d88-e0a34cddeafe");        
         public static string ADDRESS_APP_OWNER =
                 "EXPEDIT SOLUTIONS PTY LTD - MiningAppstore\r\n" +
                 "ABN 93152456374\r\n" +
