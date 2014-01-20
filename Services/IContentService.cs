@@ -33,7 +33,7 @@ namespace EXPEDIT.Share.Services
          SelectListItem[] GetCountries(string startsWith);
 
          [OperationContract]
-         Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null);
+         Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false);
 
     }
 }

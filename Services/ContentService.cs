@@ -186,7 +186,7 @@ namespace EXPEDIT.Share.Services
 
 
 
-        public Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null)
+        public Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false)
         {
             var contact = _users.ContactID;
             using (new TransactionScope(TransactionScopeOption.Suppress))
@@ -222,6 +222,20 @@ namespace EXPEDIT.Share.Services
                     child.InitialIP = requestIPAddress;
                 if (parent.HasValue && !child.ParentContactID.HasValue)
                     child.ParentContactID = parent.Value;
+                if (referral && parentAffiliateID.HasValue)
+                {
+                    var table = d.GetTableName<Affiliate>();
+                    var stat = (from o in d.StatisticDatas
+                                where o.ReferenceID == parentAffiliateID.Value && o.TableType == table
+                                && o.StatisticDataName == ConstantsHelper.STAT_NAME_REFERRAL
+                                select o).FirstOrDefault();
+                    if (stat == null)
+                    {
+                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = table, ReferenceID = parentAffiliateID.Value, StatisticDataName = ConstantsHelper.STAT_NAME_REFERRAL, Count = 0 };
+                        d.StatisticDatas.AddObject(stat);
+                    }
+                    stat.Count++;
+                }
                 d.SaveChanges();
                 return child;
             }
@@ -238,7 +252,7 @@ namespace EXPEDIT.Share.Services
 
         public void LoggedIn(IUser user)
         {
-            UpdateAffiliate();            
+            UpdateAffiliate();    
         }
 
         public void LoggedOut(IUser user) { }

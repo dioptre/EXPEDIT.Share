@@ -203,7 +203,7 @@ namespace EXPEDIT.Share.Controllers {
         {
             try
             {
-                _content.UpdateAffiliate(null, new Guid(id), Request.GetIPAddress());
+                _content.UpdateAffiliate(null, new Guid(id), Request.GetIPAddress(), true);
             }
             catch { }
             if (string.IsNullOrWhiteSpace(name))
@@ -218,6 +218,20 @@ namespace EXPEDIT.Share.Controllers {
                 {
                     return HttpNotFound();
                 }
+            }
+        }
+
+        [Themed(false)]
+        [ValidateInput(false)]
+        public ActionResult Referral(string id, string name)
+        {
+            try
+            {
+                return new JsonHelper.JsonNetResult(_content.UpdateAffiliate(null, null, Request.GetIPAddress()).AffiliateID, JsonRequestBehavior.AllowGet);
+            }
+            catch 
+            {
+                return new JsonHelper.JsonNetResult(string.Empty, JsonRequestBehavior.AllowGet);
             }
         }
 
