@@ -9,7 +9,8 @@ namespace EXPEDIT.Share.Helpers
     {
         public static string DOCUMENT_TYPE_SOFTWARE_SUBMISSION = "Software Submission";
         public static string DOCUMENT_TYPE_INVOICE = "Invoice";
-
+        public static string EMAIL_FOLDER_INBOX = "Inbox";
+        public static string EMAIL_FOLDER_SUPPORT = "Support";
         public static Guid COMPANY_DEFAULT = new Guid("6887ABC9-E2D8-4A2D-B143-6C3E5245C565");
         public static Guid ACCOUNT_TYPE_ONLINE = new Guid("5C329B8D-007D-435E-8261-4FA72D7DF28A");
         public static Guid DEVICE_TYPE_SOFTWARE = new Guid("3f526009-827a-41b0-a633-14b422bdf27f");
