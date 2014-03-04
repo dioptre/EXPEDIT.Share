@@ -9,6 +9,6 @@ Category: Business
 Features:
     EXPEDIT.Share: 
         Description: Share web module by EXPEDIT.
-		Dependencies: Orchard.Email,XODB,Orchard.Media,XmlRpc,Orchard.Search
+		Dependencies: Orchard.Email,NKD,Orchard.Media,XmlRpc,Orchard.Search
 		Category: Business
 		Priority: 10

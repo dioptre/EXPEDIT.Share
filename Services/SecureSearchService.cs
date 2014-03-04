@@ -18,16 +18,16 @@ using Orchard.Messaging.Services;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Data;
-#if XODB
-using XODB.Module.BusinessObjects;
+#if NKD
+using NKD.Module.BusinessObjects;
 #else
 using EXPEDIT.Utils.DAL.Models;
 #endif
-using XODB.Services;
+using NKD.Services;
 using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
 using System.Web.Mvc;
-using XODB.Helpers;
+using NKD.Helpers;
 using PdfSharp.Pdf;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;

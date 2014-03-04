@@ -16,7 +16,7 @@ using MigraDoc.Extensions.Html;
 using MigraDoc.Extensions.Markdown;
 using System.Globalization;
 using MigraDoc.DocumentObjectModel.Tables;
-using XODB.Module.BusinessObjects;
+using NKD.Module.BusinessObjects;
 using System.Data.Entity;
 
 namespace EXPEDIT.Share.Helpers

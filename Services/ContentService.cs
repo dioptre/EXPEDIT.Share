@@ -18,20 +18,21 @@ using Orchard.Messaging.Services;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Data;
-#if XODB
-using XODB.Module.BusinessObjects;
+#if NKD
+using NKD.Module.BusinessObjects;
 #else
 using EXPEDIT.Utils.DAL.Models;
 #endif
-using XODB.Services;
+using NKD.Services;
 using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
 using System.Web.Mvc;
-using XODB.Helpers;
+using NKD.Helpers;
 using PdfSharp.Pdf;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using Orchard.Users.Events;
+
 
 namespace EXPEDIT.Share.Services
 {
@@ -78,7 +79,7 @@ namespace EXPEDIT.Share.Services
                 var invoiceID = default(Guid?);
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
-                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    var d = new NKDC(_users.ApplicationConnectionString, null, false);
                     invoiceID = (from o in d.Supplies
                                  join i in d.Invoices on o.SupplyID equals i.SupplyID
                                  where o.CustomerPurchaseOrderID == orderID && o.PurchaseOrderCustomer.CustomerContactID == contact
@@ -108,7 +109,7 @@ namespace EXPEDIT.Share.Services
                 var now = DateTime.UtcNow;
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
-                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    var d = new NKDC(_users.ApplicationConnectionString, null, false);
                     var invoiceTableType = d.GetTableName(typeof(Invoice), true);
                     var invoice = (from o in d.Invoices
                                    where o.InvoiceID == invoiceID
@@ -175,7 +176,7 @@ namespace EXPEDIT.Share.Services
         {
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
-                var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
                 d.ContextOptions.LazyLoadingEnabled = false;
                 return (from o in d.DictionaryCountries
                         where o.StandardCountryName.StartsWith(startsWith)
@@ -191,7 +192,7 @@ namespace EXPEDIT.Share.Services
             var contact = _users.ContactID;
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
-                var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
                 Guid? parent = null;
                 if (parentAffiliateID.HasValue)
                     parent = (from o in d.Affiliates where o.AffiliateID == parentAffiliateID && o.AffiliateContactID != null && o.Version == 0 && o.VersionDeletedBy == null select o.AffiliateContactID).FirstOrDefault();

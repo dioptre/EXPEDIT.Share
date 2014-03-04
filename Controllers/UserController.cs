@@ -3,7 +3,7 @@ using Orchard.Localization;
 using Orchard;
 using EXPEDIT.Share.Services;
 using Orchard.Themes;
-using XODB.Helpers;
+using NKD.Helpers;
 using System;
 using EXPEDIT.Share.Helpers;
 using Orchard.DisplayManagement;
@@ -23,6 +23,7 @@ using Orchard.ContentManagement;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Mvc;
+
 
 namespace EXPEDIT.Share.Controllers {
     
@@ -89,7 +90,7 @@ namespace EXPEDIT.Share.Controllers {
 
             var file = _share.GetDownload(id, Request.GetIPAddress());
             if (file != null)
-                return new XODB.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}", id, XODB.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "application/octet", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
+                return new NKD.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}", id, NKD.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "application/octet", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
             return new HttpNotFoundResult();
         }
 
@@ -108,7 +109,7 @@ namespace EXPEDIT.Share.Controllers {
         {
             var file = _share.GetFile(new Guid(id));
             if (file != null)
-                return new XODB.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}", id, XODB.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "application/octet", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
+                return new NKD.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}", id, NKD.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "application/octet", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
             return new HttpNotFoundResult();
         }
 

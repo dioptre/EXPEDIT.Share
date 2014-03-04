@@ -4,7 +4,7 @@ using System.IO;
 using System.Web;
 using Orchard;
 using System.ServiceModel;
-using XODB.Module.BusinessObjects;
+using NKD.Module.BusinessObjects;
 using System.Web.Mvc;
 namespace EXPEDIT.Share.Services
 {

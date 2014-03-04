@@ -18,18 +18,18 @@ using Orchard.Messaging.Services;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Data;
-#if XODB
-using XODB.Module.BusinessObjects;
+#if NKD
+using NKD.Module.BusinessObjects;
 #else
 using EXPEDIT.Utils.DAL.Models;
 #endif
-using XODB.Services;
+using NKD.Services;
 using Orchard.Media.Services;
 using EXPEDIT.Share.ViewModels;
 using EXPEDIT.Share.Helpers;
 using Orchard.DisplayManagement;
 using ImpromptuInterface;
-using XODB.Models;
+using NKD.Models;
 
 namespace EXPEDIT.Share.Services {
     
@@ -71,7 +71,7 @@ namespace EXPEDIT.Share.Services {
                 var application = _users.ApplicationID;
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
-                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    var d = new NKDC(_users.ApplicationConnectionString, null, false);
                     var route = (from o in d.ApplicationRoutes where o.ApplicationID == application && o.RouteURL == routeURL orderby o.Sequence descending select o).FirstOrDefault();
                     var routeTable = d.GetTableName(route.GetType());
                     if (route.IsCapturingStatistic.HasValue && route.IsCapturingStatistic.Value)
@@ -110,7 +110,7 @@ namespace EXPEDIT.Share.Services {
                 var server = _users.ServerID;                
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
-                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    var d = new NKDC(_users.ApplicationConnectionString, null, false);
                     var download = (from o in d.Downloads where o.DownloadID==new Guid(downloadID) select o).First();
                     var downloadTable = d.GetTableName(download.GetType());
                     if (download.FilterApplicationID.HasValue && download.FilterApplicationID.Value != application)
@@ -162,7 +162,7 @@ namespace EXPEDIT.Share.Services {
             {
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
-                    var d = new XODBC(_users.ApplicationConnectionString, null, false);
+                    var d = new NKDC(_users.ApplicationConnectionString, null, false);
                     var table = d.GetTableName(typeof(FileData));
                     var root = (from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select new { o.VersionAntecedentID, o.VersionOwnerCompanyID, o.VersionOwnerContactID }).FirstOrDefault(); 
                     var verified = false;
@@ -177,7 +177,7 @@ namespace EXPEDIT.Share.Services {
                             AccessorContactID = _users.ContactID,
                             OwnerReferenceID = root.VersionAntecedentID.Value,
                             OwnerTableType = table
-                        }, XODB.Models.ActionPermission.Read);
+                        }, NKD.Models.ActionPermission.Read);
                     else
                         verified = _users.CheckPermission(new SecuredBasic
                         {
@@ -185,7 +185,7 @@ namespace EXPEDIT.Share.Services {
                             AccessorContactID = _users.ContactID,
                             OwnerReferenceID = fileDataID,
                             OwnerTableType = table
-                        }, XODB.Models.ActionPermission.Read);
+                        }, NKD.Models.ActionPermission.Read);
                     if (!verified)
                         throw new AuthorityException(string.Format("Can not download file: {0} Unauthorised access by contact: {1}", fileDataID, _users.ContactID));                  
                     var stat = (from o in d.StatisticDatas
@@ -210,7 +210,7 @@ namespace EXPEDIT.Share.Services {
         }
 
         /// <summary>
-        /// Returns search within XODB. Only search products for now.
+        /// Returns search within NKD. Only search products for now.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="supplierModelID"></param>
@@ -224,7 +224,7 @@ namespace EXPEDIT.Share.Services {
             var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
-                var d = new XODBC(_users.ApplicationConnectionString, null);
+                var d = new NKDC(_users.ApplicationConnectionString, null);
                 var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
                 var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
                 return (from o in d.E_SP_GetSecuredSearch(text, contact, application, null, startRowIndex, pageSize, verified, found)
