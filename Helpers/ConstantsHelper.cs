@@ -23,6 +23,7 @@ namespace EXPEDIT.Share.Helpers
         public static string STAT_NAME_ROUTES = "Routes";
         public static string STAT_NAME_CLICKS_BUY = "ClicksBuy";
         public static string STAT_NAME_REFERRAL = "Referral";
+        public static string STAT_NAME_CHECKIN = "Checkin";
         public static string STAT_NAME_CLICKS_CONFIRM = "ClicksConfirm";
         public static string METADATA_ANTIFORGERY = "E_ANTIFORGERY";
         public static string REFERENCE_TYPE_LABOUR = "E_LABOUR";

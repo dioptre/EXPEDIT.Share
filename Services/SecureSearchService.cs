@@ -18,11 +18,7 @@ using Orchard.Messaging.Services;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Data;
-#if NKD
 using NKD.Module.BusinessObjects;
-#else
-using EXPEDIT.Utils.DAL.Models;
-#endif
 using NKD.Services;
 using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
@@ -67,18 +63,18 @@ namespace EXPEDIT.Share.Services {
                 ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search")
                 : new NullSearchBuilder();
         }
-
-        IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, bool filterCulture, string[] searchFields, Func<ISearchHit, T> shapeResult)
+        
+         IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, bool filterCulture, string index, string[] searchFields, Func<ISearchHit, T> shapeResult) 
         {
 
+            
             if (string.IsNullOrWhiteSpace(query))
                 return new PageOfItems<T>(Enumerable.Empty<T>());
 
-            var searchBuilder = Search().Parse(searchFields, query);
+            var searchBuilder = Search().Parse(searchFields, query); //Search(index)
 
-            if (filterCulture)
-            {
-                var culture = _cultureManager.GetSiteCulture();
+            if (filterCulture) {
+                var culture = _cultureManager.GetCurrentCulture(Services.WorkContext.HttpContext);
 
                 // use LCID as the text representation gets analyzed by the query parser
                 searchBuilder
@@ -93,14 +89,14 @@ namespace EXPEDIT.Share.Services {
 
             var searchResults = searchBuilder.Search();
 
-            var pageOfItems = new PageOfItems<T>(searchResults.Select(shapeResult))
-            {
+            var pageOfItems = new PageOfItems<T>(searchResults.Select(shapeResult)) {
                 PageNumber = page,
                 PageSize = pageSize != null ? (int)pageSize : totalCount,
                 TotalItemCount = totalCount
             };
 
             return pageOfItems;
+
         }
     }
 }

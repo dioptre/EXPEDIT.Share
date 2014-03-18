@@ -18,11 +18,7 @@ using Orchard.Messaging.Services;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Data;
-#if NKD
 using NKD.Module.BusinessObjects;
-#else
-using EXPEDIT.Utils.DAL.Models;
-#endif
 using NKD.Services;
 using Orchard.Media.Services;
 using EXPEDIT.Share.ViewModels;

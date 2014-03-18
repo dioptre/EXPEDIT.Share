@@ -23,6 +23,7 @@ using Orchard.ContentManagement;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Mvc;
+using System.Text.RegularExpressions;
 
 
 namespace EXPEDIT.Share.Controllers {
@@ -154,6 +155,7 @@ namespace EXPEDIT.Share.Controllers {
             {
                 searchHits = _searchService.Query(q, pager.Page, pager.PageSize,
                                                   Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
+                                                  null,
                                                   searchFields,
                                                   searchHit => searchHit);
             }
@@ -234,6 +236,31 @@ namespace EXPEDIT.Share.Controllers {
             {
                 return new JsonHelper.JsonNetResult(string.Empty, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        [Themed(false)]
+        [ValidateInput(false)]
+        public ActionResult Checkin(string id)
+        {
+            string nid = null;
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                if (id.Last() == '=' && (id.Length % 4 == 0) && Regex.IsMatch(id, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None))
+                {
+                    try
+                    {
+                        nid = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(id));
+                    }
+                    catch
+                    {
+                        nid = id;
+                    }
+                }
+                else
+                    nid = id;
+            }
+            _content.UpdateAffiliate(null, null, Request.GetIPAddress(), false, true, nid);
+            return new EmptyResult();
         }
 
     }

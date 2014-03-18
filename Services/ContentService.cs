@@ -18,11 +18,7 @@ using Orchard.Messaging.Services;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Data;
-#if NKD
 using NKD.Module.BusinessObjects;
-#else
-using EXPEDIT.Utils.DAL.Models;
-#endif
 using NKD.Services;
 using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
@@ -187,7 +183,7 @@ namespace EXPEDIT.Share.Services
 
 
 
-        public Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false)
+        public Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false, bool checkin=false, string reference=null)
         {
             var contact = _users.ContactID;
             using (new TransactionScope(TransactionScopeOption.Suppress))
@@ -204,7 +200,11 @@ namespace EXPEDIT.Share.Services
                     if (contact.HasValue)
                         child = (from o in d.Affiliates where o.AffiliateContactID == contact && o.Version == 0 && o.VersionDeletedBy == null select o).FirstOrDefault();
                     else if (!string.IsNullOrWhiteSpace(requestIPAddress))
+                    {
                         child = (from o in d.Affiliates where o.InitialIP == requestIPAddress && o.AffiliateContactID == null && o.Version == 0 && o.VersionDeletedBy == null orderby o.VersionUpdated ascending select o).FirstOrDefault();
+                        if (child == null)
+                            child = (from o in d.Affiliates where o.InitialIP == requestIPAddress && o.Version == 0 && o.VersionDeletedBy == null orderby o.VersionUpdated ascending select o).FirstOrDefault();
+                    }
                     if (child == null && (contact.HasValue || !string.IsNullOrWhiteSpace(requestIPAddress))) //Create new ID
                     {
                         child = new Affiliate
@@ -216,26 +216,64 @@ namespace EXPEDIT.Share.Services
                         d.Affiliates.AddObject(child);
                     }
                 }
-                if (child == null)
-                    return null;
-                //Now try and update
-                if (string.IsNullOrWhiteSpace(child.InitialIP) && !string.IsNullOrWhiteSpace(requestIPAddress))
-                    child.InitialIP = requestIPAddress;
-                if (parent.HasValue && !child.ParentContactID.HasValue)
-                    child.ParentContactID = parent.Value;
-                if (referral && parentAffiliateID.HasValue)
+                var table = d.GetTableName<Affiliate>();
+                if (child != null)
                 {
-                    var table = d.GetTableName<Affiliate>();
-                    var stat = (from o in d.StatisticDatas
-                                where o.ReferenceID == parentAffiliateID.Value && o.TableType == table
-                                && o.StatisticDataName == ConstantsHelper.STAT_NAME_REFERRAL
+                    //Now try and update
+                    if (string.IsNullOrWhiteSpace(child.InitialIP) && !string.IsNullOrWhiteSpace(requestIPAddress))
+                        child.InitialIP = requestIPAddress;
+                    if (parent.HasValue && !child.ParentContactID.HasValue)
+                        child.ParentContactID = parent.Value;
+                    if (referral && parentAffiliateID.HasValue)
+                    {
+
+                        var stat = (from o in d.StatisticDatas
+                                    where o.ReferenceID == parentAffiliateID.Value && o.TableType == table
+                                    && o.StatisticDataName == ConstantsHelper.STAT_NAME_REFERRAL
+                                    select o).FirstOrDefault();
+                        if (stat == null)
+                        {
+                            stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = table, ReferenceID = parentAffiliateID.Value, StatisticDataName = ConstantsHelper.STAT_NAME_REFERRAL, Count = 0 };
+                            d.StatisticDatas.AddObject(stat);
+                        }
+                        stat.Count++;
+                    }
+                }
+                if (checkin)
+                {
+                    StatisticData stat;
+                    string externalRef;
+                    bool userMissing = string.IsNullOrWhiteSpace(reference);
+                    if (userMissing)
+                        externalRef = requestIPAddress;
+                    else
+                        externalRef = string.Join("", string.Format("{0}+{1}", requestIPAddress, reference).Take(50));
+                    if (child != null)
+                        stat = (from o in d.StatisticDatas
+                                where o.ReferenceID == child.AffiliateID && o.TableType == table
+                                && o.StatisticDataName == ConstantsHelper.STAT_NAME_CHECKIN
+                                select o).FirstOrDefault();
+                    else //this should never happen
+                        stat = (from o in d.StatisticDatas
+                                where o.ReferenceExternal.StartsWith(requestIPAddress)
+                                && o.StatisticDataName == ConstantsHelper.STAT_NAME_CHECKIN
                                 select o).FirstOrDefault();
                     if (stat == null)
                     {
-                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = table, ReferenceID = parentAffiliateID.Value, StatisticDataName = ConstantsHelper.STAT_NAME_REFERRAL, Count = 0 };
+                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = table, ReferenceID = (child == null) ? default(Guid?) : child.AffiliateID, StatisticDataName = ConstantsHelper.STAT_NAME_CHECKIN, Count = 0 };
                         d.StatisticDatas.AddObject(stat);
                     }
                     stat.Count++;
+                    if (string.IsNullOrWhiteSpace(stat.ReferenceExternal)) //Let's save what we can
+                        stat.ReferenceExternal = externalRef;
+                    else if (stat.ReferenceExternal != externalRef)
+                    {
+                        if (!userMissing)
+                            stat.ReferenceExternal = externalRef;
+                        else if (stat.ReferenceExternal.IndexOf('+') < 0)
+                            stat.ReferenceExternal = externalRef;
+                    }
+                        
                 }
                 d.SaveChanges();
                 return child;
@@ -243,6 +281,7 @@ namespace EXPEDIT.Share.Services
 
         }
 
+    
 
         public void Creating(UserContext context) { }
 
