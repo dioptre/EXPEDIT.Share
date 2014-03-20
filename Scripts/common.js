@@ -46,11 +46,26 @@ function refer(affiliateID) {
     summary = "Check out the " + ((summary.length>0) ? summary + " on the " : "") + title.toLowerCase() + ". I think it could be really useful for everyone in our industry.";
     url = 'http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + '&summary=' + encodeURIComponent(summary);
     var w = 600;
-    var h = 450;
-    popupWindow(url, title, w, h);
+    var h = 450;    
+    var popup = popupWindow(url, title, w, h);
+    checkPopup(popup);
+    
 }
 function popupWindow(url, title, w, h) {
     var left = (screen.width / 2) - (w / 2);
     var top = (screen.height / 2) - (h / 2);
     return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
 }
+function checkPopup(popup, url) {
+    if (!popup || popup.closed || (typeof popup.closed == 'undefined') || popup.outerHeight == 0 || popup.outerWidth == 0) {        
+        if (typeof url != 'undefined' && url) {
+            alert('Please enable popups. Attempting to redirect instead...');
+            document.location.href = url;
+        }
+        else {
+            alert('Please enable popups.');
+        }            
+    }
+}
+
+

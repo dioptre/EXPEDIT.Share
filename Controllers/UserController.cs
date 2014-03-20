@@ -88,7 +88,6 @@ namespace EXPEDIT.Share.Controllers {
         [Authorize]
         public ActionResult Download(string id)
         {
-
             var file = _share.GetDownload(id, Request.GetIPAddress());
             if (file != null)
                 return new NKD.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}", id, NKD.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "application/octet", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
@@ -114,25 +113,6 @@ namespace EXPEDIT.Share.Controllers {
             return new HttpNotFoundResult();
         }
 
-
-
-        [ValidateInput(false)]
-        [Authorize]
-        //[ValidateAntiForgeryToken]
-        [Themed(true)]
-        public ActionResult GetInvoice(string id)
-        {
-            return Download(string.Format("{0}",_content.GetInvoice(new Guid(id), Request.GetIPAddress())));
-        }
-
-        [ValidateInput(false)]
-        [Authorize]
-        //[ValidateAntiForgeryToken]
-        [Themed(true)]
-        public ActionResult GetOrderInvoice(string id)
-        {
-            return Download(string.Format("{0}", _content.GetOrderInvoice(new Guid(id), Request.GetIPAddress())));
-        }
 
         [ValidateInput(false)]
         [Authorize]

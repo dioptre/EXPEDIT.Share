@@ -159,7 +159,6 @@
   <ItemGroup>
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Helpers\ConstantsHelper.cs" />
-    <Compile Include="Helpers\PdfHelper.cs" />
     <Compile Include="Route.cs" />
     <Compile Include="Services\ContentService.cs" />
     <Compile Include="Services\SecureSearchService.cs" />
