@@ -18,5 +18,12 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false, bool checkin=false, string reference=null);
 
+         [OperationContract]
+         int GetAffiliateCount();
+
+         [OperationContract]
+         int GetAffiliatePoints();
+
+
     }
 }

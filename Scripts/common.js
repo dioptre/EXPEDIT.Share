@@ -67,5 +67,27 @@ function checkPopup(popup, url) {
         }            
     }
 }
-
-
+var setupPager = false;
+function addPager(offset, pageSize, urlPrefix, action) { //MyTicketsPartial & /tickets/user/
+    if (!setupPager) {
+        $.ajaxSetup({ cache: false });
+        setupPager = true;
+    }
+    var s = //'<script language=\"javascript\" type=\"text/javascript\">' +
+        'var pageSize' + action + ' = ' + pageSize + ';' +
+        'var offset' + action + ' = ' + offset + ';' +                 
+        '$(\"#' + action + 'PagerNext\").click(function () {' +
+        'offset' + action + '+=pageSize' + action + ';' +
+        '$(\"#' + action + 'PagerPage\").load(\'' + urlPrefix + action + '/\' + pageSize' + action + ' + \'/\' + offset' + action + ');' +
+        '});' +
+        '$(\"#' + action + 'PagerPrevious\").click(function () {' +
+        'if (offset' + action + ' < 2)' +
+        '   return;' +
+        'offset' + action + '-=pageSize' + action + ';' +
+        '$(\"#' + action + 'PagerPage").load(\'' + urlPrefix + action + '/\' + pageSize' + action + ' + \'/\' + offset' + action + ');' +
+        '});'
+        // + '</script>'
+        ;
+    eval(s);
+    eval('$(\"#' + action + 'PagerPage\").load(\'' + urlPrefix + action + '/\' + pageSize' + action + ' + \'/\' + offset' + action + ');');
+}

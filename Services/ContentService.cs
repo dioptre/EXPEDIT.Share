@@ -209,5 +209,20 @@ namespace EXPEDIT.Share.Services
             
         }
 
+        public int GetAffiliateCount()
+        {
+            var contact = _users.ContactID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                return (from o in d.Affiliates where o.ParentContactID==contact select o.ParentContactID).Count();
+            }
+        }
+
+        public int GetAffiliatePoints()
+        {
+            return 0;
+        }
+
     }
 }
