@@ -133,11 +133,14 @@ namespace EXPEDIT.Share.Controllers {
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
             try
             {
-                searchHits = _searchService.Query(q, pager.Page, pager.PageSize,
-                                                  Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                                                  null,
-                                                  searchFields,
-                                                  searchHit => searchHit);
+                searchHits = _searchService.Query(
+                    q, 
+                    pager.Page, 
+                    pager.PageSize, 
+                    false,                                                  
+                    null,                                                                      
+                    searchFields,                                                  
+                    searchHit => searchHit);
             }
             catch (Exception exception)
             {
