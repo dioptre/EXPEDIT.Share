@@ -8,13 +8,14 @@
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
     Layout.Title = T("Pick File").ToString();
 }
+<script type="text/x-handlebars">    
 @using (Html.BeginForm("PickFile", "User", new { area = "EXPEDIT.Share" }, FormMethod.Post, new { id = "form1", @class = "form" }))
 {
 <article class="content-item page" style="margin:11px;">
     <fieldset>
     @*<legend></legend>*@
     <div class="editor-label">
-        <p><strong>Search:</strong>@Html.TextBoxFor(m => m.Query, new { @class = "searchbox" })</p>
+        <p><strong>Search:</strong>{{view Ember.TextField valueBinding="q" type='text' placeholder="Add keywords"}}</p>
     </div>
     <div class="editor-field">
     <!-- The file upload form used as target for the file upload widget -->
@@ -61,16 +62,29 @@
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
     </div>
     </div>
-    <ul class="pager">
-        <li><a href="#" id="MyFilesPartialPagerPrevious">Previous</a></li>
-        <li><a href="#" id="MyFilesPartialPagerNext">Next</a></li>
-    </ul>
-  <script type="text/x-handlebars">
     {{outlet}}
+    </fieldset>
+    @*<input type="submit" value="Submit" />*@
+    @Html.HiddenFor(m => m.FileDataID)
+    </article>
+}
   </script>
-  <script type="text/x-handlebars" id="index">
+  <script type="text/x-handlebars" id="search">
+     <ul class="pager">
+         {{#if prev}}
+            
+            <li><a {{action 'transition' 'Previous'}}>Previous</a></li>
+         {{/if}}
+
+                {{currentPage}}
+
+         {{#if next}}
+  
+        <li><a {{action 'transition' 'Next'}}>Next</a></li>
+         {{/if}}
+     </ul>
      <div id="media-library-main-list" class=""><ul id="pickfiles" style="list-style-type:none !important;">
-     {{#each item in model}}  
+     {{#each item in model.images}}  
          <li>
              <div class="thumbnail"><div class="media-thumbnail media-thumbnail-image mime-type-image-png"><img {{bind-attr src="item.ImageUrl"}}"></div></div>
              <div class="media-library-main-list-overlay"><p class="title">{{item.Title}}</p></div>
@@ -78,12 +92,6 @@
     {{/each}}
     </ul></div>
   </script>
-
-    </fieldset>
-    @*<input type="submit" value="Submit" />*@
-    @Html.HiddenFor(m => m.FileDataID)
-    </article>
-}
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
