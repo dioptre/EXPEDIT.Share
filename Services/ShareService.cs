@@ -26,15 +26,23 @@ using EXPEDIT.Share.Helpers;
 using Orchard.DisplayManagement;
 using ImpromptuInterface;
 using NKD.Models;
+using NKD.Helpers;
+using System.Drawing;
+using System.Web.Hosting;
+using Orchard.Environment.Configuration;
 
 namespace EXPEDIT.Share.Services {
     
     [UsedImplicitly]
     public class ShareService : IShareService {
+
+        private const string DIRECTORY_TEMP = "EXPEDIT.Share\\Temp";
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
         private readonly IMessageManager _messageManager;
         private readonly IScheduledTaskManager _taskManager;
+        private readonly IStorageProvider _storage;
+        private ShellSettings _settings;
         private readonly IUsersService _users;
         private readonly IMediaService _media;
         public ILogger Logger { get; set; }
@@ -43,7 +51,9 @@ namespace EXPEDIT.Share.Services {
             IContentManager contentManager, 
             IOrchardServices orchardServices, 
             IMessageManager messageManager, 
-            IScheduledTaskManager taskManager, 
+            IScheduledTaskManager taskManager,
+            IStorageProvider storage,
+            ShellSettings shellSettings,
             IUsersService users, 
             IMediaService media)
         {
@@ -51,6 +61,8 @@ namespace EXPEDIT.Share.Services {
             _contentManager = contentManager;
             _messageManager = messageManager;
             _taskManager = taskManager;
+            _storage = storage;
+            _settings = shellSettings;
             _media = media;
             _users = users;
             T = NullLocalizer.Instance;
@@ -152,6 +164,47 @@ namespace EXPEDIT.Share.Services {
             }
         }
 
+        internal bool CheckFilePrivileges(NKDC d, Guid fileDataID)
+        {
+            var table = d.GetTableName(typeof(FileData));
+            var root = (from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select new { o.VersionAntecedentID, o.VersionOwnerCompanyID, o.VersionOwnerContactID }).FirstOrDefault();
+            var verified = false;
+            if (root == null)
+                return false;
+            else if (!root.VersionOwnerCompanyID.HasValue && !root.VersionOwnerContactID.HasValue)
+                verified = true;
+            else if (root.VersionAntecedentID.HasValue)
+                verified = _users.CheckPermission(new SecuredBasic
+                {
+                    AccessorApplicationID = _users.ApplicationID,
+                    AccessorContactID = _users.ContactID,
+                    OwnerReferenceID = root.VersionAntecedentID.Value,
+                    OwnerTableType = table
+                }, NKD.Models.ActionPermission.Read);
+            else
+                verified = _users.CheckPermission(new SecuredBasic
+                {
+                    AccessorApplicationID = _users.ApplicationID,
+                    AccessorContactID = _users.ContactID,
+                    OwnerReferenceID = fileDataID,
+                    OwnerTableType = table
+                }, NKD.Models.ActionPermission.Read);
+            if (!verified)
+                throw new AuthorityException(string.Format("Can not download file: {0} Unauthorised access by contact: {1}", fileDataID, _users.ContactID));
+            var stat = (from o in d.StatisticDatas
+                        where o.ReferenceID == fileDataID && o.TableType == table
+                        && o.StatisticDataName == ConstantsHelper.STAT_NAME_DOWNLOADS
+                        select o).FirstOrDefault();
+            if (stat == null)
+            {
+                stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = table, ReferenceID = fileDataID, StatisticDataName = ConstantsHelper.STAT_NAME_DOWNLOADS, Count = 0 };
+                d.StatisticDatas.AddObject(stat);
+            }
+            stat.Count++;
+            d.SaveChanges();
+            return true;
+        }
+
         public FileData GetFile(Guid fileDataID)
         {
             try
@@ -159,44 +212,74 @@ namespace EXPEDIT.Share.Services {
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
                     var d = new NKDC(_users.ApplicationConnectionString, null, false);
-                    var table = d.GetTableName(typeof(FileData));
-                    var root = (from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select new { o.VersionAntecedentID, o.VersionOwnerCompanyID, o.VersionOwnerContactID }).FirstOrDefault(); 
-                    var verified = false;
-                    if (root == null)
+                    if (!CheckFilePrivileges(d, fileDataID))
                         return null;
-                    else if (!root.VersionOwnerCompanyID.HasValue && !root.VersionOwnerContactID.HasValue)
-                        verified = true;
-                    else if (root.VersionAntecedentID.HasValue)
-                        verified = _users.CheckPermission(new SecuredBasic
-                        {
-                            AccessorApplicationID = _users.ApplicationID,
-                            AccessorContactID = _users.ContactID,
-                            OwnerReferenceID = root.VersionAntecedentID.Value,
-                            OwnerTableType = table
-                        }, NKD.Models.ActionPermission.Read);
+                    var cacheKey = string.Format("{0}-{1}", fileDataID, CacheHelper.CacheType.Original);
+                    var file = CacheHelper.Cache[cacheKey] as FileData;
+                    if (file == null) 
+                        return CacheHelper.AddFileDataToCache((from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select o).Single()
+                            , cacheKey); 
                     else
-                        verified = _users.CheckPermission(new SecuredBasic
+                        return file;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+       
+
+        /// <summary>
+        /// Always return 200x200 Png
+        /// </summary>
+        /// <param name="fileDataID"></param>
+        /// <returns></returns>
+        public FileData GetPreview(Guid fileDataID)
+        {
+            try
+            {
+
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                    if (!CheckFilePrivileges(d, fileDataID))
+                        return null;
+                    var cacheKey = string.Format("{0}-{1}", fileDataID, CacheHelper.CacheType.Preview);
+                    var file = CacheHelper.Cache[cacheKey] as FileData;
+                    if (file == null) {
+                        var preview = (from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select o).Single();
+                        if (preview.MimeType != null && preview.MimeType.ToLower().StartsWith("image"))
                         {
-                            AccessorApplicationID = _users.ApplicationID,
-                            AccessorContactID = _users.ContactID,
-                            OwnerReferenceID = fileDataID,
-                            OwnerTableType = table
-                        }, NKD.Models.ActionPermission.Read);
-                    if (!verified)
-                        throw new AuthorityException(string.Format("Can not download file: {0} Unauthorised access by contact: {1}", fileDataID, _users.ContactID));                  
-                    var stat = (from o in d.StatisticDatas
-                                where o.ReferenceID == fileDataID && o.TableType == table
-                                && o.StatisticDataName == ConstantsHelper.STAT_NAME_DOWNLOADS
-                                select o).FirstOrDefault();
-                    if (stat == null)
-                    {
-                        stat = new StatisticData { StatisticDataID = Guid.NewGuid(), TableType = table, ReferenceID = fileDataID, StatisticDataName = ConstantsHelper.STAT_NAME_DOWNLOADS, Count = 0 };
-                        d.StatisticDatas.AddObject(stat);
+                            using (var thumb = new MemoryStream())
+                            {
+                                using (var full = new MemoryStream(preview.FileBytes))
+                                {
+                                    try
+                                    {
+                                        Image image = Image.FromStream(full);
+                                        Image tn = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
+                                        tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Png);
+                                        preview.FileBytes = thumb.ToArray();
+                                        if (preview.FileBytes.Length < 1)
+                                            preview.FileBytes = null;
+                                    }
+                                    catch
+                                    {
+                                        preview.FileBytes = null;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                            preview.FileBytes = null;
+                        preview.FileContent = null;
+                        return CacheHelper.AddFileDataToCache(preview, cacheKey);
+
                     }
-                    stat.Count++;
-                    d.SaveChanges();
-                    var file = (from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select o).Single(); 
-                    return file;
+                    else
+                        return file;
                 }
             }
             catch
@@ -221,9 +304,10 @@ namespace EXPEDIT.Share.Services {
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
+                var table = d.GetTableName(typeof(SupplierModel));
                 var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
                 var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
-                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, null, startRowIndex, pageSize, verified, found)
+                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null,null, null, startRowIndex, pageSize, verified, found)
                         select GetSearchResultShape(new SearchViewModel
                         {
                             ReferenceID = o.ReferenceID,
@@ -238,6 +322,40 @@ namespace EXPEDIT.Share.Services {
             }
         }
 
+        /// <summary>
+        /// Returns search files within NKD. Only search products for now.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="supplierModelID"></param>
+        /// <param name="startRowIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public IEnumerable<SearchViewModel> GetFiles(string text = null, int? startRowIndex = null, int? pageSize = null)
+        {
+            var contact = _users.ContactID;
+            var application = _users.ApplicationID;
+            var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                var table = d.GetTableName(typeof(FileData));
+                var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
+                var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
+                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, startRowIndex, pageSize, verified, found)
+                        select new SearchViewModel
+                        {
+                            ReferenceID = o.ReferenceID,
+                            TableType = o.TableType,
+                            Title = o.Title,
+                            Description = o.Description,
+                            Sequence = o.Row,
+                            Total = o.TotalRows,
+                            UrlInternal = o.InternalURL
+                        }
+                       ).ToArray();
+            }
+        }
+
 
         [Shape]
         public IHtmlString GetSearchResultShape(SearchViewModel model)
@@ -245,6 +363,62 @@ namespace EXPEDIT.Share.Services {
             return new HtmlString(string.Format("<a href='/share/go/{0}'><h2>{1}</h2>{2}</a>", model.UrlInternal, model.Title, model.Description)); //TODO:Extend search different object types
         }
 
+
+        public bool SubmitFiles(Dictionary<Guid, HttpPostedFileBase> files, Dictionary<Guid, int> fileLengths )
+        {
+            var contact = _users.ContactID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null);               
+                if (files != null)
+                {
+                    var mediaPath = HostingEnvironment.IsHosted ? HostingEnvironment.MapPath("~/Media/") ?? "" : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
+                    var storagePath = Path.Combine(mediaPath, _settings.Name);
+                    foreach (var f in files)
+                    {
+                        var filename = string.Concat(f.Value.FileName.Reverse().Take(50).Reverse());
+                        var table = d.GetTableName(typeof(Contact));
+                        var file = new FileData
+                        {
+                            FileDataID = f.Key,
+                            TableType = table,
+                            ReferenceID = contact,
+                            FileTypeID = null, //TODO give type
+                            FileName = filename,
+                            FileLength = f.Value.ContentLength,
+                            MimeType = f.Value.ContentType,
+                            VersionOwnerContactID = contact,
+                            DocumentType = ConstantsHelper.DOCUMENT_TYPE_CONTENT_SUBMISSION
+                        };
+                        fileLengths.Add(f.Key, f.Value.ContentLength);
+                        _media.GetMediaFolders(DIRECTORY_TEMP);
+                        var path = string.Format("{0}\\{1}-{2}-{3}", DIRECTORY_TEMP, string.Format("{0}", contact).Replace("-", ""), f.Key.ToString().Replace("-", "").Substring(15), filename.ToString().Replace("-", ""));
+                        var sf = _storage.CreateFile(path);
+                        using (var sw = sf.OpenWrite())
+                            f.Value.InputStream.CopyTo(sw);
+                        f.Value.InputStream.Close();
+                        try
+                        {
+
+                            using (var dh = new DocHelper.FilterReader(Path.Combine(storagePath, path)))
+                                file.FileContent = dh.ReadToEnd();
+                        }
+                        catch { }
+                        using (var sr = sf.OpenRead())
+                            file.FileBytes = sr.ToByteArray();
+                        _storage.DeleteFile(path);
+                        file.FileChecksum = file.FileBytes.ComputeHash();
+                        d.FileDatas.AddObject(file);
+                        d.SaveChanges(); //Commit after each file
+
+                    }
+                }
+
+
+            }
+
+            return true;
+        }
         
        
     }

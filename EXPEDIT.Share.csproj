@@ -165,6 +165,7 @@
     <Compile Include="Services\IContentService.cs" />
     <Compile Include="Services\IShareService.cs" />
     <Compile Include="Services\ShareService.cs" />
+    <Compile Include="ViewModels\PickFileViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +176,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\Search.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\PickFile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

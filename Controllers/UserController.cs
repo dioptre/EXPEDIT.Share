@@ -25,6 +25,8 @@ using System.Linq;
 using Orchard.Mvc;
 using System.Text.RegularExpressions;
 
+using System.Dynamic;
+using ImpromptuInterface.Dynamic;
 
 namespace EXPEDIT.Share.Controllers {
     
@@ -110,6 +112,30 @@ namespace EXPEDIT.Share.Controllers {
             var file = _share.GetFile(new Guid(id));
             if (file != null)
                 return new NKD.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}", id, NKD.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "application/octet", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
+            return new HttpNotFoundResult();
+        }
+
+
+        /// <summary>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="contactid"></param>
+        /// <returns></returns>
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        //[Themed(false)]
+        [Authorize]
+        public ActionResult Preview(string id)
+        {
+            var file = _share.GetPreview(new Guid(id));
+            if (file != null)
+            {
+                if (file.FileBytes != null)
+                    return new NKD.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}.png", id, NKD.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "image/png", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
+                else
+                    return new RedirectResult(System.Web.VirtualPathUtility.ToAbsolute("~/Media/Default/EXPEDIT.Share/images/qmark.jpg"));                    
+            }
             return new HttpNotFoundResult();
         }
 
@@ -244,6 +270,52 @@ namespace EXPEDIT.Share.Controllers {
             }
             _content.UpdateAffiliate(null, null, Request.GetIPAddress(), false, true, nid);
             return new EmptyResult();
+        }
+
+
+
+        /// <summary>
+        /// Download a file (can use a sqlfilestream eventually) TODO:
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="contactid"></param>
+        /// <returns></returns>
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        //[Themed(false)]
+        [Authorize]
+        public ActionResult PickFile(PagerParameters pagerParameters, string q = "")
+        {
+            return View(new ViewModels.PickFileViewModel { 
+                Query=q,  
+                SearchResults= _share.GetFiles(q, pagerParameters.Page*pagerParameters.PageSize, pagerParameters.PageSize)});
+        }
+
+
+
+
+        [Authorize]
+        [Themed(Enabled = false)]
+        public virtual ActionResult UploadFile()
+        {
+            //var sessionID = Request.Params["SessionID"];
+            //use contactID
+            var m = new EXPEDIT.Share.ViewModels.PickFileViewModel { };
+            var rFiles = new Dictionary<Guid, HttpPostedFileBase>();
+            var rFileLengths = new Dictionary<Guid, int>();
+            m.QueryFileLengths = new Dictionary<Guid, int>();
+            if (m.QueryFiles == null)
+                m.QueryFiles = new Dictionary<Guid, HttpPostedFileBase>();
+            for (int i = 0; i < Request.Files.Count; i++)
+                m.QueryFiles.Add(Guid.NewGuid(), Request.Files[i]);
+            _share.SubmitFiles(m.QueryFiles, m.QueryFileLengths);
+            rFiles = m.QueryFiles;
+            rFileLengths = m.QueryFileLengths;
+            var list = new List<dynamic>();
+            foreach (var f in rFiles)
+                list.Add(Build<ExpandoObject>.NewObject(name: f.Value.FileName, type: "application/octet", size: rFileLengths[f.Key], url: VirtualPathUtility.ToAbsolute(string.Format("~/share/file/{0}", f.Key))));
+            return new JsonHelper.JsonNetResult(new { files = list.ToArray() }, JsonRequestBehavior.AllowGet);
         }
 
     }
