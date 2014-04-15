@@ -1,14 +1,14 @@
 App = Ember.Application.create();
 
 App.Router.map(function () {
-    this.route('search', { path: '/' });
-    this.route('search', { path: '/:page' });
+    this.route('index', { path: '/' });
+    this.route('index', { path: '/:page' });
     this.route('search', { path: '/:page/:keywords' });
 });
 
 App.IndexRoute = Ember.Route.extend({
-    redirect: function () {
-        this.transitionToRoute("search", 0, null);
+    beforeModel: function () {
+        this.transitionTo("search", 0, '');
     }
 })
 
@@ -19,7 +19,7 @@ App.ApplicationController = Ember.Controller.extend({
         var controller = this;
         var temp = this.get('q');
 
-        if (temp.length > 2) {
+        if (temp.length > 2 || temp == '') {
             if (timer) {
                 clearTimeout(timer);
             }
@@ -47,8 +47,10 @@ App.SearchRoute = Ember.Route.extend({
 
 App.SearchController = Ember.Controller.extend({
     next: function () {
-        var total = this.store.all('myFile').objectAt(0).get('Total');
-        return (((this.get('currentPage')+1) * pfPageSize) < total);
+        var first = this.store.all('myFile').objectAt(0);
+        if (typeof first === 'undefined')
+            return false;        
+        return (((this.get('currentPage')+1) * pfPageSize) < first.get('Total'));
     }.property('model'),
     prev: function() {
         var params = this.get('model.params');
