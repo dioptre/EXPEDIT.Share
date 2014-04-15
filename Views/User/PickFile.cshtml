@@ -2,23 +2,20 @@
 @Html.Partial("Header")
 
 @{
-    //Style.Require("NKD");
+    Style.Require("Site");
+    Style.Require("PickFile");
     HtmlHelper.ClientValidationEnabled = true;
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
     Layout.Title = T("Pick File").ToString();
 }
 @using (Html.BeginForm("PickFile", "User", new { area = "EXPEDIT.Share" }, FormMethod.Post, new { id = "form1", @class = "form" }))
 {
-<article class="content-item page">
-    <header><h1>@Layout.Title</h1></header>
+<article class="content-item page" style="margin:11px;">
     <fieldset>
     @*<legend></legend>*@
     <div class="editor-label">
-        <p>Search:</p>
+        <p><strong>Search:</strong>@Html.TextBoxFor(m => m.Query, new { @class = "searchbox" })</p>
     </div>
-    <div class="editor-field">
-    @Html.TextBoxFor(m => m.FileName)<br />
-    </div>   
     <div class="editor-field">
     <!-- The file upload form used as target for the file upload widget -->
     <div id="fileupload">
@@ -34,10 +31,10 @@
                     <span>Add files...</span>
                     <input type="file" name="files[]" multiple>
                 </span>
-                <button type="submit" class="btn btn-primary start">
+@*                <button type="submit" class="btn btn-primary start">
                     <i class="glyphicon glyphicon-upload"></i>
                     <span>Start upload</span>
-                </button>
+                </button>*@
                 @*<button type="reset" class="btn btn-warning cancel">
                     <i class="glyphicon glyphicon-ban-circle"></i>
                     <span>Cancel upload</span>
@@ -63,7 +60,26 @@
         <!-- The table listing the files available for upload/download -->
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
     </div>
-    </div></fieldset>
+    </div>
+    <ul class="pager">
+        <li><a href="#" id="MyFilesPartialPagerPrevious">Previous</a></li>
+        <li><a href="#" id="MyFilesPartialPagerNext">Next</a></li>
+    </ul>
+  <script type="text/x-handlebars">
+    {{outlet}}
+  </script>
+  <script type="text/x-handlebars" id="index">
+     <div id="media-library-main-list" class=""><ul id="pickfiles" style="list-style-type:none !important;">
+     {{#each item in model}}  
+         <li>
+             <div class="thumbnail"><div class="media-thumbnail media-thumbnail-image mime-type-image-png"><img {{bind-attr src="item.ImageUrl"}}"></div></div>
+             <div class="media-library-main-list-overlay"><p class="title">{{item.Title}}</p></div>
+         </li>
+    {{/each}}
+    </ul></div>
+  </script>
+
+    </fieldset>
     @*<input type="submit" value="Submit" />*@
     @Html.HiddenFor(m => m.FileDataID)
     </article>
@@ -100,22 +116,6 @@
     </tr>
 {% } %}
 </script>
-@foreach(var o in Model.SearchResults) {
-<div id="media-library-main-list" class="">
-                <ul >
-                    <li>
-                        <div class="thumbnail">
-
-<div class="media-thumbnail media-thumbnail-image mime-type-image-png">
-    <img src="/share/user/preview/@o.ReferenceID" width="200px" height="200px">
-</div></div>
-                        <div class="media-library-main-list-overlay">
-                            <p class="title">@o.Title</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-}
 
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
@@ -225,19 +225,10 @@
      // jqXHRData needed for grabbing by data object of fileupload scope
      var jqXHRData;     
 
-     $(document).ready(function () {
-
-         //Initialization of fileupload
-         initSimpleFileUpload();
-
-         //Handler for "Start upload" button 
-         $("#hl-start-upload").on('click', function () {
-             if (jqXHRData) {
-                 jqXHRData.submit();
-             }
-             return false;
-         });
-     });
+     function pickFile(props) {
+         alert(props);
+         console.debug(props);
+     }
 
      function initSimpleFileUpload() {
          'use strict';
@@ -330,7 +321,27 @@
 
      }
 
+     $(document).ready(function () {
+
+         //Initialization of fileupload
+         initSimpleFileUpload();
+         $('#pickfiles').selectable({
+             selected: function (event, ui) {
+                 pickFile(ui);
+             }
+         });
+
+         //Handler for "Start upload" button 
+         $("#hl-start-upload").on('click', function () {
+             if (jqXHRData) {
+                 jqXHRData.submit();
+             }
+             return false;
+         });
+     });
+
 
 
 
 </script>
+

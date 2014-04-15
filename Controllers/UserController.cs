@@ -283,7 +283,7 @@ namespace EXPEDIT.Share.Controllers {
         /// <returns></returns>
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
-        //[Themed(false)]
+        [Themed(false)]
         [Authorize]
         public ActionResult PickFile(PagerParameters pagerParameters, string q = "")
         {
@@ -292,6 +292,14 @@ namespace EXPEDIT.Share.Controllers {
                 SearchResults= _share.GetFiles(q, pagerParameters.Page*pagerParameters.PageSize, pagerParameters.PageSize)});
         }
 
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        [Themed(false)]
+        [Authorize]
+        public ActionResult MyFiles(string q = "")
+        {
+            return new JsonHelper.JsonNetResult(new { myFiles = _share.GetFiles(q) }, JsonRequestBehavior.AllowGet);
+        }
 
 
 

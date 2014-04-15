@@ -114,7 +114,40 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\alertify.js" />
+    <Content Include="Scripts\alertify.min.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\ember-1.5.0.js" />
+    <Content Include="Scripts\ember-data.js" />
+    <Content Include="Scripts\handlebars-1.1.2.js" />
+    <Content Include="Scripts\html5shiv.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\jquery.nivo.slider.pack.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.additional-methods.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\populateSelectNav.js" />
+    <Content Include="Scripts\share.js" />
+    <Content Include="Styles\alertify.bootstrap.css" />
+    <Content Include="Styles\alertify.core.css" />
+    <Content Include="Styles\alertify.default.css" />
+    <Content Include="Styles\blueimp-gallery.min.css" />
+    <Content Include="Styles\bootstrap.min.css" />
+    <Content Include="Styles\expedit-transactions.css" />
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\images\checked.gif" />
+    <Content Include="Styles\images\unchecked.gif" />
+    <Content Include="Styles\jquery.fileupload-noscript.css" />
+    <Content Include="Styles\jquery.fileupload-ui-noscript.css" />
+    <Content Include="Styles\jquery.fileupload-ui.css" />
+    <Content Include="Styles\jquery.fileupload.css" />
+    <Content Include="Styles\pickfile.css" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -159,6 +192,7 @@
   <ItemGroup>
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Helpers\ConstantsHelper.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Route.cs" />
     <Compile Include="Services\ContentService.cs" />
     <Compile Include="Services\SecureSearchService.cs" />
@@ -179,6 +213,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\PickFile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Header.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
