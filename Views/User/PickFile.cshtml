@@ -254,7 +254,7 @@
              dataType: 'json',
              autoUpload: true,
              add: function (e, data) {
-                 for (var i=0; i < data.files.length) {
+                 for (var i = 0; i < data.files.length; i++) {
                      if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(data.files[i].name)) {
                          alert('Wrong file type. Images only please.');
                          return false;
@@ -331,58 +331,6 @@
      }
 
 
-     //$(function () {
-     //    'use strict';
-
-     //    // Initialize the jQuery File Upload widget:
-     //    $('#fu-my-file').fileupload();
-
-     //    $('#fu-my-file').fileupload('option', {
-     //        autoUpload: true,
-     //        url: '/store/user/uploadfile',
-     //        dataType: 'json',
-     //    //maxFileSize: 2000000, // Size in Bytes – 2 MB
-     //    add: function (e, data) {
-     //        var goUpload = true;
-     //        var uploadFile = data.files[0];
-
-     //        if (!(/\.(gif|jpg|jpeg|tiff|png|csv|pdf)$/i).test(uploadFile.name)) {
-     //            alert('Wrong type');
-     //            goUpload = false;
-     //        } else if (uploadFile.size > 2000000) { // 2mb
-     //            alert('Please upload a smaller file, max size is 2 MB');
-     //            goUpload = false;
-     //        }
-     //        else {
-     //            alert(uploadFile.name);
-     //        }
-
-     //        if (goUpload == true) {
-     //            //showLoader();
-     //            var jqXHR = data.submit()
-     //            .success(function (result, textStatus, jqXHR) {
-
-     //                if (result.isValid) {
-
-     //                }
-     //                else {
-
-     //                }
-     //            })
-     //            .error(function (jqXHR, textStatus, errorThrown) {
-     //                if (typeof (jqXHR) != 'undefined' || typeof (textStatus) != 'undefined' || typeof (errorThrown) != 'undefined') {
-     //                    alert(textStatus + errorThrown + jqXHR);
-     //                }
-     //            });
-     //        }
-     //    },
-     //    fail: function (event, data) {
-     //        if (data.files[0].error) {
-     //            alert(data.files[0].error);
-     //        }
-     //    }
-     //});
-     //});
 
 
 </script>
