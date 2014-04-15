@@ -87,7 +87,7 @@
      </ul>
      <div id="media-library-main-list" class=""><ul id="pickfiles" style="list-style-type:none !important;">
      {{#each item in model.images}}  
-         <li>
+         <li {{action 'selectToggle' item}} {{bind-attr class="item.Selected:ui-selected"}}>
              <div class="thumbnail"><div class="media-thumbnail media-thumbnail-image mime-type-image-png"><img {{bind-attr src="item.ImageUrl"}}"></div></div>
              <div class="media-library-main-list-overlay"><p class="title">{{item.Title}}</p></div>
          </li>
@@ -161,7 +161,7 @@
                 </button>
                 <input type="checkbox" name="delete" value="1" class="toggle">
             {% } else { %}
-                <button class="btn btn-warning select">
+                <button class="btn btn-warning select ufselector" type="button" onclick="pickFile('{%=file.url%}','{%=file.name%}');return false;">
                     <i class="glyphicon glyphicon-ok"></i>
                     <span>Select</span>
                 </button>
@@ -235,8 +235,8 @@
      // jqXHRData needed for grabbing by data object of fileupload scope
      var jqXHRData;     
 
-     function pickFile(props) {
-         alert(props);
+     function pickFile(refid, name) {
+         alert(refid + name);
          console.debug(props);
      }
 
@@ -335,11 +335,6 @@
 
          //Initialization of fileupload
          initSimpleFileUpload();
-         $('#pickfiles').selectable({
-             selected: function (event, ui) {
-                 pickFile(ui);
-             }
-         });
 
          //Handler for "Start upload" button 
          $("#hl-start-upload").on('click', function () {
@@ -347,6 +342,11 @@
                  jqXHRData.submit();
              }
              return false;
+         });
+
+         $(".ufselector").click(function (event) {
+             event.preventDefault();
+             alert('hi');
          });
      });
 

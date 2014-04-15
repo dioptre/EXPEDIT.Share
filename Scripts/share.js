@@ -36,13 +36,11 @@ App.ApplicationController = Ember.Controller.extend({
 var pfPageSize = 20;
 App.SearchRoute = Ember.Route.extend({
     model: function (params) {
-        console.log(params.page, params.keywords);
-//        return this.store.find('myFile', { page: params.page, keywords: params.keywords, pagesize: pfPageSize });
         return Ember.RSVP.hash({
             images: this.store.find('myFile', { page: params.page, keywords: params.keywords, pagesize: pfPageSize }),
             params: params
         })
-  }
+    }
 });
 
 App.SearchController = Ember.Controller.extend({
@@ -66,6 +64,10 @@ App.SearchController = Ember.Controller.extend({
             var params = this.get('model.params');            
             var pp = (page == 'Next') ? this.get('currentPage') + 1 : this.get('currentPage') - 1;
             controller.transitionToRoute('search', pp , params.keywords)
+        },
+        selectToggle: function (item) {
+            item.set('Selected', !item.get('Selected'));
+            pickFile(item.get('ReferenceID'), item.get('Title'));
         }
     }
 })
@@ -91,6 +93,9 @@ App.MyFile = DS.Model.extend({
     Total: DS.attr(),
     ImageUrl: function () {
         return '/share/user/preview/' + this.get('ReferenceID');
+    }.property(),
+    Selected: function() {
+        return false;
     }.property()
 })
 

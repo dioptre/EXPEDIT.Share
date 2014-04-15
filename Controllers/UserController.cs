@@ -329,7 +329,7 @@ namespace EXPEDIT.Share.Controllers {
             rFileLengths = m.QueryFileLengths;
             var list = new List<dynamic>();
             foreach (var f in rFiles)
-                list.Add(Build<ExpandoObject>.NewObject(name: f.Value.FileName, type: "application/octet", size: rFileLengths[f.Key], url: VirtualPathUtility.ToAbsolute(string.Format("~/share/file/{0}", f.Key))));
+                list.Add(Build<ExpandoObject>.NewObject(name: f.Value.FileName, type: "application/octet", size: rFileLengths[f.Key], url: VirtualPathUtility.ToAbsolute(string.Format("~/share/user/preview/{0}", f.Key))));
             return new JsonHelper.JsonNetResult(new { files = list.ToArray() }, JsonRequestBehavior.AllowGet);
         }
 
