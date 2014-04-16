@@ -142,7 +142,7 @@
     <Content Include="Styles\alertify.default.css" />
     <Content Include="Styles\blueimp-gallery.min.css" />
     <Content Include="Styles\bootstrap.min.css" />
-    <Content Include="Styles\expedit-transactions.css" />
+    <Content Include="Styles\expedit-share.css" />
     <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Styles\images\checked.gif" />
     <Content Include="Styles\images\unchecked.gif" />
