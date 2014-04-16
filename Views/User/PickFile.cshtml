@@ -236,9 +236,36 @@
      var jqXHRData;     
 
      function pickFile(refid, name) {
-         alert(refid + name);
-         console.debug(props);
+        //alert(refid + name);
+         //console.debug(props);
+         //for (var i = 0; i < viewModel.selection().length; i++) {
+         //    var selection = viewModel.selection()[i];
+         //    selectedData.push(selection.data);
+         //}
+         if (refid.lastIndexOf('/') > 0)
+             refid = refid.substring(refid.lastIndexOf('/') + 1);
+        if (parent.$.colorbox) {
+            var selectedData = [];
+            selectedData.push({});
+            selectedData[0].refid = refid;
+            selectedData[0].name = name;
+            parent.$.colorbox.close();
+        };
+        parent.$.colorbox.selectedData = selectedData;
+        parent.$.colorbox.close();
      }
+
+     $("#media-library-main-selection-select > .button-cancel").on('click', function () {
+         cancelPickFile();
+     });
+
+     function cancelPickFile() {
+         if (parent.$.colorbox) {
+             parent.$.colorbox.selectedData = null;
+             parent.$.colorbox.close();
+         };
+     }
+
 
      function initSimpleFileUpload() {
          'use strict';
@@ -343,11 +370,7 @@
              }
              return false;
          });
-
-         $(".ufselector").click(function (event) {
-             event.preventDefault();
-             alert('hi');
-         });
+      
      });
 
 

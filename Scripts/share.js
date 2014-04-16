@@ -27,9 +27,6 @@ App.ApplicationController = Ember.Controller.extend({
                 controller.transitionToRoute('search', 0, temp)
             }, 300);
         }
-
-
-
     }.observes('q')
 });
 
@@ -45,7 +42,7 @@ App.SearchRoute = Ember.Route.extend({
 
 App.SearchController = Ember.Controller.extend({
     next: function () {
-        var first = this.store.all('myFile').objectAt(0);
+        var first = this.get('model.images').objectAt(0);
         if (typeof first === 'undefined')
             return false;        
         return (((this.get('currentPage')+1) * pfPageSize) < first.get('Total'));

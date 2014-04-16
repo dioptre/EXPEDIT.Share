@@ -301,7 +301,7 @@ namespace EXPEDIT.Share.Controllers {
             int page;
             int pageSize;
             string query = Request.Params["keywords"];
-            if (query == "undefined")
+            if (string.IsNullOrWhiteSpace(query) || query == "undefined")
                 query = null;
             bool pFound = int.TryParse(Request.Params["page"], out page);
             bool psFound = int.TryParse(Request.Params["pageSize"], out pageSize);
@@ -329,7 +329,7 @@ namespace EXPEDIT.Share.Controllers {
             rFileLengths = m.QueryFileLengths;
             var list = new List<dynamic>();
             foreach (var f in rFiles)
-                list.Add(Build<ExpandoObject>.NewObject(name: f.Value.FileName, type: "application/octet", size: rFileLengths[f.Key], url: VirtualPathUtility.ToAbsolute(string.Format("~/share/user/preview/{0}", f.Key))));
+                list.Add(Build<ExpandoObject>.NewObject(name: f.Value.FileName, type: "application/octet", size: rFileLengths[f.Key], url: VirtualPathUtility.ToAbsolute(string.Format("~/share/file/{0}", f.Key))));
             return new JsonHelper.JsonNetResult(new { files = list.ToArray() }, JsonRequestBehavior.AllowGet);
         }
 

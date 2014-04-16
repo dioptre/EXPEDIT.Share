@@ -9,7 +9,7 @@ namespace EXPEDIT.Share.ViewModels
 {
     public class SearchViewModel
     {
-        public int? id { get { return (int?)Sequence; } }
+        public string id { get { return string.Format("{0}",ReferenceID); } }
         public long? Sequence { get; set; }
         public long? Total { get; set; }
         public Guid? ReferenceID { get; set; }

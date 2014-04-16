@@ -367,6 +367,7 @@ namespace EXPEDIT.Share.Services {
         public bool SubmitFiles(Dictionary<Guid, HttpPostedFileBase> files, Dictionary<Guid, int> fileLengths )
         {
             var contact = _users.ContactID;
+            var company = _users.DefaultContactCompanyID;
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);               
@@ -388,6 +389,10 @@ namespace EXPEDIT.Share.Services {
                             FileLength = f.Value.ContentLength,
                             MimeType = f.Value.ContentType,
                             VersionOwnerContactID = contact,
+                            VersionOwnerCompanyID = company,
+                            VersionUpdated = DateTime.UtcNow,
+                            VersionAntecedentID = f.Key,
+                            VersionUpdatedBy = contact,
                             DocumentType = ConstantsHelper.DOCUMENT_TYPE_CONTENT_SUBMISSION
                         };
                         fileLengths.Add(f.Key, f.Value.ContentLength);
