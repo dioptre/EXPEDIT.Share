@@ -28,7 +28,7 @@ using PdfSharp.Pdf;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using Orchard.Users.Events;
-
+using Newtonsoft.Json;
 
 namespace EXPEDIT.Share.Services
 {
@@ -79,6 +79,22 @@ namespace EXPEDIT.Share.Services
             }
         }
 
+        public SelectListItem[] GetLocations(string startsWith)
+        {
+            if (startsWith.Length == 1)
+                return new SelectListItem[] {};
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.E_SP_LookupLocations(startsWith)                        
+                        select o).AsEnumerable()
+                        .Select(f=>
+                             new SelectListItem { Text = f.LocationName, Value = JsonConvert.SerializeObject( new {id=f.LocationID, spatial=f.LocationGeography} ) })
+                             .ToArray()
+                        ;
+            }
+        }
 
 
 

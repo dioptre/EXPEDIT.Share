@@ -149,6 +149,15 @@ namespace EXPEDIT.Share.Controllers {
         }
 
 
+        [ValidateInput(false)]
+        [Authorize]
+        [Themed(false)]
+        public JsonResult GetLocations(string id)
+        {
+            return Json(_content.GetLocations(id), JsonRequestBehavior.AllowGet);
+        }
+
+
         dynamic Shape { get; set; }
         [Themed(true)]
         public ActionResult Search(PagerParameters pagerParameters, string q = "")

@@ -15,6 +15,10 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          SelectListItem[] GetCountries(string startsWith);
 
+
+         [OperationContract]
+         SelectListItem[] GetLocations(string startsWith);
+
          [OperationContract]
          Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false, bool checkin=false, string reference=null);
 
