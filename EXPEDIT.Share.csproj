@@ -133,6 +133,7 @@
     <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\ember-1.7.0.js" />
     <Content Include="Scripts\ember-1.5.0.js" />
     <Content Include="Scripts\ember-bootstrap\css\bs-growl-notifications.min.css" />
     <Content Include="Scripts\ember-bootstrap\js\bs-alert.max.js" />
@@ -164,6 +165,7 @@
     <Content Include="Scripts\ember-bootstrap\js\bs-wizard.max.js" />
     <Content Include="Scripts\ember-bootstrap\js\bs-wizard.min.js" />
     <Content Include="Scripts\ember-data.js" />
+    <Content Include="Scripts\ember.js" />
     <Content Include="Scripts\handlebars-1.1.2.js" />
     <Content Include="Scripts\handlebars-v1.3.0.js" />
     <Content Include="Scripts\html5shiv.js" />
