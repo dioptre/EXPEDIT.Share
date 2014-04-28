@@ -281,8 +281,6 @@ namespace EXPEDIT.Share.Controllers {
             return new EmptyResult();
         }
 
-
-
         /// <summary>
         /// Download a file (can use a sqlfilestream eventually) TODO:
         /// </summary>
@@ -301,6 +299,7 @@ namespace EXPEDIT.Share.Controllers {
                 SearchResults= _share.GetFiles(q, pagerParameters.Page*pagerParameters.PageSize, pagerParameters.PageSize)});
         }
 
+
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         [Themed(false)]
@@ -317,6 +316,45 @@ namespace EXPEDIT.Share.Controllers {
             return new JsonHelper.JsonNetResult(new { myFiles = _share.GetFiles(query, (pFound && psFound) ? (page * pageSize) + 1 : default(int?), psFound ? pageSize : default(int?) ) }, JsonRequestBehavior.AllowGet);
         }
 
+
+        /// <summary>
+        /// Download a file (can use a sqlfilestream eventually) TODO:
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="contactid"></param>
+        /// <returns></returns>
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        [Themed(false)]
+        [Authorize]
+        public ActionResult PickLocation(PagerParameters pagerParameters, string q = "")
+        {
+            return View(new ViewModels.PickLocationViewModel
+            {
+                Query = q,
+                SearchResults =  _share.GetLocations(q, pagerParameters.Page * pagerParameters.PageSize, pagerParameters.PageSize)
+            });
+        }
+
+
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        [Themed(false)]
+        [Authorize]
+        public ActionResult MyLocations(string q = "")
+        {
+            int page;
+            int pageSize;
+            string query = Request.Params["keywords"];
+            if (string.IsNullOrWhiteSpace(query) || query == "undefined")
+                query = null;
+            bool pFound = int.TryParse(Request.Params["page"], out page);
+            bool psFound = int.TryParse(Request.Params["pageSize"], out pageSize);
+            return new JsonHelper.JsonNetResult(new { myLocations = 
+                _share.GetLocations(query, (pFound && psFound) ? (page * pageSize) + 1 : default(int?), psFound ? pageSize : default(int?)) }
+                , JsonRequestBehavior.AllowGet);
+        }
 
 
         [Authorize]

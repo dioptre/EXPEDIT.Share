@@ -177,6 +177,51 @@ namespace EXPEDIT.Share
                                 {"area", "EXPEDIT.Share"}
                             },
                             new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                        Priority = 5,
+                        Route = new Route(
+                            "share/picklocation",
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"},
+                                {"controller", "User"},
+                                {"action", "picklocation"}
+                            },
+                            null,
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"}
+                            },
+                            new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                        Priority = 5,
+                        Route = new Route(
+                            "share/mylocations",
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"},
+                                {"controller", "User"},
+                                {"action", "mylocations"}
+                            },
+                            null,
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"}
+                            },
+                            new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                        Priority = 50,
+                        Route = new Route(
+                            "share/mylocations/{*q}",
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"},
+                                {"controller", "User"},
+                                {"action", "mylocations"}
+                            },
+                            null,
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"}
+                            },
+                            new MvcRouteHandler())
                 }
 
             };

@@ -350,7 +350,12 @@ namespace EXPEDIT.Share.Services {
                             Description = o.Description,
                             Sequence = o.Row,
                             Total = o.TotalRows,
-                            UrlInternal = o.InternalURL
+                            UrlInternal = o.InternalURL,
+                            UrlExternal = o.ExternalURL,
+                            SpatialJSON = o.SpatialJSON,
+                            Score = o.Score,
+                            Author = o.Author,
+                            Updated = o.Updated
                         }
                        ).ToArray();
             }
@@ -424,7 +429,42 @@ namespace EXPEDIT.Share.Services {
 
             return true;
         }
-        
+
+        public IEnumerable<SearchViewModel> GetLocations(string text = null, int? startRowIndex = null, int? pageSize = null)
+        {
+            var contact = _users.ContactID;
+            var application = _users.ApplicationID;
+            var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                var table = d.GetTableName(typeof(Location));
+                var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
+                var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
+                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, startRowIndex, pageSize, verified, found)
+                        select new SearchViewModel
+                        {
+                            ReferenceID = o.ReferenceID,
+                            TableType = o.TableType,
+                            Title = o.Title,
+                            Description = o.Description,
+                            Sequence = o.Row,
+                            Total = o.TotalRows,
+                            UrlInternal = o.InternalURL,
+                            UrlExternal = o.ExternalURL,
+                            SpatialJSON = o.SpatialJSON,
+                            Score = o.Score,
+                            Author = o.Author,
+                            Updated = o.Updated
+                        }
+                       ).ToArray();
+            }
+        }
+
+        public bool SubmitLocation(string locationName, string geography)
+        {
+            return false;
+        }
        
     }
 }

@@ -133,6 +133,7 @@
     <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\share-picklocation.js" />
     <Content Include="Scripts\ember-1.7.0.js" />
     <Content Include="Scripts\ember-1.5.0.js" />
     <Content Include="Scripts\ember-bootstrap\css\bs-growl-notifications.min.css" />
@@ -942,7 +943,7 @@
     <Content Include="Scripts\lodash.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\populateSelectNav.js" />
-    <Content Include="Scripts\share.js" />
+    <Content Include="Scripts\share-pickfile.js" />
     <Content Include="Scripts\tmpl.min.js" />
     <Content Include="Scripts\underscore\underscore.js" />
     <Content Include="Scripts\vis.js" />
@@ -976,7 +977,7 @@
     <Content Include="Styles\jquery.fileupload-ui-noscript.css" />
     <Content Include="Styles\jquery.fileupload-ui.css" />
     <Content Include="Styles\jquery.fileupload.css" />
-    <Content Include="Styles\pickfile.css" />
+    <Content Include="Styles\picker.css" />
     <Content Include="Styles\vis.css" />
     <Content Include="Styles\vis.min.css" />
     <Content Include="Web.config" />
@@ -985,6 +986,7 @@
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
+    <Content Include="Views\User\PickLocation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\NKD.Extensions\NKD.Extensions.csproj">
@@ -1030,6 +1032,7 @@
     <Compile Include="Services\IContentService.cs" />
     <Compile Include="Services\IShareService.cs" />
     <Compile Include="Services\ShareService.cs" />
+    <Compile Include="ViewModels\PickLocationViewModel.cs" />
     <Compile Include="ViewModels\PickFileViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
   </ItemGroup>

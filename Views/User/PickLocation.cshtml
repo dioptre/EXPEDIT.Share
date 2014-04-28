@@ -1,0 +1,100 @@
+﻿@model EXPEDIT.Share.ViewModels.PickLocationViewModel
+@Html.Partial("Header")
+
+@{
+    Style.Require("Site");
+    Style.Require("Picker");
+    HtmlHelper.ClientValidationEnabled = true;
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    Layout.Title = T("Pick Location").ToString();
+}
+<script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.utils.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.maps.js")"></script>
+<script src="@Url.Content("~/Modules/EXPEDIT.Share/Scripts/share-picklocation.js")"></script>
+<script type="text/x-handlebars">    
+@using (Html.BeginForm("PickLocation", "User", new { area = "EXPEDIT.Share" }, FormMethod.Post, new { id = "form1", @class = "form" }))
+{
+<article class="content-item page" style="margin:11px;">
+    <fieldset>
+    @*<legend></legend>*@
+    <div class="editor-label">
+        <p><strong>Search:</strong>{{view Ember.TextField valueBinding="q" type='text' placeholder="Location Name" classNames="searchbox"}}</p>
+    </div>
+    <div class="editor-field">
+        @Html.AntiForgeryToken()
+        <span class="btn btn-success locationinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Add location...</span>
+            <input type="button" name="btnUpdateLocation" style="display:none;">
+        </span>
+    </div>
+    <br />
+    {{outlet}}
+    <div id="map-search" style="width: 100%; height: 75vh"></div>
+    </fieldset>
+    @*<input type="submit" value="Submit" />*@
+    @Html.HiddenFor(m => m.LocationID)
+    </article>
+}
+  </script>
+  <script type="text/x-handlebars" id="loading">
+      <div style="text-align:center;">
+          <h4>Loading...</h4>
+          <img src="@Url.Content("~/Modules/EXPEDIT.Share/Images/loading.gif")" />
+      </div>
+  </script>
+  <script type="text/x-handlebars" id="search">
+     <ul class="pager">
+         {{#if prev}}
+            
+            <li><a {{action 'transition' 'Previous'}}>Previous</a></li>
+         {{/if}}          
+         {{#if next}}
+        <li><a {{action 'transition' 'Next'}}>Next</a></li>
+         {{/if}}
+     </ul>
+  </script>
+
+
+<link href="@Url.Content("~/Modules/EXPEDIT.Transactions/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Themes/MAS1/Styles/site.css")" rel="stylesheet" type="text/css" />
+
+
+ <script type="text/javascript">
+  
+     function pickLocation(refid, name) {
+        //alert(refid + name);
+         //console.debug(props);
+         //for (var i = 0; i < viewModel.selection().length; i++) {
+         //    var selection = viewModel.selection()[i];
+         //    selectedData.push(selection.data);
+         //}
+         if (refid.lastIndexOf('/') > 0)
+             refid = refid.substring(refid.lastIndexOf('/') + 1);
+        if (parent.$.colorbox) {
+            var selectedData = [];
+            selectedData.push({});
+            selectedData[0].refid = refid;
+            selectedData[0].name = name;
+            parent.$.colorbox.close();
+        };
+        parent.$.colorbox.selectedData = selectedData;
+        parent.$.colorbox.close();
+     }
+
+     $("#media-library-main-selection-select > .button-cancel").on('click', function () {
+         cancelPickLocation();
+     });
+
+     function cancelPickLocation() {
+         if (parent.$.colorbox) {
+             parent.$.colorbox.selectedData = null;
+             parent.$.colorbox.close();
+         };
+     }
+
+
+
+
+</script>
+

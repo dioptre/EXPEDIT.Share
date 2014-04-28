@@ -33,5 +33,12 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          bool SubmitFiles(Dictionary<Guid, HttpPostedFileBase> files, Dictionary<Guid, int> fileLengths);
 
+
+         [OperationContract]
+         IEnumerable<SearchViewModel> GetLocations(string text = null, int? startRowIndex = null, int? pageSize = null);
+
+         [OperationContract]
+         bool SubmitLocation(string locationName, string geography);
+
     }
 }
