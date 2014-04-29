@@ -64,6 +64,7 @@
       <HintPath>..\..\..\..\lib\impromptu\ImpromptuInterface.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="MigraDoc.DocumentObjectModel">
       <HintPath>..\..\..\..\lib\pdfsharp\MigraDoc.DocumentObjectModel.dll</HintPath>
     </Reference>
@@ -133,6 +134,15 @@
     <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\jquery.blueimp-gallery.min.js" />
+    <Content Include="Scripts\jquery.fileupload-audio.js" />
+    <Content Include="Scripts\jquery.fileupload-image.js" />
+    <Content Include="Scripts\jquery.fileupload-process.js" />
+    <Content Include="Scripts\jquery.fileupload-ui.js" />
+    <Content Include="Scripts\jquery.fileupload-validate.js" />
+    <Content Include="Scripts\jquery.fileupload-video.js" />
+    <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\share-picklocation.js" />
     <Content Include="Scripts\ember-1.7.0.js" />
     <Content Include="Scripts\ember-1.5.0.js" />
@@ -987,6 +997,7 @@
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Views\User\PickLocation.cshtml" />
+    <Content Include="Views\User\Location.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\NKD.Extensions\NKD.Extensions.csproj">

@@ -1,4 +1,8 @@
-﻿/**From Orchard.MediaLibrary 2014/04*/
+﻿.capitalized {
+    text-transform: capitalize;
+}
+
+/**From Orchard.MediaLibrary 2014/04*/
 .zone-content, #content, #main, #layout-content, #layout-main {
     height: 100%;
     display: block;

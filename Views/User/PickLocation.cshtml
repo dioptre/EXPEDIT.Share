@@ -6,11 +6,10 @@
     Style.Require("Picker");
     HtmlHelper.ClientValidationEnabled = true;
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
-    Layout.Title = T("Pick Location").ToString();
+    Layout.Title = T("Pick Location").ToString();    
 }
 <script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.utils.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.maps.js")"></script>
-<script src="@Url.Content("~/Modules/EXPEDIT.Share/Scripts/share-picklocation.js")"></script>
 <script type="text/x-handlebars">    
 @using (Html.BeginForm("PickLocation", "User", new { area = "EXPEDIT.Share" }, FormMethod.Post, new { id = "form1", @class = "form" }))
 {
@@ -18,15 +17,17 @@
     <fieldset>
     @*<legend></legend>*@
     <div class="editor-label">
-        <p><strong>Search:</strong>{{view Ember.TextField valueBinding="q" type='text' placeholder="Location Name" classNames="searchbox"}}</p>
+        <p><strong>Search:</strong>{{view Ember.TextField valueBinding="q" type='text' placeholder="Location Name" classNames="searchbox capitalized" id="searchLocation"}}</p>
     </div>
     <div class="editor-field">
         @Html.AntiForgeryToken()
-        <span class="btn btn-success locationinput-button">
+        {{#view App.NewLocationView id="new-myLocation"}}
+        <span class="btn btn-success locationinput-button" id="updateLocation" style="display:none;">
             <i class="glyphicon glyphicon-plus"></i>
             <span>Add location...</span>
             <input type="button" name="btnUpdateLocation" style="display:none;">
         </span>
+        {{/view}}
     </div>
     <br />
     {{outlet}}
@@ -34,6 +35,8 @@
     </fieldset>
     @*<input type="submit" value="Submit" />*@
     @Html.HiddenFor(m => m.LocationID)
+    @Html.HiddenFor(m => m.LocationName)
+    @Html.HiddenFor(m => m.Geography)
     </article>
 }
   </script>
@@ -44,9 +47,9 @@
       </div>
   </script>
   <script type="text/x-handlebars" id="search">
-     <ul class="pager">
-         {{#if prev}}
-            
+     
+      <ul class="pager">
+         {{#if prev}}            
             <li><a {{action 'transition' 'Previous'}}>Previous</a></li>
          {{/if}}          
          {{#if next}}
@@ -56,12 +59,18 @@
   </script>
 
 
-<link href="@Url.Content("~/Modules/EXPEDIT.Transactions/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Themes/MAS1/Styles/site.css")" rel="stylesheet" type="text/css" />
 
 
  <script type="text/javascript">
   
+     //$("#form1").submit(function (e) {
+     //    // prevent default posting of form
+     //    e.preventDefault();
+     //    e.returnValue = false;
+     //});
+
      function pickLocation(refid, name) {
         //alert(refid + name);
          //console.debug(props);
@@ -98,3 +107,4 @@
 
 </script>
 
+<script src="@Url.Content("~/Modules/EXPEDIT.Share/Scripts/share-picklocation.js")"></script>

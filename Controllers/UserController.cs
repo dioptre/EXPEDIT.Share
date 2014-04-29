@@ -24,9 +24,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Mvc;
 using System.Text.RegularExpressions;
-
+using Newtonsoft.Json;
 using System.Dynamic;
 using ImpromptuInterface.Dynamic;
+using System.Threading;
+using System.Globalization;
 
 namespace EXPEDIT.Share.Controllers {
     
@@ -317,13 +319,6 @@ namespace EXPEDIT.Share.Controllers {
         }
 
 
-        /// <summary>
-        /// Download a file (can use a sqlfilestream eventually) TODO:
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="contactid"></param>
-        /// <returns></returns>
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         [Themed(false)]
@@ -342,7 +337,9 @@ namespace EXPEDIT.Share.Controllers {
         //[ValidateAntiForgeryToken]
         [Themed(false)]
         [Authorize]
-        public ActionResult MyLocations(string q = "")
+        [HttpGet]
+        [ActionName("MyLocations")]
+        public ActionResult GetMyLocations(string q = "")
         {
             int page;
             int pageSize;
@@ -354,6 +351,49 @@ namespace EXPEDIT.Share.Controllers {
             return new JsonHelper.JsonNetResult(new { myLocations = 
                 _share.GetLocations(query, (pFound && psFound) ? (page * pageSize) + 1 : default(int?), psFound ? pageSize : default(int?)) }
                 , JsonRequestBehavior.AllowGet);
+        }
+
+        [ValidateInput(false)]
+        [ValidateAntiForgeryToken]
+        [Themed(false)]
+        [Authorize]
+        [HttpPost]
+        [ActionName("MyLocations")]
+        public ActionResult UpdateMyLocation(string q = "")
+        {            
+            string id = Request.Params["myLocation[LocationID]"];
+            Guid guid;
+            if (!Guid.TryParse(id, out guid))
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.ExpectationFailed);
+            string name = Request.Params["myLocation[Title]"];
+            string geo = Request.Params["myLocation[Geography]"];
+            string culture = (Request.UserLanguages == null || Request.UserLanguages.Length == 0) ? "en-US" : Request.UserLanguages[0];
+            var success = _share.SubmitLocation(guid, name, geo, culture);
+            if (!success)
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.ExpectationFailed);
+            return new JsonHelper.JsonNetResult(new
+            {
+                myLocations = true
+            }
+                , JsonRequestBehavior.AllowGet);
+            
+
+        }
+
+
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        [Themed(false)]
+        [Authorize]
+        public ActionResult Location(string id)
+        {
+            Guid guid;
+            if (!Guid.TryParse(id, out guid))
+                return new HttpNotFoundResult();
+            var m = _share.GetLocation(guid);
+            if (m == null)
+                return new HttpNotFoundResult();
+            return View(m);
         }
 
 

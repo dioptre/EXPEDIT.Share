@@ -37,6 +37,10 @@ App.SearchRoute = Ember.Route.extend({
             images: this.store.find('myFile', { page: params.page, keywords: params.keywords, pagesize: pfPageSize }),
             params: params
         })
+    },
+    afterModel: function (model, transition, params) {
+        if ($("#searchFile").val() === "")
+            $("#searchFile").val(model.params.keywords);
     }
 });
 

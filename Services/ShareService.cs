@@ -461,9 +461,76 @@ namespace EXPEDIT.Share.Services {
             }
         }
 
-        public bool SubmitLocation(string locationName, string geography)
+        public PickLocationViewModel GetLocation(Guid locationID)
         {
-            return false;
+            var contact = _users.ContactID;
+            var application = _users.ApplicationID;
+            var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                var table = d.GetTableName(typeof(Location));
+                var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
+                var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
+                return (from o in d.Locations
+                        where o.LocationID == locationID
+                        select new PickLocationViewModel
+                        {
+                            ReferenceID = o.LocationID,
+                            TableType = table,
+                            LocationName = o.DefaultLocationName,
+                            Comment = o.Comment,
+                            Geography = o.LocationGeography.AsText(),
+                            LocationID = locationID,
+                            CountryID = o.CountryID,
+                            CountryStateID = o.CountryStateID,
+                            CountryStateName = o.CountryState.StandardCountryStateName,
+                            LocationCode = o.LocationCode,
+                            PostCode = o.Postcode
+                        }
+                       ).FirstOrDefault();
+            }
+        }
+
+        public bool SubmitLocation(Guid id, string locationName, string geography, string culture="en-US")
+        {
+            if (string.IsNullOrWhiteSpace(locationName))
+                return false;
+            else
+                locationName = locationName.Capitalize();
+            var contact = _users.ContactID;
+            var company = _users.DefaultContactCompanyID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                if (d.Locations.Any(f => f.LocationID == id))
+                    return false;
+                Microsoft.SqlServer.Types.OpenGisGeographyType gType;
+                var geo =  NKD.Helpers.SpatialHelper.CreateGeography(geography, out gType).GetCentre();
+                if (d.Locations.Any(f=> f.LocationGeography.SpatialEquals(geo) && f.VersionOwnerCompanyID == company))
+                    return false;
+                var countryid = (from o in d.Provinces where o.ProvinceGeography.Intersects(geo) && o.CountryID != null select o.CountryID).FirstOrDefault();
+                var m = new Location
+                {
+                    LocationID = id,
+                    DefaultLocationName = locationName,
+                    LocationTypeID = ConstantsHelper.LOCATION_TYPE_UNCLASSIFIED,
+                    LocationGeography = geo,
+                    CountryID = countryid,
+                    LongitudeWGS84 = (decimal)geo.Longitude.Value,
+                    LatitudeWGS84 = (decimal)geo.Latitude.Value,
+                    VersionCertainty = -11,
+                    VersionOwnerContactID = contact,
+                    VersionOwnerCompanyID = company,
+                    VersionUpdated = DateTime.UtcNow,
+                    VersionAntecedentID = id,
+                    VersionUpdatedBy = contact
+                };
+                d.Locations.AddObject(m);
+                d.SaveChanges();
+
+            }
+            return true;
         }
        
     }

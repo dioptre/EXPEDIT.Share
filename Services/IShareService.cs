@@ -38,7 +38,10 @@ namespace EXPEDIT.Share.Services
          IEnumerable<SearchViewModel> GetLocations(string text = null, int? startRowIndex = null, int? pageSize = null);
 
          [OperationContract]
-         bool SubmitLocation(string locationName, string geography);
+         bool SubmitLocation(Guid locationID, string locationName, string geography, string culture="en-US");
+
+         [OperationContract]
+         PickLocationViewModel GetLocation(Guid locationID);
 
     }
 }

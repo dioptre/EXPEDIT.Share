@@ -7,7 +7,7 @@ namespace EXPEDIT.Share.Helpers
 {
     public class ConstantsHelper
     {
-
+        public static Guid LOCATION_TYPE_UNCLASSIFIED = new Guid("dab2d152-398e-40f8-86ef-7431a20efa19");
         public static Guid WORK_TYPE_FEEDBACK_MODEL = new Guid("4E796115-62B0-441A-B29C-4652E7A1557C");
         public static Guid WORK_TYPE_SUPPORT_REGARDING = new Guid("57ebd6b8-980f-4116-90f5-574765c9766d");
         public static Guid WORK_TYPE_SUPPORT_STATUS = new Guid("72e99319-3a7b-4338-8d97-856678fe7e31");

@@ -1,0 +1,167 @@
+﻿@model EXPEDIT.Share.ViewModels.PickLocationViewModel
+@Html.Partial("Header")
+
+@{
+    Style.Require("Site");
+    Style.Require("Share");
+    Style.Require("Picker");
+    HtmlHelper.ClientValidationEnabled = true;
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    Layout.Title = T("Location").ToString();    
+}
+<script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.utils.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.maps.js")"></script>
+@using (Html.BeginForm("Location", "User", new { area = "EXPEDIT.Share" }, FormMethod.Post, new { id = "formLocation", @class = "form" }))
+{
+<article class="content-item page" style="margin:11px;">
+    <fieldset>
+    @*<legend></legend>*@      
+    @Html.AntiForgeryToken()
+    <div class="editor-label">
+       @Html.LabelFor(m => m.LocationName, new { style = "font-weight:bold;"})
+    </div>
+    <div class="editor-field">
+       @Html.TextBoxFor(m => m.LocationName)
+    </div>       
+    <div id="map-location" style="width: 100%; height: 75vh"></div>
+    <div class="editor-label">
+       @Html.LabelFor(m => m.CountryID)
+    </div>
+    <div class="editor-field">
+       @Html.TextBoxFor(m => m.CountryID)
+    </div>     
+    <div class="editor-label">
+       @Html.LabelFor(m => m.PostCode)
+    </div>
+    <div class="editor-field">
+       @Html.TextBoxFor(m => m.PostCode)
+    </div>     
+    <div class="editor-label">
+       @Html.LabelFor(m => m.Comment)
+    </div>
+    <div class="editor-field">
+       @Html.TextAreaFor(m => m.Comment)
+    </div>     
+    </fieldset>
+    @*<input type="submit" value="Submit" />*@
+    @Html.HiddenFor(m => m.LocationID)
+    <input type="hidden" value="@Model.Geography" id="SqlGeography" name="SqlGeography" />
+    <input type="hidden" value="" id="Geography" name="Geography" />
+    <input type="submit" value="submit" />
+    </article>
+}
+
+
+<link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Themes/MAS1/Styles/site.css")" rel="stylesheet" type="text/css" />
+
+
+ <script type="text/javascript">
+  
+     function MapInitialize() {
+         lmap = SetupDrawingMap('map-location');
+         RedrawMap(lmap);
+         var geoData = ParseGeographyData($("#SqlGeography").val());
+         AddMarkerUnique(lmap, GetFirstLocation(geoData), true, '@Model.LocationName', '@Model.LocationID');
+         RefocusMap(lmap);
+         setTimeout(function () {
+             lmap.setZoom(15);
+         }, 1000);         
+     }
+
+
+     function OnMapUpdate(map, event, center, viewport) {
+         cmap = map;
+         if (event.eventType == "EDITED") {
+             if (event.eventSource.type == "marker") {
+                 DeleteExceptedShape(map, event.eventSource)
+                 $("#Geography").val(MapObjectsToString(map));
+             }
+             else {
+                 DeleteExceptedShapeTypes(map);
+                 $("#Geography").val(MapObjectsToString(map));
+             }
+         }
+         if (event.eventType == "MARKER_DRAGEND") {
+             $("#Geography").val(MapObjectsToString(map));
+         }
+       
+     }
+
+     var drawing = true;
+     var lmap;
+     var cmap;
+     LoadScript('http://maps.googleapis.com/maps/api/js?libraries=drawing&sensor=true&callback=MapInitialize');
+
+     var request;
+     $("#formLocation").submit(function (e) {
+         // prevent default posting of form
+         e.preventDefault();
+         e.returnValue = false;
+     }).validate({
+         rules: {
+             "LocationName": { required: true }
+         },
+         submitHandler: function (form) {
+             // abort any pending request
+             if (request) {
+                 request.abort();
+             }
+             // setup some local variables
+             var $form = $("#formLocation");
+             // let's select and cache all the fields
+             var $inputs = $form.find("input, select, button, textarea, hidden");
+             // serialize the data in the form
+             var serializedData = $form.serialize();
+
+             // let's disable the inputs for the duration of the ajax request
+             $inputs.prop("disabled", true);
+
+             // fire off the request to /form.php
+             request = $.ajax({
+                 url: '@Url.Action("Location", "User", new { area = "EXPEDIT.Share" } )',
+                 type: "post",
+                 data: serializedData
+             });
+
+             // callback handler that will be called on success
+             request.done(function (response, textStatus, jqXHR) {
+                 // log a message to the console
+                 alertify.success("Your details have been updated.");
+             });
+
+             // callback handler that will be called on failure
+             request.fail(function (jqXHR, textStatus, errorThrown) {
+                 // log the error to the console
+                 alertify.error("Please check your inputs and try again.");
+                 //alertify.error("The following error occured: " + textStatus, errorThrown);                    
+             });
+
+             // callback handler that will be called regardless
+             // if the request failed or succeeded
+             request.always(function () {
+                 // reenable the inputs
+                 $inputs.prop("disabled", false);
+             });
+         }
+     });
+
+     $("#CountryID").autocomplete({
+         source: function (request, response) {
+             $.ajax({
+                 url: "/share/getcountries/" + request.term,
+                 type: "GET",
+                 dataType: "json",
+                 //data: { id: request.term },
+                 success: function (data) {
+                     response($.map(data, function (item) {
+                         return {
+                             label: item.Text, value: item.Text, id: item.Text
+                         }
+                     }))
+                 }
+             })
+         }
+     });
+</script>
+
