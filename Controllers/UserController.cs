@@ -30,6 +30,7 @@ using ImpromptuInterface.Dynamic;
 using System.Threading;
 using System.Globalization;
 
+
 namespace EXPEDIT.Share.Controllers {
     
     [Themed]
@@ -383,9 +384,43 @@ namespace EXPEDIT.Share.Controllers {
 
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
+        [Themed(true)]
+        [Authorize]
+        [HttpGet]
+        [ActionName("Location")]
+        public ActionResult Location(string id)
+        {
+            Guid guid;
+            if (!Guid.TryParse(id, out guid))
+                return new HttpNotFoundResult();
+            var m = _share.GetLocation(guid);
+            if (m == null)
+                return new HttpNotFoundResult();
+            return View(m);
+        }
+
+
+
+        [ValidateInput(false)]
+        [ValidateAntiForgeryToken]
+        [Themed(true)]
+        [Authorize]
+        [HttpPost]
+        [ActionName("Location")]
+        public ActionResult SubmitLocation(EXPEDIT.Share.ViewModels.PickLocationViewModel m)
+        {
+            if (!_share.SubmitLocation(m))
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.ExpectationFailed);
+            else
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.OK);
+        }
+
+
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
         [Themed(false)]
         [Authorize]
-        public ActionResult Location(string id)
+        public ActionResult LocationRaw(string id)
         {
             Guid guid;
             if (!Guid.TryParse(id, out guid))

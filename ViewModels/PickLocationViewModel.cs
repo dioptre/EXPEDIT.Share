@@ -17,13 +17,16 @@ namespace EXPEDIT.Share.ViewModels
         public string LocationName { get; set; }
         public string Geography { get; set; }
         public string Comment { get; set; }
-        [DisplayName("Country")]
         public string CountryID { get; set; }
+        [DisplayName("Country")]
+        public string CountryName { get; set; }
         public Guid? CountryStateID { get; set; }
+        [DisplayName("Province")]
         public string CountryStateName { get; set; }
         public string LocationCode { get; set; }
         [DisplayName("Post Code")]
         public string PostCode { get; set; }
+        public string Culture { get; set; }
         
         public string Query { get; set; }
         public IEnumerable<SearchViewModel> SearchResults { get; set; }

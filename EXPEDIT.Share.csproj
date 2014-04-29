@@ -997,7 +997,10 @@
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Views\User\PickLocation.cshtml" />
+    <Content Include="Views\User\LocationPartial.cshtml" />
     <Content Include="Views\User\Location.cshtml" />
+    <Content Include="Views\User\HeaderThemed.cshtml" />
+    <Content Include="Views\User\LocationRaw.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\NKD.Extensions\NKD.Extensions.csproj">

@@ -41,6 +41,9 @@ namespace EXPEDIT.Share.Services
          bool SubmitLocation(Guid locationID, string locationName, string geography, string culture="en-US");
 
          [OperationContract]
+         bool SubmitLocation(PickLocationViewModel m);
+
+         [OperationContract]
          PickLocationViewModel GetLocation(Guid locationID);
 
     }

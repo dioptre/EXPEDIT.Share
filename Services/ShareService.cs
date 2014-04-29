@@ -483,6 +483,7 @@ namespace EXPEDIT.Share.Services {
                             Geography = o.LocationGeography.AsText(),
                             LocationID = locationID,
                             CountryID = o.CountryID,
+                            CountryName = o.Country.StandardCountryName,
                             CountryStateID = o.CountryStateID,
                             CountryStateName = o.CountryState.StandardCountryStateName,
                             LocationCode = o.LocationCode,
@@ -492,41 +493,86 @@ namespace EXPEDIT.Share.Services {
             }
         }
 
-        public bool SubmitLocation(Guid id, string locationName, string geography, string culture="en-US")
+        public bool SubmitLocation(Guid id, string locationName, string geography, string culture = "en-US")
         {
-            if (string.IsNullOrWhiteSpace(locationName))
+            return SubmitLocation(new PickLocationViewModel
+            {
+                LocationID = id,
+                LocationName = locationName,
+                Geography = geography,
+                Culture = culture
+            });
+        }
+        public bool SubmitLocation(PickLocationViewModel m)
+        {
+            if (string.IsNullOrWhiteSpace(m.LocationName))
                 return false;
             else
-                locationName = locationName.Capitalize();
+                m.LocationName = m.LocationName.Capitalize();
             var contact = _users.ContactID;
             var company = _users.DefaultContactCompanyID;
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
-                if (d.Locations.Any(f => f.LocationID == id))
-                    return false;
                 Microsoft.SqlServer.Types.OpenGisGeographyType gType;
-                var geo =  NKD.Helpers.SpatialHelper.CreateGeography(geography, out gType).GetCentre();
-                if (d.Locations.Any(f=> f.LocationGeography.SpatialEquals(geo) && f.VersionOwnerCompanyID == company))
+                var geo = NKD.Helpers.SpatialHelper.CreateGeography(m.Geography, out gType).GetCentre();
+                var isNew = !d.Locations.Any(f => f.LocationID == m.LocationID);
+                if (!isNew && d.Locations.Any(f => f.LocationGeography.SpatialEquals(geo) && f.VersionOwnerCompanyID == company && f.LocationID != m.LocationID))
                     return false;
-                var countryid = (from o in d.Provinces where o.ProvinceGeography.Intersects(geo) && o.CountryID != null select o.CountryID).FirstOrDefault();
-                var m = new Location
+                if (string.IsNullOrWhiteSpace(m.CountryID))
+                    m.CountryID = (from o in d.Provinces where o.ProvinceGeography.Intersects(geo) && o.CountryID != null select o.CountryID).FirstOrDefault();
+                var table = d.GetTableName(typeof(Location));
+                if (!_users.CheckPermission(new SecuredBasic
                 {
-                    LocationID = id,
-                    DefaultLocationName = locationName,
-                    LocationTypeID = ConstantsHelper.LOCATION_TYPE_UNCLASSIFIED,
-                    LocationGeography = geo,
-                    CountryID = countryid,
-                    LongitudeWGS84 = (decimal)geo.Longitude.Value,
-                    LatitudeWGS84 = (decimal)geo.Latitude.Value,
-                    VersionCertainty = -11,
-                    VersionOwnerContactID = contact,
-                    VersionOwnerCompanyID = company,
-                    VersionUpdated = DateTime.UtcNow,
-                    VersionAntecedentID = id,
-                    VersionUpdatedBy = contact
-                };
-                d.Locations.AddObject(m);
+                    AccessorApplicationID = _users.ApplicationID,
+                    AccessorContactID = _users.ContactID,
+                    OwnerReferenceID = m.LocationID,
+                    OwnerTableType = table
+                }, isNew ? NKD.Models.ActionPermission.Create : ActionPermission.Update))
+                    return false;
+
+
+                Location location;
+
+                if (isNew)
+                {
+                    location = new Location
+                    {
+                        LocationID = m.LocationID.Value,
+                        LocationTypeID = ConstantsHelper.LOCATION_TYPE_UNCLASSIFIED,
+                        VersionCertainty = -11,
+                        VersionOwnerContactID = contact,
+                        VersionOwnerCompanyID = company,
+                    };
+                    d.Locations.AddObject(location);
+                }
+                else
+                {
+                    location = (from o in d.Locations where o.LocationID == m.LocationID && o.Version == 0 && o.VersionDeletedBy == null select o).FirstOrDefault();
+                    if (location == null || location.VersionOwnerCompanyID != company)
+                        return false;
+                }
+
+                if (location.DefaultLocationName != m.LocationName)
+                    location.DefaultLocationName = m.LocationName;
+                if (location.LocationGeography.AsText() != geo.AsText())
+                    location.LocationGeography = geo;
+                if (location.CountryID != m.CountryID)
+                    location.CountryID = m.CountryID;
+                if (location.LongitudeWGS84 != (decimal)geo.Longitude.Value)
+                    location.LongitudeWGS84 = (decimal)geo.Longitude.Value;
+                if (location.LatitudeWGS84 != (decimal)geo.Latitude.Value)
+                    location.LatitudeWGS84 = (decimal)geo.Latitude.Value;
+                if (location.Postcode != m.PostCode)
+                    location.Postcode = m.PostCode;
+                if (location.Comment != m.Comment)
+                    location.Comment = m.Comment;
+                if (location.EntityState != System.Data.EntityState.Unchanged)
+                {
+                    location.VersionUpdated = DateTime.UtcNow;
+                    location.VersionAntecedentID = m.LocationID;
+                    location.VersionUpdatedBy = contact;
+                }
                 d.SaveChanges();
 
             }
