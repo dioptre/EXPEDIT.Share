@@ -16,7 +16,7 @@
     <fieldset>
     @*<legend></legend>*@
     <div class="editor-label">
-        <p><strong>Search:</strong>{{view Ember.TextField valueBinding="q" type='text' placeholder="Location Name" classNames="searchbox capitalized" id="searchLocation"}}</p>
+        <p><strong>Search:</strong>{{view Ember.TextField action='blur' valueBinding="q" type='text' placeholder="Location Name" classNames="searchbox capitalized" id="searchLocation"}}</p>
     </div>
     <div class="editor-field">
         @Html.AntiForgeryToken()
@@ -61,14 +61,17 @@
 <link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Themes/MAS1/Styles/site.css")" rel="stylesheet" type="text/css" />
 
-
+<script src="@Url.Content("~/Modules/EXPEDIT.Share/Scripts/share-picklocation.js")"></script>
  <script type="text/javascript">
   
-     //$("#form1").submit(function (e) {
-     //    // prevent default posting of form
-     //    e.preventDefault();
-     //    e.returnValue = false;
-     //});
+     $(document).ready(function () {
+         $('#form1').submit(function (e) {
+             // prevent default posting of form
+             e.preventDefault();
+             e.returnValue = false;
+             return false;
+         });
+     });
 
      function pickLocation(refid, name) {
         //alert(refid + name);
@@ -106,4 +109,4 @@
 
 </script>
 
-<script src="@Url.Content("~/Modules/EXPEDIT.Share/Scripts/share-picklocation.js")"></script>
+

@@ -54,7 +54,7 @@ App.ApplicationController = Ember.Controller.extend({
     qm: function () {
         var controller = this;
         var temp = this.get('q');
-
+        //debugger;
         if (temp.length > 2 || temp == '') {
             if (timer) {
                 clearTimeout(timer);
@@ -64,8 +64,10 @@ App.ApplicationController = Ember.Controller.extend({
             }, 300);
         }
     }.observes('q'),
-    submitAction: function () {
-        alert('hi');
+    actions: {
+        blur: function (e) {
+
+        }
     }
 });
 
@@ -201,6 +203,7 @@ App.NewLocationView = Ember.View.extend({
                     pickLocation($("#LocationID").val(), $("#LocationName").val());
             }, function (response) {
                 //if failure
+                m.deleteRecord();
                 alertify.error('Failed saving new location. Please try again with a new location or name.');
             });
 

@@ -380,6 +380,8 @@ namespace EXPEDIT.Share.Services {
                 {
                     var mediaPath = HostingEnvironment.IsHosted ? HostingEnvironment.MapPath("~/Media/") ?? "" : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
                     var storagePath = Path.Combine(mediaPath, _settings.Name);
+                    Guid? creatorContact, creatorCompany;
+                    _users.GetCreator(contact, company, out creatorContact, out creatorCompany);
                     foreach (var f in files)
                     {
                         var filename = string.Concat(f.Value.FileName.Reverse().Take(50).Reverse());
@@ -393,8 +395,8 @@ namespace EXPEDIT.Share.Services {
                             FileName = filename,
                             FileLength = f.Value.ContentLength,
                             MimeType = f.Value.ContentType,
-                            VersionOwnerContactID = contact,
-                            VersionOwnerCompanyID = company,
+                            VersionOwnerContactID = creatorContact,
+                            VersionOwnerCompanyID = creatorCompany,
                             VersionUpdated = DateTime.UtcNow,
                             VersionAntecedentID = f.Key,
                             VersionUpdatedBy = contact,
@@ -470,8 +472,15 @@ namespace EXPEDIT.Share.Services {
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
                 var table = d.GetTableName(typeof(Location));
-                var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
-                var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
+                bool verified = _users.CheckPermission(new SecuredBasic
+                {
+                    AccessorApplicationID = application,
+                    AccessorContactID = contact,
+                    OwnerReferenceID = locationID,
+                    OwnerTableType = table
+                }, NKD.Models.ActionPermission.Read);
+                if (!verified)
+                    return null;
                 return (from o in d.Locations
                         where o.LocationID == locationID
                         select new PickLocationViewModel
@@ -522,52 +531,67 @@ namespace EXPEDIT.Share.Services {
                 if (string.IsNullOrWhiteSpace(m.CountryID))
                     m.CountryID = (from o in d.Provinces where o.ProvinceGeography.Intersects(geo) && o.CountryID != null select o.CountryID).FirstOrDefault();
                 var table = d.GetTableName(typeof(Location));
-                if (!_users.CheckPermission(new SecuredBasic
+                if (isNew)
                 {
-                    AccessorApplicationID = _users.ApplicationID,
-                    AccessorContactID = _users.ContactID,
-                    OwnerReferenceID = m.LocationID,
-                    OwnerTableType = table
-                }, isNew ? NKD.Models.ActionPermission.Create : ActionPermission.Update))
-                    return false;
+                    if (!_users.CheckPermission(new SecuredBasic
+                    {
+                        AccessorApplicationID = _users.ApplicationID,
+                        AccessorContactID = _users.ContactID,
+                        OwnerTableType = table
+                    }, NKD.Models.ActionPermission.Create))
+                        return false;
+                }
+                else
+                {
+                    if (!_users.CheckPermission(new SecuredBasic
+                    {
+                        AccessorApplicationID = _users.ApplicationID,
+                        AccessorContactID = _users.ContactID,
+                        OwnerReferenceID = m.LocationID,
+                        OwnerTableType = table
+                    }, ActionPermission.Update))
+                        return false;
+                }
 
 
                 Location location;
 
                 if (isNew)
                 {
+                    Guid? creatorContact, creatorCompany;
+                    _users.GetCreator(contact, company, out creatorContact, out creatorCompany);
                     location = new Location
                     {
                         LocationID = m.LocationID.Value,
                         LocationTypeID = ConstantsHelper.LOCATION_TYPE_UNCLASSIFIED,
                         VersionCertainty = -11,
-                        VersionOwnerContactID = contact,
-                        VersionOwnerCompanyID = company,
+                        VersionOwnerContactID = creatorContact,
+                        VersionOwnerCompanyID = creatorCompany,
                     };
                     d.Locations.AddObject(location);
                 }
                 else
                 {
                     location = (from o in d.Locations where o.LocationID == m.LocationID && o.Version == 0 && o.VersionDeletedBy == null select o).FirstOrDefault();
-                    if (location == null || location.VersionOwnerCompanyID != company)
+                    if (location == null || (location.VersionOwnerCompanyID != company && location.VersionCertainty > -2)) //Only allow edits of own data
                         return false;
                 }
 
-                if (location.DefaultLocationName != m.LocationName)
+                if (isNew || location.DefaultLocationName != m.LocationName)
                     location.DefaultLocationName = m.LocationName;
-                if (location.LocationGeography.AsText() != geo.AsText())
+                if (isNew || location.LocationGeography.AsText() != geo.AsText())
                     location.LocationGeography = geo;
-                if (location.CountryID != m.CountryID)
+                if (isNew || location.CountryID != m.CountryID)
                     location.CountryID = m.CountryID;
-                if (location.LongitudeWGS84 != (decimal)geo.Longitude.Value)
+                if (isNew || location.LongitudeWGS84 != (decimal)geo.Longitude.Value)
                     location.LongitudeWGS84 = (decimal)geo.Longitude.Value;
-                if (location.LatitudeWGS84 != (decimal)geo.Latitude.Value)
+                if (isNew || location.LatitudeWGS84 != (decimal)geo.Latitude.Value)
                     location.LatitudeWGS84 = (decimal)geo.Latitude.Value;
-                if (location.Postcode != m.PostCode)
+                if (isNew || location.Postcode != m.PostCode)
                     location.Postcode = m.PostCode;
-                if (location.Comment != m.Comment)
+                if (isNew || location.Comment != m.Comment)
                     location.Comment = m.Comment;
-                if (location.EntityState != System.Data.EntityState.Unchanged)
+                if (isNew || location.EntityState != System.Data.EntityState.Unchanged)
                 {
                     location.VersionUpdated = DateTime.UtcNow;
                     location.VersionAntecedentID = m.LocationID;
