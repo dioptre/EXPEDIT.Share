@@ -131,7 +131,7 @@ App.SearchController = Ember.Controller.extend({
         var first = this.get('model.results').objectAt(0);
         if (typeof first === 'undefined')
             return false;        
-        return (((this.get('currentPage')+1) * pfPageSize) < first.get('Total'));
+        return (((this.get('currentPage')+1) * pfPageSize) < first.get('TotalRows'));
     }.property('model'),
     prev: function() {
         var params = this.get('model.params');
@@ -172,8 +172,8 @@ App.MyLocation = DS.Model.extend({
     Title: DS.attr(),
     ReferenceID: DS.attr(),
     LocationID: DS.attr(),
-    Sequence: DS.attr(),
-    Total: DS.attr(),
+    Row: DS.attr(),
+    TotalRows: DS.attr(),
     SpatialJSON: DS.attr(),
     Geography: DS.attr(),
     Selected: function () {

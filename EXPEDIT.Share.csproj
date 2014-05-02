@@ -134,6 +134,8 @@
     <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\require.js" />
+    <Content Include="Scripts\required.js" />
     <Content Include="Scripts\jquery.blueimp-gallery.min.js" />
     <Content Include="Scripts\jquery.fileupload-audio.js" />
     <Content Include="Scripts\jquery.fileupload-image.js" />

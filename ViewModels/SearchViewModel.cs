@@ -9,17 +9,17 @@ namespace EXPEDIT.Share.ViewModels
 {
     public class SearchViewModel
     {
-        public string id { get { return string.Format("{0}", ReferenceID); } }
-        public long? Sequence { get; set; }
-        public long? Total { get; set; }
+        public long? Row { get; set; }
+        public long? TotalRows { get; set; }
+        public decimal? Score { get; set; }
+        public Guid? id { get; set; }
         public Guid? ReferenceID { get; set; }
         public string TableType { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string UrlInternal { get; set; }
-        public decimal? Score { get; set; }
         public string SpatialJSON { get; set; }
-        public string UrlExternal { get; set; }
+        public string InternalUrl { get; set; }
+        public string ExternalUrl { get; set; }
         public string Author { get; set; }
         public DateTime? Updated { get; set; }
     }

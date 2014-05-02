@@ -310,13 +310,14 @@ namespace EXPEDIT.Share.Services {
                 return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null,null, null, startRowIndex, pageSize, verified, found)
                         select GetSearchResultShape(new SearchViewModel
                         {
+                            id = o.id,
                             ReferenceID = o.ReferenceID,
                             TableType = o.TableType,
                             Title = o.Title,
                             Description = o.Description,
-                            Sequence = o.Row,
-                            Total = o.TotalRows,
-                            UrlInternal = o.InternalURL
+                            Row = o.Row,
+                            TotalRows = o.TotalRows,
+                            InternalUrl = o.InternalURL
                         })
                        ).ToArray();
             }
@@ -344,14 +345,15 @@ namespace EXPEDIT.Share.Services {
                 return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, startRowIndex, pageSize, verified, found)
                         select new SearchViewModel
                         {
+                            id = o.id,
                             ReferenceID = o.ReferenceID,
                             TableType = o.TableType,
                             Title = o.Title,
                             Description = o.Description,
-                            Sequence = o.Row,
-                            Total = o.TotalRows,
-                            UrlInternal = o.InternalURL,
-                            UrlExternal = o.ExternalURL,
+                            Row = o.Row,
+                            TotalRows = o.TotalRows,
+                            InternalUrl = o.InternalURL,
+                            ExternalUrl = o.ExternalURL,
                             SpatialJSON = o.SpatialJSON,
                             Score = o.Score,
                             Author = o.Author,
@@ -365,7 +367,7 @@ namespace EXPEDIT.Share.Services {
         [Shape]
         public IHtmlString GetSearchResultShape(SearchViewModel model)
         {
-            return new HtmlString(string.Format("<a href='/share/go/{0}'><h2>{1}</h2>{2}</a>", model.UrlInternal, model.Title, model.Description)); //TODO:Extend search different object types
+            return new HtmlString(string.Format("<a href='/share/go/{0}'><h2>{1}</h2>{2}</a>", model.InternalUrl, model.Title, model.Description)); //TODO:Extend search different object types
         }
 
 
@@ -446,14 +448,15 @@ namespace EXPEDIT.Share.Services {
                 return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, startRowIndex, pageSize, verified, found)
                         select new SearchViewModel
                         {
+                            id = o.id,
                             ReferenceID = o.ReferenceID,
                             TableType = o.TableType,
                             Title = o.Title,
                             Description = o.Description,
-                            Sequence = o.Row,
-                            Total = o.TotalRows,
-                            UrlInternal = o.InternalURL,
-                            UrlExternal = o.ExternalURL,
+                            Row = o.Row,
+                            TotalRows = o.TotalRows,
+                            InternalUrl = o.InternalURL,
+                            ExternalUrl = o.ExternalURL,
                             SpatialJSON = o.SpatialJSON,
                             Score = o.Score,
                             Author = o.Author,
