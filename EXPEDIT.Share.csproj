@@ -134,6 +134,12 @@
     <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\common.js" />
+    <None Include="Scripts\jquery.linq-vsdoc.js" />
+    <Content Include="Scripts\jquery.linq.js" />
+    <Content Include="Scripts\jquery.linq.min.js" />
+    <None Include="Scripts\linq-vsdoc.js" />
+    <Content Include="Scripts\linq.js" />
+    <Content Include="Scripts\linq.min.js" />
     <Content Include="Scripts\require.js" />
     <Content Include="Scripts\required.js" />
     <Content Include="Scripts\jquery.blueimp-gallery.min.js" />
@@ -960,6 +966,7 @@
     <Content Include="Scripts\underscore\underscore.js" />
     <Content Include="Scripts\vis.js" />
     <Content Include="Scripts\vis.min.js" />
+    <Content Include="Scripts\wiki2html.js" />
     <Content Include="Styles\alertify.bootstrap.css" />
     <Content Include="Styles\alertify.core.css" />
     <Content Include="Styles\alertify.default.css" />
