@@ -48,10 +48,11 @@ InstaView.conf =
 	paths: {
 		base_href: '/',
 		articles: '#/wikipedia/',
-		math: '/math/',
+		origin: 'http://en.wikipedia.org/wiki/',
+		math: 'http://upload.wikimedia.org/math/',
 		images: '',
 		images_fallback: 'http://upload.wikimedia.org/wikipedia/commons/',
-		magnify_icon: 'skins/common/images/magnify-clip.png'
+		magnify_icon: '/Modules/EXPEDIT.Share/images/magnify.png'
 	},
 	
 	locale: {
@@ -101,6 +102,8 @@ InstaView.convert = function(wiki)
 
 
     function filter(str, tagname, opentag, closetag, tagcount) {
+        if (typeof str != 'string')
+            return '';
         var opened = '';
         for (var i = 0; i < tagcount; i++)
             opened += opentag;
@@ -134,6 +137,8 @@ InstaView.convert = function(wiki)
     wiki = filter(wiki, 'cite', '{', '}', 2);
     wiki = filter(wiki, 'dead', '{', '}', 2);
 
+
+   
     var 	ll = (typeof wiki == 'string')? wiki.replace(/\r/g,'').split(/\n/): wiki, // lines of wikicode
 		o='',	// output
 		p=0,	// para flag
@@ -214,8 +219,11 @@ InstaView.convert = function(wiki)
 			
 			switch (l_match[1].charAt(l_match[1].length-1)) {
 			
-				case '*': case '#':
-					ps('<li>' + parse_inline_nowiki(l_match[2])); break
+			    case '*': case '#':
+			        var tempMatch =  parse_inline_nowiki(l_match[2]);
+                    if (tempMatch && tempMatch.trim() != '')
+                        ps('<li>' + tempMatch);
+                    break
 					
 				case ';':
 					ps('<dt>')
@@ -319,7 +327,7 @@ InstaView.convert = function(wiki)
 	function parse_image(str)
 	{
 		// get what's in between "[[Image:" and "]]"
-		var tag = str.substring(InstaView.conf.locale.image.length + 3, str.length - 2);
+		var tag = str.substring(str.indexOf(':') + 1, str.length - 2);
 		
 		var width;
 		var attr = [], filename, caption = '';
@@ -390,8 +398,8 @@ InstaView.convert = function(wiki)
 				if (!width) width = InstaView.conf.wiki.default_thumb_width;
 				
 				o += f("<div style='width:?px;'>?", 2+width*1, make_image(filename, caption, width)) +
-					f("<div class='thumbcaption'><div class='magnify' style='float:right'><a href='?' class='internal' title='Enlarge'><img src='?'></a></div>?</div>",
-						InstaView.conf.paths.articles + InstaView.conf.locale.image + ':' + filename,
+					f("<div class='thumbcaption'><div class='magnify' style='float:right'><a href='?' class='internal' title='Enlarge'><img src='?' width='20px'></a></div>?</div>",
+						InstaView.conf.paths.origin + InstaView.conf.locale.image + ':' + filename,
 						InstaView.conf.paths.magnify_icon,
 						parse_inline_nowiki(caption)
 					)
@@ -472,7 +480,7 @@ InstaView.convert = function(wiki)
 		var loop, close, open, wiki, html;
 		
 		while (-1 != (start=str.indexOf('[[', substart))) {
-			if(str.substr(start+2).match(RegExp('^' + InstaView.conf.locale.image + ':','i'))) {
+			if(str.substr(start+2).match(RegExp('^(' + InstaView.conf.locale.image + '|File):','i'))) {
 				loop=true;
 				substart=start;
 				do {
@@ -501,6 +509,20 @@ InstaView.convert = function(wiki)
 		}
 		
 		return str;
+	}
+
+	function parse_video(url) {
+
+	    if (url.match(/^(https?:\/\/)?(www.)?youtube.com\//) == null) {
+	        return "<b>" + url + " is an invalid YouTube URL</b>";
+	    }
+
+	    if ((result = url.match(/^(https?:\/\/)?(www.)?youtube.com\/watch\?(.*)v=([^&]+)/)) != null) {
+	        url = "http://www.youtube.com/embed/" + result[4];
+	    }
+
+
+	    return '<iframe width="480" height="390" src="' + url + '" frameborder="0" allowfullscreen></iframe>';
 	}
 	
 	// the output of this function doesn't respect the FILO structure of HTML
@@ -533,7 +555,10 @@ InstaView.convert = function(wiki)
 		// math
 		while (aux_match = str.match(/<(?:)math>(.*?)<\/math>/i)) {
 			var math_md5 = hex_md5(aux_match[1]);
-			str = str.replace(aux_match[0], f("<img src='?.png'>", InstaView.conf.paths.math+math_md5));
+		    str = str.replace(aux_match[0], f("<img src='?.png'>", InstaView.conf.paths.math+math_md5));
+		    //Math not working AG
+		    //check: http://git.wikimedia.org/blob/mediawiki%2Fextensions%2FMath.git/bb6e0b05427e5e6594a8ec53e09170af42ffcf07/MathRenderer.php
+			//str = '';
 		}
 		
 		// Build a Mediawiki-formatted date string

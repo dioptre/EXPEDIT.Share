@@ -5,7 +5,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.7.0-beta.1+canary.13fb4d7e
+ * @version   1.7.0-beta.1+canary.c736cb1c
  */
 
 
@@ -2531,7 +2531,7 @@ define("ember-metal/core",
 
       @class Ember
       @static
-      @version 1.7.0-beta.1+canary.13fb4d7e
+      @version 1.7.0-beta.1+canary.c736cb1c
     */
 
     if ('undefined' === typeof Ember) {
@@ -2558,10 +2558,10 @@ define("ember-metal/core",
     /**
       @property VERSION
       @type String
-      @default '1.7.0-beta.1+canary.13fb4d7e'
+      @default '1.7.0-beta.1+canary.c736cb1c'
       @static
     */
-    Ember.VERSION = '1.7.0-beta.1+canary.13fb4d7e';
+    Ember.VERSION = '1.7.0-beta.1+canary.c736cb1c';
 
     /**
       Standard environmental variables. You can define these in a global `EmberENV`
@@ -4263,9 +4263,10 @@ define("ember-metal/map",
 
     var set = __dependency1__.set;
     var guidFor = __dependency2__.guidFor;
-    var indexOf = __dependency3__.indexOf;var create = __dependency4__.create;
+    var indexOf = __dependency3__.indexOf;
+    var create = __dependency4__.create;
 
-    var copy = function(obj) {
+    function copy(obj) {
       var output = {};
 
       for (var prop in obj) {
@@ -4273,9 +4274,9 @@ define("ember-metal/map",
       }
 
       return output;
-    };
+    }
 
-    var copyMap = function(original, newObject) {
+    function copyMap(original, newObject) {
       var keys = original.keys.copy(),
           values = copy(original.values);
 
@@ -4284,7 +4285,7 @@ define("ember-metal/map",
       newObject.length = original.length;
 
       return newObject;
-    };
+    }
 
     /**
       This class is used internally by Ember and Ember Data.
@@ -4298,7 +4299,7 @@ define("ember-metal/map",
     */
     function OrderedSet() {
       this.clear();
-    };
+    }
 
     /**
       @method create
@@ -4427,10 +4428,12 @@ define("ember-metal/map",
       @private
       @constructor
     */
-    var Map = Ember.Map = function() {
+    function Map() {
       this.keys = OrderedSet.create();
       this.values = {};
-    };
+    }
+
+    Ember.Map = Map;
 
     /**
       @method create
@@ -4449,7 +4452,6 @@ define("ember-metal/map",
         @default 0
       */
       length: 0,
-
 
       /**
         Retrieve the value associated with a given key.
@@ -4563,7 +4565,7 @@ define("ember-metal/map",
     function MapWithDefault(options) {
       Map.call(this);
       this.defaultValue = options.defaultValue;
-    };
+    }
 
     /**
       @method create
@@ -8023,7 +8025,7 @@ define("ember-metal/utils",
     __exports__.applyStr = applyStr;
     __exports__.apply = apply;
   });
-define("backburner",
+define("backburner", 
   ["backburner/deferred_action_queues","exports"],
   function(__dependency1__, __exports__) {
     "use strict";
@@ -8037,6 +8039,15 @@ define("backburner",
         autorun, laterTimer, laterTimerExpiresAt,
         global = this,
         NUMBER = /\d+/;
+
+    // In IE 6-8, try/finally doesn't work without a catch.
+    // Unfortunately, this is impossible to test for since wrapping it in a parent try/catch doesn't trigger the bug.
+    // This tests for another broken try/catch behavior that only exhibits in the same versions of IE.
+    var needsIETryCatchFix = (function(e,x){
+      try{ x(); }
+      catch(e) { } // jshint ignore:line
+      return !!e;
+    })();
 
     function isCoercableNumber(number) {
       return typeof number === 'number' || NUMBER.test(number);
@@ -8078,25 +8089,32 @@ define("backburner",
             currentInstance = this.currentInstance,
             nextInstance = null;
 
+        // Prevent double-finally bug in Safari 6.0.2 and iOS 6
+        // This bug appears to be resolved in Safari 6.0.5 and iOS 7
+        var finallyAlreadyCalled = false;
         try {
           currentInstance.flush();
         } finally {
-          this.currentInstance = null;
+          if (!finallyAlreadyCalled) {
+            finallyAlreadyCalled = true;
 
-          if (this.instanceStack.length) {
-            nextInstance = this.instanceStack.pop();
-            this.currentInstance = nextInstance;
-          }
+            this.currentInstance = null;
 
-          if (onEnd) {
-            onEnd(currentInstance, nextInstance);
+            if (this.instanceStack.length) {
+              nextInstance = this.instanceStack.pop();
+              this.currentInstance = nextInstance;
+            }
+
+            if (onEnd) {
+              onEnd(currentInstance, nextInstance);
+            }
           }
         }
       },
 
       run: function(target, method /*, args */) {
         var options = this.options,
-            ret;
+            ret, length = arguments.length;
 
         this.begin();
 
@@ -8110,40 +8128,32 @@ define("backburner",
         }
 
         var onError = options.onError || (options.onErrorTarget && options.onErrorTarget[options.onErrorMethod]);
+        var args = slice.call(arguments, 2);
 
-        // Prevent Safari double-finally.
-        var finallyAlreadyCalled = false;
-        try {
-          if (arguments.length > 2) {
-            if (onError) {
-              // Do we need this double try?
-              try {
-                ret = method.apply(target, slice.call(arguments, 2));
-              } catch (e) {
-                onError(e);
-              }
-            } else {
-              ret = method.apply(target, slice.call(arguments, 2));
-            }
-          } else {
-            if (onError) {
-              // Do we need this double try?
-              try {
-                ret = method.call(target);
-              } catch (e) {
-                onError(e);
-              }
-            } else {
-              ret = method.call(target);
+        // guard against Safari 6's double-finally bug
+        var didFinally = false;
+
+        if (onError) {
+          try {
+            return method.apply(target, args);
+          } catch(error) {
+            onError(error);
+          } finally {
+            if (!didFinally) {
+              didFinally = true;
+              this.end();
             }
           }
-        } finally {
-          if (!finallyAlreadyCalled) {
-            finallyAlreadyCalled = true;
-            this.end();
+        } else {
+          try {
+            return method.apply(target, args);
+          } finally {
+            if (!didFinally) {
+              didFinally = true;
+              this.end();
+            }
           }
         }
-        return ret;
       },
 
       defer: function(queueName, target, method /* , args */) {
@@ -8415,12 +8425,32 @@ define("backburner",
 
         return false;
       }
-
     };
 
     Backburner.prototype.schedule = Backburner.prototype.defer;
     Backburner.prototype.scheduleOnce = Backburner.prototype.deferOnce;
     Backburner.prototype.later = Backburner.prototype.setTimeout;
+
+    if (needsIETryCatchFix) {
+      var originalRun = Backburner.prototype.run;
+      Backburner.prototype.run = function() {
+        try {
+          originalRun.apply(this, arguments);
+        } catch (e) {
+          throw e;
+        }
+      };
+
+      var originalEnd = Backburner.prototype.end;
+      Backburner.prototype.end = function() {
+        try {
+          originalEnd.apply(this, arguments);
+        } catch (e) {
+          throw e;
+        }
+      };
+    }
+
 
     function createAutorun(backburner) {
       backburner.begin();
@@ -8519,7 +8549,7 @@ define("backburner",
 
     __exports__.Backburner = Backburner;
   });
-define("backburner/deferred_action_queues",
+define("backburner/deferred_action_queues", 
   ["backburner/queue","exports"],
   function(__dependency1__, __exports__) {
     "use strict";
@@ -8556,11 +8586,34 @@ define("backburner/deferred_action_queues",
         }
       },
 
+      invoke: function(target, method, args, _) {
+        if (args && args.length > 0) {
+          method.apply(target, args);
+        } else {
+          method.call(target);
+        }
+      },
+
+      invokeWithOnError: function(target, method, args, onError) {
+        try {
+          if (args && args.length > 0) {
+            method.apply(target, args);
+          } else {
+            method.call(target);
+          }
+        } catch(error) {
+          onError(error);
+        }
+      },
+
       flush: function() {
         var queues = this.queues,
             queueNames = this.queueNames,
             queueName, queue, queueItems, priorQueueNameIndex,
-            queueNameIndex = 0, numberOfQueues = queueNames.length;
+            queueNameIndex = 0, numberOfQueues = queueNames.length,
+            options = this.options,
+            onError = options.onError || (options.onErrorTarget && options.onErrorTarget[options.onErrorMethod]),
+            invoke = onError ? this.invokeWithOnError : this.invoke;
 
         outerloop:
         while (queueNameIndex < numberOfQueues) {
@@ -8570,14 +8623,13 @@ define("backburner/deferred_action_queues",
           queue._queue = [];
 
           var queueOptions = queue.options, // TODO: write a test for this
-              options = this.options,
               before = queueOptions && queueOptions.before,
               after = queueOptions && queueOptions.after,
-              onError = options.onError || (options.onErrorTarget && options.onErrorTarget[options.onErrorMethod]),
               target, method, args, stack,
               queueIndex = 0, numberOfQueueItems = queueItems.length;
 
           if (numberOfQueueItems && before) { before(); }
+
           while (queueIndex < numberOfQueueItems) {
             target = queueItems[queueIndex];
             method = queueItems[queueIndex+1];
@@ -8588,32 +8640,12 @@ define("backburner/deferred_action_queues",
 
             // method could have been nullified / canceled during flush
             if (method) {
-              // TODO: error handling
-              if (args && args.length > 0) {
-                if (onError) {
-                  try {
-                    method.apply(target, args);
-                  } catch (e) {
-                    onError(e);
-                  }
-                } else {
-                  method.apply(target, args);
-                }
-              } else {
-                if (onError) {
-                  try {
-                    method.call(target);
-                  } catch(e) {
-                    onError(e);
-                  }
-                } else {
-                  method.call(target);
-                }
-              }
+              invoke(target, method, args, onError);
             }
 
             queueIndex += 4;
           }
+
           queue._queueBeingFlushed = null;
           if (numberOfQueueItems && after) { after(); }
 
@@ -8641,7 +8673,7 @@ define("backburner/deferred_action_queues",
 
     __exports__.DeferredActionQueues = DeferredActionQueues;
   });
-define("backburner/queue",
+define("backburner/queue", 
   ["exports"],
   function(__exports__) {
     "use strict";
@@ -14182,7 +14214,7 @@ define("ember-runtime/controllers/array_controller",
 
       ```handlebars
         {{#each post in controller}}
-          <li>{{title}} ({{titleLength}} characters)</li>
+          <li>{{post.title}} ({{post.titleLength}} characters)</li>
         {{/each}}
       ```
 
@@ -15470,7 +15502,7 @@ define("ember-runtime/mixins/array",
         @return {*} item at index or undefined
       */
       objectAt: function(idx) {
-        if ((idx < 0) || (idx>=get(this, 'length'))) return undefined ;
+        if ((idx < 0) || (idx >= get(this, 'length'))) return undefined;
         return get(this, idx);
       },
 
@@ -15585,8 +15617,8 @@ define("ember-runtime/mixins/array",
         if (startAt === undefined) startAt = 0;
         if (startAt < 0) startAt += len;
 
-        for(idx=startAt;idx<len;idx++) {
-          if (this.objectAt(idx) === object) return idx ;
+        for(idx = startAt; idx < len; idx++) {
+          if (this.objectAt(idx) === object) return idx;
         }
         return -1;
       },
@@ -15618,8 +15650,8 @@ define("ember-runtime/mixins/array",
         if (startAt === undefined || startAt >= len) startAt = len-1;
         if (startAt < 0) startAt += len;
 
-        for(idx=startAt;idx>=0;idx--) {
-          if (this.objectAt(idx) === object) return idx ;
+        for(idx = startAt; idx >= 0; idx--) {
+          if (this.objectAt(idx) === object) return idx;
         }
         return -1;
       },
@@ -16865,7 +16897,7 @@ define("ember-runtime/mixins/enumerable",
       toArray: function() {
         var ret = Ember.A();
         this.forEach(function(o, idx) { ret[idx] = o; });
-        return ret ;
+        return ret;
       },
 
       /**
@@ -18691,12 +18723,12 @@ define("ember-runtime/mixins/sortable",
 
         forEach(sortProperties, function(propertyName) {
           if (result === 0) {
-            result = sortFunction(get(item1, propertyName), get(item2, propertyName));
+            result = sortFunction.call(this, get(item1, propertyName), get(item2, propertyName));
             if ((result !== 0) && !sortAscending) {
               result = (-1) * result;
             }
           }
-        });
+        }, this);
 
         return result;
       },
@@ -18960,7 +18992,7 @@ define("ember-runtime/mixins/target_action_support",
       });
       ```
 
-      The `actionContext` defaults to the object you mixing `TargetActionSupport` into.
+      The `actionContext` defaults to the object you are mixing `TargetActionSupport` into.
       But `target` and `action` must be specified either as properties or with the argument
       to `triggerAction`, or a combination:
 
@@ -20549,7 +20581,7 @@ define("ember-runtime/system/namespace",
         if (name) { return name; }
 
         findNamespaces();
-        return this[GUID_KEY+'_name'];
+        return this[NAME_KEY];
       },
 
       nameClasses: function() {
@@ -20625,32 +20657,30 @@ define("ember-runtime/system/namespace",
       paths.length = idx; // cut out last item
     }
 
+    var STARTS_WITH_UPPERCASE = /^[A-Z]/;
+
     function findNamespaces() {
       var lookup = Ember.lookup, obj, isNamespace;
 
       if (Namespace.PROCESSED) { return; }
 
       for (var prop in lookup) {
-        // These don't raise exceptions but can cause warnings
-        if (prop === "parent" || prop === "top" || prop === "frameElement" || prop === "webkitStorageInfo") { continue; }
+        // Only process entities that start with uppercase A-Z
+        if (!STARTS_WITH_UPPERCASE.test(prop)) { continue; }
 
-        //  get(window.globalStorage, 'isNamespace') would try to read the storage for domain isNamespace and cause exception in Firefox.
-        // globalStorage is a storage obsoleted by the WhatWG storage specification. See https://developer.mozilla.org/en/DOM/Storage#globalStorage
-        if (prop === "globalStorage" && lookup.StorageList && lookup.globalStorage instanceof lookup.StorageList) { continue; }
         // Unfortunately, some versions of IE don't support window.hasOwnProperty
         if (lookup.hasOwnProperty && !lookup.hasOwnProperty(prop)) { continue; }
 
         // At times we are not allowed to access certain properties for security reasons.
         // There are also times where even if we can access them, we are not allowed to access their properties.
         try {
-          obj = Ember.lookup[prop];
+          obj = lookup[prop];
           isNamespace = obj && obj.isNamespace;
         } catch (e) {
           continue;
         }
 
         if (isNamespace) {
-          Ember.deprecate("Namespaces should not begin with lowercase.", /^[A-Z]/.test(prop));
           obj[NAME_KEY] = prop;
         }
       }
@@ -30089,7 +30119,7 @@ define("ember-handlebars/controls/text_support",
     };
 
     // In principle, this shouldn't be necessary, but the legacy
-    // sectionAction semantics for TextField are different from
+    // sendAction semantics for TextField are different from
     // the component semantics so this method normalizes them.
     function sendAction(eventName, view, event) {
       var action = get(view, eventName),
@@ -30439,7 +30469,7 @@ define("ember-handlebars/ext",
 
       Which allows for template syntax such as `{{concatenate prop1 prop2}}` or
       `{{concatenate prop1 prop2 prop3}}`. If any of the properties change,
-      the helpr will re-render.  Note that dependency keys cannot be
+      the helper will re-render.  Note that dependency keys cannot be
       using in conjunction with multi-property helpers, since it is ambiguous
       which property the dependent keys would belong to.
 
@@ -42016,17 +42046,21 @@ define("router/transition-state",
         }
 
         function proceed(resolvedHandlerInfo) {
+          var wasAlreadyResolved = currentState.handlerInfos[payload.resolveIndex].isResolved;
+
           // Swap the previously unresolved handlerInfo with
           // the resolved handlerInfo
           currentState.handlerInfos[payload.resolveIndex++] = resolvedHandlerInfo;
 
-          // Call the redirect hook. The reason we call it here
-          // vs. afterModel is so that redirects into child
-          // routes don't re-run the model hooks for this
-          // already-resolved route.
-          var handler = resolvedHandlerInfo.handler;
-          if (handler && handler.redirect) {
-            handler.redirect(resolvedHandlerInfo.context, payload);
+          if (!wasAlreadyResolved) {
+            // Call the redirect hook. The reason we call it here
+            // vs. afterModel is so that redirects into child
+            // routes don't re-run the model hooks for this
+            // already-resolved route.
+            var handler = resolvedHandlerInfo.handler;
+            if (handler && handler.redirect) {
+              handler.redirect(resolvedHandlerInfo.context, payload);
+            }
           }
 
           // Proceed after ensuring that the redirect hook

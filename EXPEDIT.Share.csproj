@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\loading.gif" />
+    <Content Include="Images\magnify.png" />
     <Content Include="Scripts\alertify.js" />
     <Content Include="Scripts\alertify.min.js" />
     <Content Include="Scripts\bootbox.js" />
@@ -135,6 +136,7 @@
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\common.js" />
     <None Include="Scripts\jquery.linq-vsdoc.js" />
+    <Content Include="Scripts\instaview.js" />
     <Content Include="Scripts\jquery.linq.js" />
     <Content Include="Scripts\jquery.linq.min.js" />
     <None Include="Scripts\linq-vsdoc.js" />
