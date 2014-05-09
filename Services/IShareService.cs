@@ -6,6 +6,7 @@ using Orchard;
 using System.ServiceModel;
 using NKD.Module.BusinessObjects;
 using EXPEDIT.Share.ViewModels;
+using NKD.ViewModels;
 
 namespace EXPEDIT.Share.Services
 {
@@ -44,6 +45,9 @@ namespace EXPEDIT.Share.Services
 
          [OperationContract]
          PickLocationViewModel GetLocation(Guid locationID);
+
+         [OperationContract]
+         ContactViewModel GetMyInfo();
 
     }
 }

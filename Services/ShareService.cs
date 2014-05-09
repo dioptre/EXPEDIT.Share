@@ -30,6 +30,7 @@ using NKD.Helpers;
 using System.Drawing;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
+using NKD.ViewModels;
 
 namespace EXPEDIT.Share.Services {
     
@@ -606,6 +607,10 @@ namespace EXPEDIT.Share.Services {
             return true;
         }
 
+        public ContactViewModel GetMyInfo()
+        {
+            return _users.GetMyInfo();
+        }
 
       
        

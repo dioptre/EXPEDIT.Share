@@ -463,5 +463,15 @@ namespace EXPEDIT.Share.Controllers {
             return new JsonHelper.JsonNetResult(new { files = list.ToArray() }, JsonRequestBehavior.AllowGet);
         }
 
+
+        [Themed(false)]
+        [HttpGet]
+        [ActionName("MyInfo")]
+        public ActionResult GetMyInfo(string id)
+        {
+            return new JsonHelper.JsonNetResult(_share.GetMyInfo(), JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }
