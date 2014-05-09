@@ -361,6 +361,7 @@ InstaView.convert = function(wiki)
 			var w_match;
 			
 			for (;attr.length; attr.shift())
+            if (typeof attr[0] === 'string')
 			if (w_match = attr[0].match(/^(\d*)px$/)) width = w_match[1]
 			else switch(attr[0]) {
 				case 'thumb':
@@ -554,8 +555,9 @@ InstaView.convert = function(wiki)
 		
 		// math
 		while (aux_match = str.match(/<(?:)math>(.*?)<\/math>/i)) {
-			var math_md5 = hex_md5(aux_match[1]);
-		    str = str.replace(aux_match[0], f("<img src='?.png'>", InstaView.conf.paths.math+math_md5));
+		    var math_md5 = hex_md5(aux_match[1]);
+		    str = '';
+		    //str = str.replace(aux_match[0], f("<img src='?.png'>", InstaView.conf.paths.math+math_md5));
 		    //Math not working AG
 		    //check: http://git.wikimedia.org/blob/mediawiki%2Fextensions%2FMath.git/bb6e0b05427e5e6594a8ec53e09170af42ffcf07/MathRenderer.php
 			//str = '';
@@ -588,7 +590,7 @@ InstaView.convert = function(wiki)
 			// [[Common links]]
 			replace(/\[\[([^|]*?)\]\](\w*)/g, f("<a href='?$1'>$1$2</a>", InstaView.conf.paths.articles)).
 
-			// [[Replaced|Links]]
+			// [[Replaced|Links]]            
 			replace(/\[\[(.*?)\|([^\]]+?)\]\](\w*)/g, f("<a href='?$1'>$2$3</a>", InstaView.conf.paths.articles)).
 
 			// [[Stripped:Namespace|Namespace]]
@@ -606,8 +608,15 @@ InstaView.convert = function(wiki)
             replace(/\s*\{\{(.*)[^}{]+\}\}\s*/g, '').
             replace(/\{\{/g, '').
             replace(/\}\}/g, '').
+    	    //Clean Relative links
+	    	replace(/href='(.*?)'/g, function (match) {
+	    	    return match.replace(/ /g,'_');
+	    	}).
 
-			replace('__NOEDITSECTION__','');
+			replace('__NOEDITSECTION__', '');
+            
+
+
 	}
 	
 	function strip_inline_wiki(str)

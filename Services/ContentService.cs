@@ -29,6 +29,7 @@ using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using Orchard.Users.Events;
 using Newtonsoft.Json;
+using System.Data.Linq.SqlClient;
 
 namespace EXPEDIT.Share.Services
 {
@@ -81,7 +82,7 @@ namespace EXPEDIT.Share.Services
 
         public SelectListItem[] GetLocations(string startsWith)
         {
-            if (startsWith.Length == 1)
+            if (startsWith == null || startsWith.Length == 1)
                 return new SelectListItem[] {};
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
@@ -96,6 +97,25 @@ namespace EXPEDIT.Share.Services
             }
         }
 
+
+        public SelectListItem[] GetUsernames(string startsWith)
+        {
+
+            if (startsWith == null || startsWith.Length == 1)
+                return new SelectListItem[] { };
+            var application = _users.ApplicationID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.Users where SqlMethods.Like(o.UserName, "%" + startsWith + "%")
+                        select o).AsEnumerable()
+                        .Select(f =>
+                             new SelectListItem { Text = f.UserName, Value = f.UserName})
+                             .ToArray()
+                        ;
+            }
+        }
 
 
         public Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false, bool checkin=false, string reference=null)

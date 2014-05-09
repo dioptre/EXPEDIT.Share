@@ -161,6 +161,14 @@ namespace EXPEDIT.Share.Controllers {
         }
 
 
+        [ValidateInput(false)]
+        [Authorize]
+        [Themed(false)]
+        public JsonResult GetUsernames(string id)
+        {
+            return Json(_content.GetUsernames(id), JsonRequestBehavior.AllowGet);
+        }
+
         dynamic Shape { get; set; }
         [Themed(true)]
         public ActionResult Search(PagerParameters pagerParameters, string q = "")
