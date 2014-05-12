@@ -7565,11 +7565,19 @@ define("ember-metal/utils",
     */
     function wrap(func, superFunc) {
       function superWrapper() {
-        var ret, sup = this.__nextSuper;
-        this.__nextSuper = superFunc;
-        ret = apply(this, func, arguments);
-        this.__nextSuper = sup;
-        return ret;
+          if (typeof this.__nextSuper !== 'undefined') {
+              var ret, sup = this.__nextSuper;
+              this.__nextSuper = superFunc;
+              ret = apply(this, func, arguments);
+              this.__nextSuper = sup;
+              return ret;
+          }
+          else {
+              this.__nextSuper = superFunc;
+              ret = apply(this, func, arguments);
+              return ret;
+          }
+              
       }
 
       superWrapper.wrappedFunction = func;

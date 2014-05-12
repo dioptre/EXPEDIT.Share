@@ -137,10 +137,14 @@
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\common.js" />
     <None Include="Scripts\jquery.linq-vsdoc.js" />
+    <Content Include="Scripts\ember-list-view.min.js" />
+    <Content Include="Scripts\emberui.js" />
+    <Content Include="Scripts\ic-ajax.js" />
     <Content Include="Scripts\instaview.js" />
     <Content Include="Scripts\jquery.linq.js" />
     <Content Include="Scripts\jquery.linq.min.js" />
     <None Include="Scripts\linq-vsdoc.js" />
+    <Content Include="Scripts\jquery.velocity.min.js" />
     <Content Include="Scripts\linq.js" />
     <Content Include="Scripts\linq.min.js" />
     <Content Include="Scripts\require.js" />
@@ -966,6 +970,7 @@
     <Content Include="Scripts\populateSelectNav.js" />
     <Content Include="Scripts\share-pickfile.js" />
     <Content Include="Scripts\tmpl.min.js" />
+    <Content Include="Scripts\twix.min.js" />
     <Content Include="Scripts\underscore\underscore.js" />
     <Content Include="Scripts\vis.js" />
     <Content Include="Scripts\vis.min.js" />
@@ -975,6 +980,8 @@
     <Content Include="Styles\alertify.default.css" />
     <Content Include="Styles\blueimp-gallery.min.css" />
     <Content Include="Styles\bootstrap.min.css" />
+    <Content Include="Styles\emberui-default-theme.css" />
+    <Content Include="Styles\emberui.css" />
     <Content Include="Styles\expedit-share.css" />
     <Content Include="Styles\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Styles\images\checked.gif" />
