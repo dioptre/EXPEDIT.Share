@@ -7564,8 +7564,8 @@ define("ember-metal/utils",
       @return {Function} wrapped function.
     */
     function wrap(func, superFunc) {
-      function superWrapper() {
-          if (typeof this.__nextSuper !== 'undefined') {
+        function superWrapper() {
+          if (typeof this !== 'undefined') {
               var ret, sup = this.__nextSuper;
               this.__nextSuper = superFunc;
               ret = apply(this, func, arguments);
@@ -7573,7 +7573,7 @@ define("ember-metal/utils",
               return ret;
           }
           else {
-              this.__nextSuper = superFunc;
+              //this.__nextSuper = superFunc;
               ret = apply(this, func, arguments);
               return ret;
           }

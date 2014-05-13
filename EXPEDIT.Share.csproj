@@ -147,6 +147,7 @@
     <Content Include="Scripts\jquery.velocity.min.js" />
     <Content Include="Scripts\linq.js" />
     <Content Include="Scripts\linq.min.js" />
+    <Content Include="Scripts\nprogress.js" />
     <Content Include="Scripts\require.js" />
     <Content Include="Scripts\required.js" />
     <Content Include="Scripts\jquery.blueimp-gallery.min.js" />
@@ -1006,6 +1007,7 @@
     <Content Include="Styles\jquery.fileupload-ui-noscript.css" />
     <Content Include="Styles\jquery.fileupload-ui.css" />
     <Content Include="Styles\jquery.fileupload.css" />
+    <Content Include="Styles\nprogress.css" />
     <Content Include="Styles\picker.css" />
     <Content Include="Styles\vis.css" />
     <Content Include="Styles\vis.min.css" />
