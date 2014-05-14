@@ -42,7 +42,7 @@ InstaView.conf =
 	wiki: {
 		lang: 'en',
 		interwiki: 'ab|aa|af|ak|sq|als|am|ang|ar|an|arc|hy|roa-rup|as|ast|av|ay|az|bm|ba|eu|be|bn|bh|bi|bs|br|bg|my|ca|ch|ce|chr|chy|ny|zh|zh-tw|zh-cn|cho|cv|kw|co|cr|hr|cs|da|dv|nl|dz|en|eo|et|ee|fo|fj|fi|fr|fy|ff|gl|ka|de|got|el|kl|gn|gu|ht|ha|haw|he|hz|hi|ho|hu|is|io|ig|id|ia|ie|iu|ik|ga|it|ja|jv|kn|kr|csb|ks|kk|km|ki|rw|rn|tlh|kv|kg|ko|kj|ku|ky|lo|la|lv|li|ln|lt|jbo|nds|lg|lb|mk|mg|ms|ml|mt|gv|mi|minnan|mr|mh|zh-min-nan|mo|mn|mus|nah|na|nv|ne|se|no|nn|oc|or|om|pi|fa|pl|pt|pa|ps|qu|ro|rm|ru|sm|sg|sa|sc|gd|sr|sh|st|tn|sn|scn|simple|sd|si|sk|sl|so|st|es|su|sw|ss|sv|tl|ty|tg|ta|tt|te|th|bo|ti|tpi|to|tokipona|ts|tum|tr|tk|tw|uk|ur|ug|uz|ve|vi|vo|wa|cy|wo|xh|ii|yi|yo|za|zu',
-		default_thumb_width: 180
+		default_thumb_width: 250
 	},
 	
 	paths: {
@@ -398,7 +398,8 @@ InstaView.convert = function(wiki)
 			if (thumb) {
 				if (!width) width = InstaView.conf.wiki.default_thumb_width;
 				
-				o += f("<div style='width:?px;'>?", 2+width*1, make_image(filename, caption, width)) +
+			    //o += f("<div style='width:?px;'>?", 2+width*1, make_image(filename, caption, width)) +
+				o += f("<div>?", make_image(filename, caption, width)) +
 					f("<div class='thumbcaption'><div class='magnify' style='float:right'><a href='?' class='internal' title='Enlarge'><img src='?' width='20px'></a></div>?</div>",
 						InstaView.conf.paths.origin + InstaView.conf.locale.image + ':' + filename,
 						InstaView.conf.paths.magnify_icon,
@@ -470,7 +471,8 @@ InstaView.convert = function(wiki)
 		
 		if (width) width = "width='" + width + "px'";
 		
-		var img = f("<img onerror=\"this.onerror=null;this.src='?'\" src='?' ? ?>", InstaView.conf.paths.images_fallback + source, InstaView.conf.paths.images + source, (caption!='')? "alt='" + caption + "'" : '', width);
+		//var img = f("<img onerror=\"this.onerror=null;this.src='?'\" src='?' ? ?>", InstaView.conf.paths.images_fallback + source, InstaView.conf.paths.images + source, (caption != '') ? "alt='" + caption + "'" : '', width);
+		var img = f("<img onerror=\"this.onerror=null;this.src='?'\" src='?' ?>", InstaView.conf.paths.images_fallback + source, InstaView.conf.paths.images + source, (caption != '') ? "alt='" + caption + "'" : '');
 		
 		return f("<a class='image' ? href='?'>?</a>", (caption!='')? "title='" + caption + "'" : '', InstaView.conf.paths.articles + InstaView.conf.locale.image + ':' + filename, img);
 	}
@@ -669,6 +671,20 @@ InstaView.convert = function(wiki)
 	}
 	
 	return o
+        //Final Chance at Fixes
+        //no refs
+	    .replace(/<ref>/g, '')
+	    .replace(/<\/ref>/g, '')
+        //no source
+	    .replace(/<source>/g, '')
+	    .replace(/<\/source>/g, '')
+        //no references
+        .replace(/<references\/>/g, '')
+	    .replace(/<\/em><li><\/em>/ig, '<\/li>')
+	    .replace(/<ul>ul>/g, '<ul>')
+        .replace(/columns\-list([0-9]|\s|\|)*/g, '')
+    	.replace(/<li>;/g, '')
+    ;
 }
 
 
