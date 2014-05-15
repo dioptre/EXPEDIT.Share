@@ -684,6 +684,7 @@ InstaView.convert = function(wiki)
 	    .replace(/<ul>ul>/g, '<ul>')
         .replace(/columns\-list([0-9]|\s|\|)*/g, '')
     	.replace(/<li>;/g, '')
+        .replace(/<p>\s*<\/p>/g,'')
     ;
 }
 
