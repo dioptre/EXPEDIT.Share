@@ -259,11 +259,11 @@
              autoUpload: true,
              add: function (e, data) {
                  for (var i = 0; i < data.files.length; i++) {
-                     if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(data.files[i].name)) {
-                         alert('Wrong file type. Images only please.');
+                     if (!(/\.(gif|jpg|jpeg|tiff|png|pdf|docx|doc|xls|xlsx|ppt|pptx|zip|psd|csv|txt)$/i).test(data.files[i].name)) {
+                         alert('Unsupported file format.');
                          return false;
-                     }
-                     else if (data.files[i].size > 2000000) { // 2mb
+                     } else 
+                     if (data.files[i].size > 2000000) { // 2mb
                          alert('Please upload a smaller file, max size is 2 MB');
                          return false;
                      }
