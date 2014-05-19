@@ -109,7 +109,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         //[Themed(false)]
-        [Authorize]
+        //[Authorize]
         public ActionResult File(string id)
         {
             var file = _share.GetFile(new Guid(id));
@@ -128,7 +128,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         //[Themed(false)]
-        [Authorize]
+        //[Authorize]
         public ActionResult Preview(string id)
         {
             var file = _share.GetPreview(new Guid(id));
@@ -144,7 +144,7 @@ namespace EXPEDIT.Share.Controllers {
 
 
         [ValidateInput(false)]
-        [Authorize]
+        //[Authorize]
         [Themed(false)]
         public JsonResult GetCountries(string id)
         {                       
@@ -153,7 +153,7 @@ namespace EXPEDIT.Share.Controllers {
 
 
         [ValidateInput(false)]
-        [Authorize]
+        //[Authorize]
         [Themed(false)]
         public JsonResult GetLocations(string id)
         {
@@ -302,7 +302,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         [Themed(false)]
-        [Authorize]
+        //[Authorize]
         public ActionResult PickFile(PagerParameters pagerParameters, string q = "")
         {
             return View(new ViewModels.PickFileViewModel { 
@@ -314,7 +314,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         [Themed(false)]
-        [Authorize]
+        //[Authorize]
         public ActionResult MyFiles(string q = "")
         {
             int page;
@@ -331,7 +331,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         [Themed(false)]
-        [Authorize]
+        //[Authorize]
         public ActionResult PickLocation(PagerParameters pagerParameters, string q = "")
         {
             return View(new ViewModels.PickLocationViewModel
@@ -345,7 +345,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         [Themed(false)]
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [ActionName("MyLocations")]
         public ActionResult GetMyLocations(string q = "")
@@ -365,7 +365,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
         [Themed(false)]
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [ActionName("MyLocations")]
         public ActionResult UpdateMyLocation(string q = "")
@@ -393,7 +393,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         [Themed(true)]
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [ActionName("Location")]
         public ActionResult Location(string id)
@@ -412,7 +412,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
         [Themed(true)]
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [ActionName("Location")]
         public ActionResult SubmitLocation(EXPEDIT.Share.ViewModels.PickLocationViewModel m)
@@ -427,7 +427,7 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         //[ValidateAntiForgeryToken]
         [Themed(false)]
-        [Authorize]
+        //[Authorize]
         public ActionResult LocationRaw(string id)
         {
             Guid guid;
@@ -440,7 +440,7 @@ namespace EXPEDIT.Share.Controllers {
         }
 
 
-        [Authorize]
+        //[Authorize]
         [Themed(Enabled = false)]
         public virtual ActionResult UploadFile()
         {
@@ -472,6 +472,13 @@ namespace EXPEDIT.Share.Controllers {
             return new JsonHelper.JsonNetResult(_share.GetMyInfo(), JsonRequestBehavior.AllowGet);
         }
 
+        [Themed(false)]
+        [HttpGet]
+        [ActionName("LoggedIn")]
+        public ActionResult LoggedIn()
+        {
+            return new JsonHelper.JsonNetResult(User.Identity.IsAuthenticated, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

@@ -222,6 +222,21 @@ namespace EXPEDIT.Share
                                 {"area", "EXPEDIT.Share"}
                             },
                             new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                        Priority = 50,
+                        Route = new Route(
+                            "share/loggedin",
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"},
+                                {"controller", "User"},
+                                {"action", "loggedin"}
+                            },
+                            null,
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"}
+                            },
+                            new MvcRouteHandler())
                 }
 
             };
