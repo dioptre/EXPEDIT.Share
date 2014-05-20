@@ -143,6 +143,26 @@ namespace EXPEDIT.Share.Controllers {
         }
 
 
+        /// <summary>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="contactid"></param>
+        /// <returns></returns>
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        //[Themed(false)]
+        //[Authorize]
+        public ActionResult Photo(string id)
+        {
+            var file = _share.GetPhoto(new Guid(id));
+            if (file != null)
+                return new NKD.Handlers.FileGeneratingResult(string.Format("{0}.png", id).Trim(), "image/png", stream => new System.IO.MemoryStream(file).WriteTo(stream));
+            else
+                return new RedirectResult(System.Web.VirtualPathUtility.ToAbsolute("~/Media/Default/EXPEDIT.Share/images/qmark.jpg"));
+        }
+
+
         [ValidateInput(false)]
         //[Authorize]
         [Themed(false)]
@@ -463,6 +483,14 @@ namespace EXPEDIT.Share.Controllers {
             return new JsonHelper.JsonNetResult(new { files = list.ToArray() }, JsonRequestBehavior.AllowGet);
         }
 
+
+        //[Authorize]
+        [Themed(Enabled = false)]
+        public virtual ActionResult UploadPhoto()
+        {
+            _share.SubmitPhoto(Request.Files[0]);
+            return new JsonHelper.JsonNetResult( true, JsonRequestBehavior.AllowGet);
+        }
 
         [Themed(false)]
         [HttpGet]

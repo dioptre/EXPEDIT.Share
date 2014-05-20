@@ -289,6 +289,51 @@ namespace EXPEDIT.Share.Services {
             }
         }
 
+        public byte[] GetPhoto(Guid userID)
+        {
+            try
+            {
+
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                    var cacheKey = string.Format("{0}-PHOTO-{1}", userID, CacheHelper.CacheType.Preview);
+                    var file = CacheHelper.Cache[cacheKey] as byte[];
+                    if (file == null)
+                    {
+                        var preview = (from o in d.Contacts where o.AspNetUserID == userID && o.Version == 0 && o.VersionDeletedBy == null select o).Single();
+                        if (preview.Photo.Length > 0)
+                        using (var thumb = new MemoryStream())
+                        {
+                            using (var full = new MemoryStream(preview.Photo))
+                            {
+                                try
+                                {
+                                    Image image = Image.FromStream(full);
+                                    Image tn = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
+                                    tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Png);
+                                    file = thumb.ToArray();
+
+                                }
+                                catch
+                                {
+                                    file = null;
+                                }
+                            }
+                            
+                        }
+                        return CacheHelper.AddToCache<byte[]>(() => { return file; }, cacheKey, new TimeSpan(0,15,0));
+                    }
+                    else
+                        return file;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Returns search within NKD. Only search products for now.
         /// </summary>
@@ -612,6 +657,39 @@ namespace EXPEDIT.Share.Services {
             return _users.GetMyInfo();
         }
 
+
+        public bool SubmitPhoto(HttpPostedFileBase file)
+        {
+            if (file.ContentType.ToLower() != "image/jpg" &&
+            file.ContentType.ToLower() != "image/jpeg" &&
+            file.ContentType.ToLower() != "image/pjpeg" &&
+            file.ContentType.ToLower() != "image/gif" &&
+            file.ContentType.ToLower() != "image/x-png" &&
+            file.ContentType.ToLower() != "image/png")
+            {
+                return false;
+            }
+            var img = file.InputStream.ToByteArray();
+            if (img == null || img.Length < 1)
+                return false;
+            var contact = _users.ContactID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                if (file != null && contact.HasValue)
+                {
+                    var m = (from o in d.Contacts where o.ContactID == contact && o.Version==0 && o.VersionDeletedBy == null select o).Single();
+                    m.Photo = img;                    
+                    d.SaveChanges(); 
+                    return true;                    
+                }
+
+
+            }
+            return false;
+            
+        }
       
        
     }

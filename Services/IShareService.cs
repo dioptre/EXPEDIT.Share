@@ -26,6 +26,9 @@ namespace EXPEDIT.Share.Services
          FileData GetPreview(Guid fileDataID);
 
          [OperationContract]
+         byte[] GetPhoto(Guid userID);
+
+         [OperationContract]
          IEnumerable<IHtmlString> GetSearchResults(string text = null, Guid? supplierModelID = null, int? startRowIndex = null, int? pageSize = null);
 
          [OperationContract]
@@ -48,6 +51,9 @@ namespace EXPEDIT.Share.Services
 
          [OperationContract]
          ContactViewModel GetMyInfo();
+
+         [OperationContract]
+         bool SubmitPhoto(HttpPostedFileBase file);
 
     }
 }
