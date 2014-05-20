@@ -1439,6 +1439,7 @@
     <Compile Include="ViewModels\PickLocationViewModel.cs" />
     <Compile Include="ViewModels\PickFileViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
+    <Compile Include="ViewModels\UserLoginViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

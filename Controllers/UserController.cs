@@ -29,12 +29,19 @@ using System.Dynamic;
 using ImpromptuInterface.Dynamic;
 using System.Threading;
 using System.Globalization;
+using Orchard.Security;
+using Orchard.Users.Services;
+using Orchard.Users.Events;
 
 
 namespace EXPEDIT.Share.Controllers {
     
     [Themed]
     public class UserController : Controller {
+        private IAuthenticationService _authenticationService { get; set; }
+        private IMembershipService _membershipService { get; set; }
+        private IUserService _userService { get; set; }
+        private IUserEventHandler _userEventHandler { get; set; }
         public IOrchardServices Services { get; set; }
         private IShareService _share { get; set; }
         private IContentService _content { get; set; }
@@ -50,18 +57,25 @@ namespace EXPEDIT.Share.Controllers {
             ISearchService searchService,
             IContentManager contentManager,
             ISiteService siteService,
-            IShapeFactory shapeFactory
+            IShapeFactory shapeFactory,
+            IUserService userService,
+            IMembershipService membershipService,
+            IAuthenticationService authenticationService,
+            IUserEventHandler userEventHandler
             )
         {
             _share = share;
             Services = services;
             _content = content;
             T = NullLocalizer.Instance;
-
             _searchService = searchService;
             _contentManager = contentManager;
             _siteService = siteService;
             Shape = shapeFactory;
+            _userService = userService;
+            _membershipService = membershipService;
+            _authenticationService = authenticationService;
+            _userEventHandler = userEventHandler;
         }
 
         public Localizer T { get; set; }
@@ -485,6 +499,7 @@ namespace EXPEDIT.Share.Controllers {
 
 
         //[Authorize]
+        [HttpPost]
         [Themed(Enabled = false)]
         public virtual ActionResult UploadPhoto()
         {
@@ -507,6 +522,41 @@ namespace EXPEDIT.Share.Controllers {
         {
             return new JsonHelper.JsonNetResult(User.Identity.IsAuthenticated, JsonRequestBehavior.AllowGet);
         }
+
+        [Themed(false)]
+        [HttpPost]
+        [ActionName("Login")]
+        public ActionResult Login(EXPEDIT.Share.ViewModels.UserLoginViewModel u)
+        {
+            if (string.IsNullOrWhiteSpace(u.UserName) || string.IsNullOrWhiteSpace(u.Password))
+            {
+                return new JsonHelper.JsonNetResult(false, JsonRequestBehavior.AllowGet);
+            }
+            var user = _membershipService.ValidateUser(u.UserName, u.Password);
+            if (user != null)
+            {
+                _authenticationService.SignIn(user, u.RememberMe);
+                _userEventHandler.LoggedIn(user);
+                return new JsonHelper.JsonNetResult(true, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return new JsonHelper.JsonNetResult(false, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [Themed(false)]
+        [HttpPost]
+        [ActionName("Logout")]
+        public ActionResult Logout()
+        {
+            var wasLoggedInUser = _authenticationService.GetAuthenticatedUser();
+            _authenticationService.SignOut();
+            if (wasLoggedInUser != null)
+                _userEventHandler.LoggedOut(wasLoggedInUser);
+            return new JsonHelper.JsonNetResult(true, JsonRequestBehavior.AllowGet);
+        }
+
 
     }
 }
