@@ -121,11 +121,26 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\trans.gif" />
+    <Content Include="Scripts\ace\ace.js" />
+    <Content Include="Scripts\ace\mode-javascript.js" />
+    <Content Include="Scripts\fuelux.wizard.js" />
+    <Content Include="Scripts\fullcalendar.min.js" />
+    <Content Include="Scripts\gcal.js" />
     <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
     <Content Include="Scripts\jquery.fitvids.js" />
+    <Content Include="Scripts\jquery.flot.js" />
+    <Content Include="Scripts\jquery.flot.resize.js" />
+    <Content Include="Scripts\jquery.flot.stack.js" />
+    <Content Include="Scripts\jquery.knob.js" />
+    <Content Include="Scripts\jquery.tmpl.min.js" />
+    <Content Include="Scripts\jquery.uniform.min.js" />
     <Content Include="Scripts\messenger-theme-flat.js" />
     <Content Include="Scripts\messenger.min.js" />
+    <Content Include="Scripts\morris.min.js" />
     <Content Include="Scripts\offline.min.js" />
+    <Content Include="Scripts\select2.min.js" />
+    <Content Include="Scripts\wysihtml5-0.3.0.js" />
     <Content Include="Styles\images\calendar-blue.gif" />
     <Content Include="Styles\images\calendar-green.gif" />
     <Content Include="Styles\images\calendar.gif" />

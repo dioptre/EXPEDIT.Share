@@ -111,7 +111,7 @@ namespace EXPEDIT.Share.Services
                 return (from o in d.Users where o.UserName.StartsWith(startsWith) orderby o.UserName ascending
                         select o).Take(20).AsEnumerable()
                         .Select(f =>
-                             new SelectListItem { Text = f.UserName, Value = f.UserName})
+                             new SelectListItem { Text = f.UserName, Value = string.Format("{0}", f.UserId)})
                              .ToArray()
                         ;
             }

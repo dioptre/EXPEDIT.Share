@@ -200,6 +200,8 @@ namespace EXPEDIT.Share.Controllers {
         [Themed(false)]
         public JsonResult GetUsernames(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+                return Json(new SelectListItem[] { }, JsonRequestBehavior.AllowGet);
             return Json(_content.GetUsernames(id), JsonRequestBehavior.AllowGet);
         }
 
