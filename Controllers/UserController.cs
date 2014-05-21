@@ -205,6 +205,17 @@ namespace EXPEDIT.Share.Controllers {
             return Json(_content.GetUsernames(id), JsonRequestBehavior.AllowGet);
         }
 
+
+        [ValidateInput(false)]
+        [Authorize]
+        [Themed(false)]
+        public JsonResult GetCompanies(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return Json(new SelectListItem[] { }, JsonRequestBehavior.AllowGet);
+            return Json(_content.GetCompanies(id), JsonRequestBehavior.AllowGet);
+        }
+
         dynamic Shape { get; set; }
         [Themed(true)]
         public ActionResult Search(PagerParameters pagerParameters, string q = "")

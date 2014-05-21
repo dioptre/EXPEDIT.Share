@@ -118,6 +118,27 @@ namespace EXPEDIT.Share.Services
         }
 
 
+        public SelectListItem[] GetCompanies(string startsWith)
+        {
+
+            if (startsWith == null || startsWith.Length == 1)
+                return new SelectListItem[] { };
+            var application = _users.ApplicationID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.Companies
+                        where o.CompanyName.StartsWith(startsWith)
+                        orderby o.CompanyName ascending
+                        select o).Take(20).AsEnumerable()
+                        .Select(f =>
+                             new SelectListItem { Text = f.CompanyName, Value = string.Format("{0}", f.CompanyID) })
+                             .ToArray()
+                        ;
+            }
+        }
+
         public Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false, bool checkin=false, string reference=null)
         {
             var contact = _users.ContactID;
