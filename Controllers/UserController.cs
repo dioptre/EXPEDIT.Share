@@ -558,5 +558,13 @@ namespace EXPEDIT.Share.Controllers {
         }
 
 
+        [Themed(false)]
+        [HttpHead]
+        [ActionName("IsOnline")]
+        public ActionResult IsOnline()
+        {
+            return new HttpStatusCodeResult(System.Net.HttpStatusCode.NoContent);
+        }
+
     }
 }

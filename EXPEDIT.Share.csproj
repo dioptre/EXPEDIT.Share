@@ -120,6 +120,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\trans.gif" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.fitvids.js" />
+    <Content Include="Scripts\messenger-theme-flat.js" />
+    <Content Include="Scripts\messenger.min.js" />
+    <Content Include="Scripts\offline.min.js" />
     <Content Include="Styles\images\calendar-blue.gif" />
     <Content Include="Styles\images\calendar-green.gif" />
     <Content Include="Styles\images\calendar.gif" />
@@ -1321,7 +1327,15 @@
     <Content Include="Styles\jquery.fileupload-ui-noscript.css" />
     <Content Include="Styles\jquery.fileupload-ui.css" />
     <Content Include="Styles\jquery.fileupload.css" />
+    <Content Include="Styles\messenger-spinner.css" />
+    <Content Include="Styles\messenger-theme-air.css" />
+    <Content Include="Styles\messenger-theme-block.css" />
+    <Content Include="Styles\messenger-theme-flat.css" />
+    <Content Include="Styles\messenger-theme-future.css" />
+    <Content Include="Styles\messenger-theme-ice.css" />
+    <Content Include="Styles\messenger.css" />
     <Content Include="Styles\nprogress.css" />
+    <Content Include="Styles\offline-theme-chrome.css" />
     <Content Include="Styles\pace.css" />
     <Content Include="Styles\picker.css" />
     <Content Include="Styles\vis.css" />

@@ -102,3 +102,12 @@ function addPager(offset, pageSize, urlPrefix, action, once) { //MyTicketsPartia
             pagers[action] = true;
     }
 }
+if (typeof Offline !== 'undefined' && Offline)
+    Offline.options = { checks: { xhr: { url: '/share/IsOnline' } } };
+
+if (typeof Messenger !== 'undefined' && Messenger)
+    Messenger.options = {
+        extraClasses: 'messenger-expedit messenger-fixed messenger-on-bottom messenger-on-right',
+        theme: 'flat',
+        messageDefaults: { hideAfter: 3 }
+    };

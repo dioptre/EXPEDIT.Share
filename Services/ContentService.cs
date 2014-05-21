@@ -108,8 +108,8 @@ namespace EXPEDIT.Share.Services
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null, false);
                 d.ContextOptions.LazyLoadingEnabled = false;
-                return (from o in d.Users where SqlMethods.Like(o.UserName, "%" + startsWith + "%")
-                        select o).AsEnumerable()
+                return (from o in d.Users where o.UserName.StartsWith(startsWith) orderby o.UserName ascending
+                        select o).Take(20).AsEnumerable()
                         .Select(f =>
                              new SelectListItem { Text = f.UserName, Value = f.UserName})
                              .ToArray()
