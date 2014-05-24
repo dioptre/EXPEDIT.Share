@@ -39,9 +39,6 @@ namespace EXPEDIT.Share.Services {
 
         private const string DIRECTORY_TEMP = "EXPEDIT.Share\\Temp";
         private readonly IOrchardServices _orchardServices;
-        private readonly IContentManager _contentManager;
-        private readonly IMessageManager _messageManager;
-        private readonly IScheduledTaskManager _taskManager;
         private readonly IStorageProvider _storage;
         private ShellSettings _settings;
         private readonly IUsersService _users;
@@ -49,19 +46,13 @@ namespace EXPEDIT.Share.Services {
         public ILogger Logger { get; set; }
 
         public ShareService(
-            IContentManager contentManager, 
             IOrchardServices orchardServices, 
-            IMessageManager messageManager, 
-            IScheduledTaskManager taskManager,
             IStorageProvider storage,
             ShellSettings shellSettings,
             IUsersService users, 
             IMediaService media)
         {
             _orchardServices = orchardServices;
-            _contentManager = contentManager;
-            _messageManager = messageManager;
-            _taskManager = taskManager;
             _storage = storage;
             _settings = shellSettings;
             _media = media;

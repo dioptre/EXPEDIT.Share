@@ -193,14 +193,14 @@
     <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\canvas-to-blob.min.js" />
     <Content Include="Scripts\common.js" />
-    <None Include="Scripts\jquery.linq-vsdoc.js" />
+    <Content Include="Scripts\jquery.linq-vsdoc.js" />
     <Content Include="Scripts\ember-list-view.min.js" />
     <Content Include="Scripts\emberui.js" />
     <Content Include="Scripts\ic-ajax.js" />
     <Content Include="Scripts\instaview.js" />
     <Content Include="Scripts\jquery.linq.js" />
     <Content Include="Scripts\jquery.linq.min.js" />
-    <None Include="Scripts\linq-vsdoc.js" />
+    <Content Include="Scripts\linq-vsdoc.js" />
     <Content Include="Scripts\jquery.velocity.min.js" />
     <Content Include="Scripts\linq.js" />
     <Content Include="Scripts\linq.min.js" />
@@ -1017,7 +1017,7 @@
     <Content Include="Scripts\jquery-ui\package.json" />
     <Content Include="Scripts\jquery-ui\README.md" />
     <Content Include="Scripts\jquery-ui\ui\.jshintrc" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.additional-methods.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

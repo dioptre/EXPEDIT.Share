@@ -1239,14 +1239,20 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
     return paddedOptions;
   }).property('options.@each', 'required'),
   label: (function() {
-    var labelPath;
+      var labelPath;
     labelPath = this.get('labelPath');
     return this.get("selection." + labelPath) || this.get('placeholder');
   }).property('selection', 'placeholder', 'labelPath'),
-  selection: Ember.computed('_selection', function(key, value) {
+  selection: Ember.computed('_selection', function (key, value) {
     var nullValue, selection;
     if (arguments.length === 2) {
-      this.set('_selection', value);
+        this.set('_selection', value);
+        //var _this = this;
+        //$.each(_this.options, function (i, a) {
+        //    a.addObserver('this.name', _this, function () {
+        //        alert('asdasd'); //return _this.notifyPropertyChange('selection');
+        //    });
+        //    });
       return value;
     } else {
       selection = this.get('_selection');
@@ -1258,6 +1264,9 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
       }
     }
   }),
+  //optionsTriggerz: function () {
+  //    alert('hi')
+  //}.observes('options.@each.name.length'),
   value: Ember.computed('selection', 'valuePath', function(key, value) {
     var selection, valuePath;
     if (arguments.length === 2) {
