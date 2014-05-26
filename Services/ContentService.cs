@@ -20,7 +20,6 @@ using Orchard.Tasks.Scheduling;
 using Orchard.Data;
 using NKD.Module.BusinessObjects;
 using NKD.Services;
-using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
 using System.Web.Mvc;
 using NKD.Helpers;
@@ -37,24 +36,16 @@ namespace EXPEDIT.Share.Services
     [UsedImplicitly]
     public class ContentService : IContentService, Orchard.Users.Events.IUserEventHandler
     {
-        private readonly IOrchardServices _orchardServices;
         private readonly IUsersService _users;
-        private readonly IMediaService _media;
-        private readonly IStorageProvider _storage;
         public ILogger Logger { get; set; }
 
         public ContentService(
-            IOrchardServices orchardServices,
-            IUsersService users,
-            IMediaService media,
-            IStorageProvider storage)
+            IUsersService users
+            )
         {
-            _orchardServices = orchardServices;
-            _media = media;
             _users = users;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
-            _storage = storage;
         }
 
         public Localizer T { get; set; }        

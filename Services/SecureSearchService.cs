@@ -20,7 +20,6 @@ using Orchard.Tasks.Scheduling;
 using Orchard.Data;
 using NKD.Module.BusinessObjects;
 using NKD.Services;
-using Orchard.Media.Services;
 using EXPEDIT.Share.Helpers;
 using System.Web.Mvc;
 using NKD.Helpers;

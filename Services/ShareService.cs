@@ -20,7 +20,7 @@ using Orchard.Tasks.Scheduling;
 using Orchard.Data;
 using NKD.Module.BusinessObjects;
 using NKD.Services;
-using Orchard.Media.Services;
+using Orchard.MediaLibrary.Services;
 using EXPEDIT.Share.ViewModels;
 using EXPEDIT.Share.Helpers;
 using Orchard.DisplayManagement;
@@ -42,15 +42,15 @@ namespace EXPEDIT.Share.Services {
         private readonly IStorageProvider _storage;
         private ShellSettings _settings;
         private readonly IUsersService _users;
-        private readonly IMediaService _media;
+        private readonly IMediaLibraryService _media;
         public ILogger Logger { get; set; }
 
         public ShareService(
             IOrchardServices orchardServices, 
             IStorageProvider storage,
             ShellSettings shellSettings,
-            IUsersService users, 
-            IMediaService media)
+            IUsersService users,
+            IMediaLibraryService media)
         {
             _orchardServices = orchardServices;
             _storage = storage;
@@ -337,7 +337,7 @@ namespace EXPEDIT.Share.Services {
         {
             var contact = _users.ContactID;
             var application = _users.ApplicationID;
-            var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
+            var directory = _storage.GetPublicUrl(@"EXPEDIT.Transactions");
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
@@ -372,7 +372,7 @@ namespace EXPEDIT.Share.Services {
         {
             var contact = _users.ContactID;
             var application = _users.ApplicationID;
-            var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
+            var directory = _storage.GetPublicUrl(@"EXPEDIT.Transactions");
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
@@ -475,7 +475,7 @@ namespace EXPEDIT.Share.Services {
         {
             var contact = _users.ContactID;
             var application = _users.ApplicationID;
-            var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
+            var directory = _storage.GetPublicUrl(@"EXPEDIT.Transactions");
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
@@ -507,7 +507,7 @@ namespace EXPEDIT.Share.Services {
         {
             var contact = _users.ContactID;
             var application = _users.ApplicationID;
-            var directory = _media.GetPublicUrl(@"EXPEDIT.Transactions");
+            var directory = _storage.GetPublicUrl(@"EXPEDIT.Transactions");
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);

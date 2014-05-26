@@ -58,7 +58,7 @@ namespace EXPEDIT.Share.Helpers
         public static string APP_VERIFY_ID = "80d249a9eecc9232fb6ed0f843e7f230";
         public static string APP_VERIFY_SECRET = "6239e342d7abb35c853ad33e65931f64";
         public static string APP_VERIFY_REPLYTO = "+61400970789";
-        public static string APP_XMLRPC_URL = @"http://test.miningappstore.com/xmlrpc";
+        public static string APP_XMLRPC_URL = @"http://miningappstore.com/xmlrpc";
 
         public static string EMAIL_FOLDER_INBOX = "Inbox";
         public static string EMAIL_FOLDER_SUPPORT = "Support";

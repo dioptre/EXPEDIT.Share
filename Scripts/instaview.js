@@ -684,7 +684,8 @@ InstaView.convert = function(wiki)
 	    .replace(/<ul>ul>/g, '<ul>')
         .replace(/columns\-list([0-9]|\s|\|)*/g, '')
     	.replace(/<li>;/g, '')
-        .replace(/<p>\s*<\/p>/g,'')
+        .replace(/<p>\s*<\/p>/g, '')
+        + "<div style='text-align:right;'><br/><br/><br/><a href='https://donate.wikimedia.org/w/index.php?title=Special:FundraiserLandingPage&utm_source=flowpro' target='_blank'>Donate to Wikipedia</a></div>"
     ;
 }
 
