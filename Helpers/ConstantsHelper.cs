@@ -79,7 +79,7 @@ namespace EXPEDIT.Share.Helpers
         private static string mailUserEmail = null;
         public static string MailUserEmail { get { if (mailUserEmail == null) { mailUserEmail = System.Configuration.ConfigurationManager.AppSettings["MailUserEmail"] ?? @"help@support.miningappstore.com"; } return mailUserEmail; } }
         private static string mailPassword = null;
-        public static string MailPassword { get { if (mailPassword == null) { mailPassword = System.Configuration.ConfigurationManager.AppSettings["MailPassword"] ?? @"help"; } return mailPassword; } }
+        public static string MailPassword { get { if (mailPassword == null) { mailPassword = System.Configuration.ConfigurationManager.AppSettings["MailPassword"] ?? @"F5C6DA7CF26F45D4A3F2DDDADE5BD256"; } return mailPassword; } }
         private static int? mailPort = null;
         public static int MailPort
         {

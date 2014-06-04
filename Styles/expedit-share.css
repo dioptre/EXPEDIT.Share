@@ -14,6 +14,9 @@ label.valid {
 	background: none;
 }
 
+#map-search img {
+    max-width: none !important;
+}
 
 .ui-autocomplete {
   position: block;

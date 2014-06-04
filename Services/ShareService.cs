@@ -370,6 +370,8 @@ namespace EXPEDIT.Share.Services {
         /// <returns></returns>
         public IEnumerable<SearchViewModel> GetFiles(string text = null, int? startRowIndex = null, int? pageSize = null)
         {
+            //if (string.IsNullOrWhiteSpace(text))
+            //    return new SearchViewModel[] { };
             var contact = _users.ContactID;
             var application = _users.ApplicationID;
             var directory = _storage.GetPublicUrl(@"EXPEDIT.Transactions");
@@ -473,6 +475,8 @@ namespace EXPEDIT.Share.Services {
 
         public IEnumerable<SearchViewModel> GetLocations(string text = null, int? startRowIndex = null, int? pageSize = null)
         {
+            if (string.IsNullOrWhiteSpace(text))
+                return new SearchViewModel[] { };
             var contact = _users.ContactID;
             var application = _users.ApplicationID;
             var directory = _storage.GetPublicUrl(@"EXPEDIT.Transactions");

@@ -7,6 +7,10 @@
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
     Layout.Title = T("Pick Location").ToString();    
 }
+<link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Themes/MAS1/Styles/site.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/expedit-share.css")" rel="stylesheet" type="text/css" />
+
 <script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.utils.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.maps.js")"></script>
 <script type="text/x-handlebars">    
@@ -40,7 +44,7 @@
 }
   </script>
   <script type="text/x-handlebars" id="loading">
-      <div style="text-align:center;">
+      <div style="text-align:center;display:none;">
           <h4>Loading...</h4>
           <img src="@Url.Content("~/Modules/EXPEDIT.Share/Images/loading.gif")" />
       </div>
@@ -57,9 +61,6 @@
      </ul>
   </script>
 
-
-<link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
-<link href="@Url.Content("~/Themes/MAS1/Styles/site.css")" rel="stylesheet" type="text/css" />
 
 <script src="@Url.Content("~/Modules/EXPEDIT.Share/Scripts/share-picklocation.js")"></script>
  <script type="text/javascript">
