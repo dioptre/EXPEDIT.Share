@@ -11200,9 +11200,9 @@ Edge.prototype.unselect = function() {
 };
 
 Edge.prototype.positionBezierNode = function() {
-  if (this.via !== null) {
-    this.via.x = 0.5 * (this.from.x + this.to.x);
-    this.via.y = 0.5 * (this.from.y + this.to.y);
+    if (this.via !== null && this.to !== null && this.from !== null) {
+        this.via.x = 0.5 * (this.from.x + this.to.x);
+        this.via.y = 0.5 * (this.from.y + this.to.y);
   }
 };
 /**
