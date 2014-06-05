@@ -171,7 +171,7 @@ namespace EXPEDIT.Share.Controllers {
         {
             var file = _share.GetPhoto(new Guid(id));
             if (file != null)
-                return new NKD.Handlers.FileGeneratingResult(string.Format("{0}.png", id).Trim(), "image/png", stream => new System.IO.MemoryStream(file).WriteTo(stream));
+                return new NKD.Handlers.FileGeneratingResult(string.Format("{0}.jpg", id).Trim(), "image/jpeg", stream => new System.IO.MemoryStream(file).WriteTo(stream));
             else
                 return new RedirectResult(System.Web.VirtualPathUtility.ToAbsolute("~/Media/Default/EXPEDIT.Share/images/qmark.jpg"));
         }

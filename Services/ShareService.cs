@@ -293,7 +293,7 @@ namespace EXPEDIT.Share.Services {
                     if (file == null)
                     {
                         var preview = (from o in d.Contacts where o.AspNetUserID == userID && o.Version == 0 && o.VersionDeletedBy == null select o).Single();
-                        if (preview.Photo.Length > 0)
+                        if (preview.Photo!= null && preview.Photo.Length > 0)
                         using (var thumb = new MemoryStream())
                         {
                             using (var full = new MemoryStream(preview.Photo))
@@ -302,7 +302,7 @@ namespace EXPEDIT.Share.Services {
                                 {
                                     Image image = Image.FromStream(full);
                                     Image tn = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
-                                    tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Png);
+                                    tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Jpeg);
                                     file = thumb.ToArray();
 
                                 }
@@ -311,12 +311,11 @@ namespace EXPEDIT.Share.Services {
                                     file = null;
                                 }
                             }
-                            
+                            return CacheHelper.AddToCache<byte[]>(() => { return file; }, cacheKey, new TimeSpan(0, 15, 0));    
                         }
-                        return CacheHelper.AddToCache<byte[]>(() => { return file; }, cacheKey, new TimeSpan(0,15,0));
+                        
                     }
-                    else
-                        return file;
+                    return file;
                 }
             }
             catch
@@ -669,7 +668,9 @@ namespace EXPEDIT.Share.Services {
                 {
                     var m = (from o in d.Contacts where o.ContactID == contact && o.Version==0 && o.VersionDeletedBy == null select o).Single();
                     m.Photo = img;                    
-                    d.SaveChanges(); 
+                    d.SaveChanges();
+                    var cacheKey = string.Format("{0}-PHOTO-{1}", m.AspNetUserID, CacheHelper.CacheType.Preview);
+                    CacheHelper.Cache.Remove(cacheKey);
                     return true;                    
                 }
 
