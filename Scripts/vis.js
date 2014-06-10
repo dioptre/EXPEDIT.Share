@@ -11352,7 +11352,6 @@ Groups = function () {
  * default constants for group colors
  */
 Groups.DEFAULT = [
-  {border: "#2B7CE9", background: "#97C2FC", highlight: {border: "#2B7CE9", background: "#D2E5FF"}}, // blue
   {border: "#FFA500", background: "#FFFF00", highlight: {border: "#FFA500", background: "#FFFFA3"}}, // yellow
   {border: "#FA0A10", background: "#FB7E81", highlight: {border: "#FA0A10", background: "#FFAFB1"}}, // red
   {border: "#41A906", background: "#7BE141", highlight: {border: "#41A906", background: "#A1EC76"}}, // green
@@ -11361,7 +11360,8 @@ Groups.DEFAULT = [
   {border: "#C37F00", background: "#FFA807", highlight: {border: "#C37F00", background: "#FFCA66"}}, // orange
   {border: "#4220FB", background: "#6E6EFD", highlight: {border: "#4220FB", background: "#9B9BFD"}}, // darkblue
   {border: "#FD5A77", background: "#FFC0CB", highlight: {border: "#FD5A77", background: "#FFD1D9"}}, // pink
-  {border: "#4AD63A", background: "#C2FABC", highlight: {border: "#4AD63A", background: "#E6FFE3"}}  // mint
+  {border: "#4AD63A", background: "#C2FABC", highlight: {border: "#4AD63A", background: "#E6FFE3"}},  // mint
+  {border: "#2B7CE9", background: "#e3efff", highlight: {border: "#2B7CE9", background: "#D2E5FF"}} // blue
 ];
 
 
@@ -16097,14 +16097,14 @@ function Graph (container, data, options) {
       level: -1,
       color: {
           border: '#2B7CE9',
-          background: '#97C2FC',
+          background: '#e3efff',
         highlight: {
           border: '#2B7CE9',
           background: '#D2E5FF'
         }
       },
       borderColor: '#2B7CE9',
-      backgroundColor: '#97C2FC',
+      backgroundColor: '#e3efff',
       highlightColor: '#D2E5FF',
       group: undefined
     },
