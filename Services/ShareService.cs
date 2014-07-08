@@ -232,7 +232,6 @@ namespace EXPEDIT.Share.Services {
         {
             try
             {
-
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
                     var d = new NKDC(_users.ApplicationConnectionString, null, false);
@@ -251,7 +250,8 @@ namespace EXPEDIT.Share.Services {
                                     try
                                     {
                                         Image image = Image.FromStream(full);
-                                        Image tn = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
+                                        Image tn = image.Resize(200, 200, true);
+                                        //Image tn = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
                                         tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Png);
                                         preview.FileBytes = thumb.ToArray();
                                         if (preview.FileBytes.Length < 1)
