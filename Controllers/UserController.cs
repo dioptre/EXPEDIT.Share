@@ -243,7 +243,7 @@ namespace EXPEDIT.Share.Controllers {
 
             var list = Shape.List();
             var offset = (pager.Page - 1) * pager.PageSize + 1;
-            var dbSearch = _share.GetSearchResults(q, null, offset, pager.PageSize);
+            var dbSearch = _share.GetSearchResults(q, null, offset, pager.PageSize, ConstantsHelper.ProductCategories);
             var dbCount = dbSearch.Count();
             foreach (var hit in dbSearch)
             {

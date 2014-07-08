@@ -29,7 +29,7 @@ namespace EXPEDIT.Share.Services
          byte[] GetPhoto(Guid userID);
 
          [OperationContract]
-         IEnumerable<IHtmlString> GetSearchResults(string text = null, Guid? supplierModelID = null, int? startRowIndex = null, int? pageSize = null);
+         IEnumerable<IHtmlString> GetSearchResults(string text = null, Guid? supplierModelID = null, int? startRowIndex = null, int? pageSize = null, string filterCategories = null);
 
          [OperationContract]
          IEnumerable<SearchViewModel> GetFiles(string text = null, int? startRowIndex = null, int? pageSize = null);

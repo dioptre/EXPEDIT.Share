@@ -332,7 +332,7 @@ namespace EXPEDIT.Share.Services {
         /// <param name="startRowIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public IEnumerable<IHtmlString> GetSearchResults(string text = null, Guid? supplierModelID = null, int? startRowIndex = null, int? pageSize = null)
+        public IEnumerable<IHtmlString> GetSearchResults(string text = null, Guid? supplierModelID = null, int? startRowIndex = null, int? pageSize = null, string filterCategories = null)
         {
             var contact = _users.ContactID;
             var application = _users.ApplicationID;
@@ -343,7 +343,7 @@ namespace EXPEDIT.Share.Services {
                 var table = d.GetTableName(typeof(SupplierModel));
                 var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
                 var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
-                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null,null, null, startRowIndex, pageSize, verified, found)
+                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, ConstantsHelper.DEVICE_TYPE_SOFTWARE, filterCategories, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, startRowIndex, pageSize, verified, found)
                         select GetSearchResultShape(new SearchViewModel
                         {
                             id = o.id,
@@ -380,7 +380,7 @@ namespace EXPEDIT.Share.Services {
                 var table = d.GetTableName(typeof(FileData));
                 var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
                 var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
-                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, startRowIndex, pageSize, verified, found)
+                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, startRowIndex, pageSize, verified, found)
                         select new SearchViewModel
                         {
                             id = o.id,
@@ -485,7 +485,7 @@ namespace EXPEDIT.Share.Services {
                 var table = d.GetTableName(typeof(Location));
                 var verified = new System.Data.Objects.ObjectParameter("verified", typeof(int));
                 var found = new System.Data.Objects.ObjectParameter("found", typeof(int));
-                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, startRowIndex, pageSize, verified, found)
+                return (from o in d.E_SP_GetSecuredSearch(text, contact, application, table, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, startRowIndex, pageSize, verified, found)
                         select new SearchViewModel
                         {
                             id = o.id,
