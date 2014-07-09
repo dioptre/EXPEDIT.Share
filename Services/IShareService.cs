@@ -7,6 +7,7 @@ using System.ServiceModel;
 using NKD.Module.BusinessObjects;
 using EXPEDIT.Share.ViewModels;
 using NKD.ViewModels;
+using NKD.Helpers;
 
 namespace EXPEDIT.Share.Services
 {
@@ -23,7 +24,7 @@ namespace EXPEDIT.Share.Services
          FileData GetFile(Guid fileDataID);
 
          [OperationContract]
-         FileData GetPreview(Guid fileDataID);
+         FileData GetPreview(Guid fileDataID, int width = 200, int? height = 200, bool crop = false, ImageHelper.ImageFormat format = ImageHelper.ImageFormat.jpeg);
 
          [OperationContract]
          byte[] GetPhoto(Guid userID);

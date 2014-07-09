@@ -143,13 +143,13 @@ namespace EXPEDIT.Share.Controllers {
         //[ValidateAntiForgeryToken]
         //[Themed(false)]
         //[Authorize]
-        public ActionResult Preview(string id)
+        public ActionResult Preview(string id, int width = 200, int? height = null, bool crop = false, ImageHelper.ImageFormat format = ImageHelper.ImageFormat.jpeg)
         {
-            var file = _share.GetPreview(new Guid(id));
+            var file = _share.GetPreview(new Guid(id), width, height, crop, format);
             if (file != null)
             {
                 if (file.FileBytes != null)
-                    return new NKD.Handlers.FileGeneratingResult(string.Format("{0}-{1}-{2}.png", id, NKD.Helpers.DateHelper.NowInOnlineFormat, file.FileName).Trim(), "image/png", stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
+                    return new NKD.Handlers.FileGeneratingResult(string.Format("{1}-{2}-{3}-{0}.{4}", id, file.FileName, width, height, format).Trim(), string.Format("image/{0}", format), stream => new System.IO.MemoryStream(file.FileBytes).WriteTo(stream));
                 else
                     return new RedirectResult(System.Web.VirtualPathUtility.ToAbsolute("~/Media/Default/EXPEDIT.Share/images/qmark.jpg"));                    
             }

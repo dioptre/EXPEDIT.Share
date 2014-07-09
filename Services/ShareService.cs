@@ -228,16 +228,18 @@ namespace EXPEDIT.Share.Services {
         /// </summary>
         /// <param name="fileDataID"></param>
         /// <returns></returns>
-        public FileData GetPreview(Guid fileDataID)
+        public FileData GetPreview(Guid fileDataID, int width = 200, int? height = 200, bool crop = false, ImageHelper.ImageFormat format = ImageHelper.ImageFormat.jpeg)
         {
             try
             {
+                if (width < 1 || width > 600 || fileDataID == default(Guid))
+                    return null;
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
                     var d = new NKDC(_users.ApplicationConnectionString, null, false);
                     if (!CheckFilePrivileges(d, fileDataID))
                         return null;
-                    var cacheKey = string.Format("{0}-{1}", fileDataID, CacheHelper.CacheType.Preview);
+                    var cacheKey = string.Format("{0}-{1}-{2}-{3}-{4}-{5}", fileDataID, width, height, crop, format, CacheHelper.CacheType.Preview);
                     var file = CacheHelper.Cache[cacheKey] as FileData;
                     if (file == null) {
                         var preview = (from o in d.FileDatas where o.FileDataID == fileDataID && o.Version == 0 && o.VersionDeletedBy == null select o).Single();
@@ -250,9 +252,29 @@ namespace EXPEDIT.Share.Services {
                                     try
                                     {
                                         Image image = Image.FromStream(full);
-                                        Image tn = image.Resize(200, 200, true);
+                                        Image tn;
+                                        if (height == default(int?))
+                                        {
+
+                                            tn = image.Resize(width, image.Width / width * image.Height, crop);
+                                        }
+                                        else
+                                            tn = image.Resize(200, 200, crop);
                                         //Image tn = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
-                                        tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Png);
+                                        switch (format)
+                                        {
+                                            case ImageHelper.ImageFormat.jpeg:
+                                                tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                                break;
+                                            case ImageHelper.ImageFormat.gif:
+                                                tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Gif);
+                                                break;
+                                            case ImageHelper.ImageFormat.png:
+                                                tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Png);
+                                                break;
+                                            default:
+                                                return null;
+                                        }
                                         preview.FileBytes = thumb.ToArray();
                                         if (preview.FileBytes.Length < 1)
                                             preview.FileBytes = null;
@@ -301,7 +323,7 @@ namespace EXPEDIT.Share.Services {
                                 try
                                 {
                                     Image image = Image.FromStream(full);
-                                    Image tn = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
+                                    Image tn = image.Resize(200, 200, true);
                                     tn.Save(thumb, System.Drawing.Imaging.ImageFormat.Jpeg);
                                     file = thumb.ToArray();
 
