@@ -111,3 +111,12 @@ if (typeof Messenger !== 'undefined' && Messenger)
         theme: 'flat',
         messageDefaults: { hideAfter: 3 }
     };
+
+function TraverseDom(node, func) {
+    func(node);
+    node = node.firstChild;
+    while (node) {
+        TraverseDom(node, func);
+        node = node.nextSibling;
+    }
+}
