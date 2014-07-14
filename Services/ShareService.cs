@@ -259,7 +259,7 @@ namespace EXPEDIT.Share.Services {
                                             tn = image.Resize(width, image.Width / width * image.Height, crop);
                                         }
                                         else
-                                            tn = image.Resize(200, 200, crop);
+                                            tn = image.Resize(width, height.Value, crop);
                                         //Image tn = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
                                         switch (format)
                                         {
