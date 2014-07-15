@@ -504,6 +504,7 @@
       return this.saveFormButton.removeAttr('disabled').text(Formbuilder.options.dict.SAVE_FORM);
     };
 
+
     BuilderView.prototype.saveForm = function(e) {
       var payload;
       if (this.formSaved) {

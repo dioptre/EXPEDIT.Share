@@ -13,7 +13,7 @@ $(document).ready(function () {
 	$('#formed').bootstrapValidator();
 	
 	$('<div>').attr({
-		id=''
+		id:''
 	})
 	//$('#formed').id = "DC85F2C1-5CE6-4BC9-ACB4-7AD65004B15E"
 

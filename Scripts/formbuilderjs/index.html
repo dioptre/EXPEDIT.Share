@@ -33,29 +33,37 @@
   </style>
 </head>
 <body>
+
   <div class='fb-main'></div>
 
   <script src="vendor/js/vendor.js"></script>
   <script src="dist/formbuilder.js"></script>
 
   <script>
-    $(function(){
+
+    $(function () {
+      Formbuilder.options.AUTOSAVE = false;
+      // setting up form plugin...
       fb = new Formbuilder({
-        selector: '.fb-main',
-        bootstrapData: [
-          {
-            "label": "Please enter your clearance number",
-            "field_type": "text",
-            "required": true,
-            "field_options": {},
-            "cid": "c6"
-          }
-        ]
+          selector: '.fb-main',
+        bootstrapData: []
       });
 
+      // trigger from plugin
       fb.on('save', function(payload){
-        console.log(payload);
+          parent.$.colorbox.selectedData = payload;
+          parent.$.colorbox.close();
       })
+           
+
+      // for the close button on the lightbox
+      $("#media-library-main-selection-select > .button-cancel").on('click', function () {
+          parent.$.colorbox.selectedData = null;
+          parent.$.colorbox.close();
+      });
+
+      
+      
     });
   </script>
 

@@ -85,3 +85,8 @@ label.valid {
     -ms-user-select: none;
     user-select: none;
 }
+
+.form-group.required label:after {
+	content:"*";
+	color:red;
+}
