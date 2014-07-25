@@ -475,6 +475,21 @@ namespace EXPEDIT.Share.Controllers {
         //[ValidateAntiForgeryToken]
         [Themed(false)]
         //[Authorize]
+        [HttpPost]
+        [ActionName("Forms")]
+        public ActionResult SubmitForm(EXPEDIT.Share.ViewModels.MyFormViewModel m)
+        {
+            if (!_share.SubmitForm(m))
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.ExpectationFailed);
+            else
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.OK);
+        }
+
+
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        [Themed(false)]
+        //[Authorize]
         public ActionResult LocationRaw(string id)
         {
             Guid guid;

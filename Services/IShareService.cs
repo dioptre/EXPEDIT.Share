@@ -48,6 +48,9 @@ namespace EXPEDIT.Share.Services
          bool SubmitLocation(PickLocationViewModel m);
 
          [OperationContract]
+         bool SubmitForm(MyFormViewModel m);
+
+         [OperationContract]
          PickLocationViewModel GetLocation(Guid locationID);
 
          [OperationContract]

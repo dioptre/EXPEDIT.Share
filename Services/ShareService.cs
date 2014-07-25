@@ -577,6 +577,12 @@ namespace EXPEDIT.Share.Services {
                 Culture = culture
             });
         }
+
+        public bool SubmitForm(MyFormViewModel m)
+        {
+            return true;
+        }
+
         public bool SubmitLocation(PickLocationViewModel m)
         {
             if (string.IsNullOrWhiteSpace(m.LocationName))
