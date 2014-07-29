@@ -7,6 +7,7 @@ $negative-color = #e74c3c
 $editing-bg = #ecf0f1
 $editing-border = darken($editing-bg, 7%)
 
+
 .fb-button {
   display: inline-block;
   margin: 0;
@@ -33,6 +34,7 @@ $editing-border = darken($editing-bg, 7%)
   opacity: .65;
   cursor: default;
 }
+
 
 .fb-clear {
   clear: both;
@@ -192,11 +194,13 @@ $editing-border = darken($editing-bg, 7%)
   z-index: 3;
 }
 
+/* bootstrap
 .fb-field-wrapper .actions-wrapper a {
   display: inline-block;
   background-color: #ccc;
   padding: 2px 8px;
 }
+*/
 
 .edit-response-field {
   input, textarea, select {
@@ -217,17 +221,22 @@ $editing-border = darken($editing-bg, 7%)
   }
 }
 
+
+
+/* giving way for bootstrap
 .fb-field-wrapper .actions-wrapper a.js-duplicate,
 .fb-edit-field-wrapper .js-add-option {
   background-color: $affirmitive-color;
   border: none;
 }
 
+
 .fb-field-wrapper .actions-wrapper a.js-clear,
 .fb-edit-field-wrapper .js-remove-option {
   background-color: $negative-color;
   border: none;
 }
+*/
 
 .fb-field-wrapper .subtemplate-wrapper {
   border: 1px dashed transparent;

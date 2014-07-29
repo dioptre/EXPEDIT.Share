@@ -31,6 +31,8 @@ using System.Drawing;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 using NKD.ViewModels;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace EXPEDIT.Share.Services {
     
@@ -256,7 +258,7 @@ namespace EXPEDIT.Share.Services {
                                         if (height == default(int?))
                                         {
 
-                                            tn = image.Resize(width, image.Width / width * image.Height, crop);
+                                            tn = image.Resize(width,  (int)((double)width / (double)image.Width * (double)image.Height), crop);
                                         }
                                         else
                                             tn = image.Resize(width, height.Value, crop);
@@ -580,7 +582,97 @@ namespace EXPEDIT.Share.Services {
 
         public bool SubmitForm(MyFormViewModel m)
         {
-            return true;
+            try
+            {
+                var contact = _users.ContactID;
+                var company = _users.DefaultContactCompanyID;
+                m.FormData = JsonConvert.SerializeObject(m.Form.FormData);
+                m.Recipients = m.Form.FormJSON.emails.Value;
+                m.id = Guid.Parse(m.Form.FormJSON.id.Value);
+                m.FormJSON = JsonConvert.SerializeObject(m.Form.FormJSON.fields);
+                m.FormHash = m.FormJSON.ComputeHash();
+                m.FormOrigin = m.Form.FormJSON.origin.Value;
+                if (!string.IsNullOrWhiteSpace(m.Recipients))
+                {
+                    _users.EmailUsers(
+                        m.Recipients.Split(','),
+                        string.Format("Form Submitted ({0})", m.id),
+                        m.FormData);
+
+                }
+
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    var d = new NKDC(_users.ApplicationConnectionString, null);
+                    Form theForm = d.Forms.SingleOrDefault(f=> f.FormID == m.id);
+                    if (theForm == null)
+                    {
+                        theForm = new Form { 
+                            FormID = m.id.Value, 
+                            FormActions = m.Recipients, 
+                            FormStructure = m.FormJSON, 
+                            FormStructureChecksum = m.FormHash,
+                            VersionOwnerContactID = contact,
+                            VersionOwnerCompanyID = company,
+                            VersionUpdated = DateTime.UtcNow,
+                            VersionUpdatedBy = contact
+                        };
+                        d.Forms.AddObject(theForm);
+                    }
+                    else
+                    {
+                        if (m.FormHash != theForm.FormStructureChecksum || m.Recipients != theForm.FormActions)
+                        {
+                            theForm.FormStructureChecksum = m.FormHash;
+                            theForm.FormStructure = m.FormJSON;
+                            theForm.FormActions = m.Recipients;
+                            theForm.VersionUpdated = DateTime.UtcNow;
+                            theForm.VersionUpdatedBy = contact;
+                        }
+                    }
+                    var formData = new FormData {
+                        FormID = m.FormID, 
+                        FormDataID = Guid.NewGuid(), 
+                        FormOrigin = m.FormOrigin, 
+                        FormContent = m.FormData,
+                        VersionOwnerContactID = contact,
+                        VersionOwnerCompanyID = company,
+                        VersionUpdated = DateTime.UtcNow,
+                        VersionUpdatedBy = contact
+                    };
+                    theForm.FormDatas.Add(formData);
+                    d.SaveChanges();
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public IEnumerable<MyFormViewModel> GetFormResults(Guid formID)
+        {
+
+            if (_orchardServices.Authorizer.Authorize(EXPEDIT.Share.Permissions.FormBuilder) || _orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) || _orchardServices.Authorizer.Authorize(StandardPermissions.AccessAdminPanel))
+            {
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    var d = new NKDC(_users.ApplicationConnectionString, null);
+                    var m = (from o in d.FormDatas
+                             where o.FormID == formID
+                             select new MyFormViewModel
+                             {
+                                 FormData = o.FormContent,
+                                 Updated = o.VersionUpdated
+                             });
+                    return m.ToArray();
+                }
+            }
+            else return null;
+
         }
 
         public bool SubmitLocation(PickLocationViewModel m)

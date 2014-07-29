@@ -70,7 +70,8 @@ module.exports = (grunt) ->
             'bower_components/underscore.mixin.deepExtend/index.js'
             'bower_components/rivets/dist/rivets.js'
             'bower_components/backbone/backbone.js'
-            'bower_components/backbone-deep-model/src/deep-model.js'
+            'bower_components/backbone-deep-model/src/deep-model.js',
+            'bower_components/select2/select2.js'
           ]
       mobile_friendly:
         files:
@@ -87,7 +88,15 @@ module.exports = (grunt) ->
       dist:
         files:
           '<%= distFolder %>/formbuilder-min.css': '<%= distFolder %>/formbuilder.css'
-          '<%= vendorFolder %>/css/vendor.css': 'bower_components/font-awesome/css/font-awesome.css'
+          '<%= vendorFolder %>/css/vendor.css': [
+            'bower_components/font-awesome/css/font-awesome.css',
+            
+            'bower_components/bootstrap/dist/css/bootstrap.css',
+            'bower_components/bootstrap/dist/css/bootstrap-theme.css',
+            'bower_components/select2/select2.css',
+            'bower_components/select2/select2-bootstrap.css'
+
+          ]
 
     stylus:
       all:

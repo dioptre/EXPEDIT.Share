@@ -200,6 +200,7 @@
     <Content Include="Scripts\formbuilderjs\src\templates\partials\add_field.html" />
     <Content Include="Scripts\formbuilderjs\src\templates\partials\edit_field.html" />
     <Content Include="Scripts\formbuilderjs\src\templates\partials\left_side.html" />
+    <Content Include="Scripts\formbuilderjs\src\templates\partials\options_field.html" />
     <Content Include="Scripts\formbuilderjs\src\templates\partials\right_side.html" />
     <Content Include="Scripts\formbuilderjs\src\templates\partials\save_button.html" />
     <Content Include="Scripts\formbuilderjs\src\templates\view\base.html" />
@@ -1559,6 +1560,7 @@
   <ItemGroup>
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Helpers\ConstantsHelper.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Route.cs" />
     <Compile Include="Services\ContentService.cs" />

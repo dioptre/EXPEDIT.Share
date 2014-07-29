@@ -51,6 +51,9 @@ namespace EXPEDIT.Share.Services
          bool SubmitForm(MyFormViewModel m);
 
          [OperationContract]
+         IEnumerable<MyFormViewModel> GetFormResults(Guid formID);
+
+         [OperationContract]
          PickLocationViewModel GetLocation(Guid locationID);
 
          [OperationContract]

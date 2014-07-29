@@ -479,10 +479,26 @@ namespace EXPEDIT.Share.Controllers {
         [ActionName("Forms")]
         public ActionResult SubmitForm(EXPEDIT.Share.ViewModels.MyFormViewModel m)
         {
+            m.Form = Newtonsoft.Json.Linq.JObject.Parse(Request.Form[0]);
             if (!_share.SubmitForm(m))
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.ExpectationFailed);
             else
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.OK);
+        }
+
+
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        [Themed(false)]
+        //[Authorize]
+        [HttpGet]
+        [ActionName("Forms")]
+        public ActionResult GetFormResults(string id)
+        {
+            Guid guid;
+            if (!Guid.TryParse(id, out guid))
+                return new HttpNotFoundResult();
+            return new JsonHelper.JsonNetResult(_share.GetFormResults(guid), JsonRequestBehavior.AllowGet);
         }
 
 

@@ -10,8 +10,8 @@
           box-sizing: border-box;
       }
 
-      body {
-          background-color: #444;
+      /*body {
+          background-color: #C2C2C2;
           font-family: sans-serif;
       }
 
@@ -38,7 +38,8 @@
       select {
           margin-bottom: 5px;
           font-size: 40px;
-      }
+      }*/
+    
   </style>
 </head>
 <body>
@@ -55,23 +56,35 @@
         // setting up form plugin...
 
         
-      var setupData = []
-      if (parent.$.colorbox.selectedData !== null && typeof parent.$.colorbox.selectedData !== 'undefined') {
-          setupData = parent.$.colorbox.selectedData.fields;
-          console.log(setupData)
-          parent.$.colorbox.selectedData = null;
-      };
+      var setupData = [];
+      var tags = '';
+      
+
+	  if (typeof parent.$.colorbox !== 'undefined'){
+		  if (parent.$.colorbox.selectedData !== null && typeof parent.$.colorbox.selectedData !== 'undefined') {
+		      setupData = parent.$.colorbox.selectedData.fields;
+		      if (typeof parent.$.colorbox.selectedData.emails !== 'undefined') {
+		          tags = parent.$.colorbox.selectedData.emails;
+		      }
+			  parent.$.colorbox.selectedData = null;
+		  };
+
+	  }
+
       
 
       // setup new form
       fb = new Formbuilder({
           selector: '.fb-main',
-          bootstrapData: setupData
+          //bootstrapData: setupData
+          bootstrapData: eval(JSON.stringify(setupData))
       });
 
       // trigger from plugin
-      fb.on('save', function(payload){
-          parent.$.colorbox.selectedData = payload;
+      fb.on('save', function (payload) {     
+          var json = JSON.parse(payload);
+          json.emails = $("#custom-emails").val()
+          parent.$.colorbox.selectedData = json;
           parent.$.colorbox.close();
       })
            
@@ -80,6 +93,28 @@
       $("#media-library-main-selection-select > .button-cancel").on('click', function () {
           parent.$.colorbox.selectedData = null;
           parent.$.colorbox.close();
+      });
+
+      function validateEmail(email) {
+          var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return re.test(email);
+      }
+      $("#custom-emails").attr('value', tags)
+      $("#custom-emails").select2({
+          createSearchChoice: function (term, data) {
+              if ($(data).filter(function () { return this.text.localeCompare(term) === 0; }).length === 0) {
+                  if (validateEmail(term) === true) {
+                      return { id: term, text: term };
+                  }
+              }
+          },
+          multiple: true,
+          formatNoMatches: 'Please enter a valid email!',
+          tags: []
+      }).on('change', function () {
+          //fb.trigger('save');
+          //somehow have to tigger unsaving!!!
+          fb.mainView.handleFormUpdate();
       });
 
       
