@@ -123,6 +123,7 @@
     <Content Include="Images\trans.gif" />
     <Content Include="Scripts\ace\ace.js" />
     <Content Include="Scripts\ace\mode-javascript.js" />
+    <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\formbuilderjs\.gitignore" />
     <Content Include="Scripts\bootstrapvalidator\dist\css\bootstrapValidator.css" />
     <Content Include="Scripts\bootstrapvalidator\dist\css\bootstrapValidator.min.css" />
@@ -222,6 +223,7 @@
     <Content Include="Scripts\gcal.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.dataTables.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.fitvids.js" />
     <Content Include="Scripts\jquery.flot.js" />
     <Content Include="Scripts\jquery.flot.resize.js" />

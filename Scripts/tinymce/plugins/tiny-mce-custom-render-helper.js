@@ -42,6 +42,8 @@
     // Rendering all templates 
     //if (typeof window.renderFunctions === 'undefined') {
         window.renderFunctions = function (selector) {
+            if (typeof selector === 'undefined')
+                selector = $('.tiny'); //in the case undefined is passed through select any tinys possible HACK
             selector.find('*').andSelf().filter('.tiny').each(function () {
                 var $this = $(this)
                 var type = $this.attr('type');
@@ -50,7 +52,7 @@
                 if (typeof trigFn !== 'undefined') {
                     trigFn($this);
                 }
-            })
+            });
         }
     //}
 
