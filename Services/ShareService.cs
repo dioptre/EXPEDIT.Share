@@ -586,11 +586,8 @@ namespace EXPEDIT.Share.Services {
             {
                 var contact = _users.ContactID;
                 var company = _users.DefaultContactCompanyID;
-                m.FormData = JsonConvert.SerializeObject(m.Form.FormData);
-                m.Recipients = m.Form.FormJSON.emails.Value;
+                m.FormData = JsonConvert.SerializeObject(m.Form.FormData);              
                 m.id = Guid.Parse(m.Form.FormJSON.id.Value);
-                m.FormJSON = JsonConvert.SerializeObject(m.Form.FormJSON.fields);
-                m.FormHash = m.FormJSON.ComputeHash();
                 m.FormOrigin = m.Form.FormJSON.origin.Value;
                 if (!string.IsNullOrWhiteSpace(m.Recipients))
                 {
@@ -604,32 +601,7 @@ namespace EXPEDIT.Share.Services {
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
                     var d = new NKDC(_users.ApplicationConnectionString, null);
-                    Form theForm = d.Forms.SingleOrDefault(f=> f.FormID == m.id);
-                    if (theForm == null)
-                    {
-                        theForm = new Form { 
-                            FormID = m.id.Value, 
-                            FormActions = m.Recipients, 
-                            FormStructure = m.FormJSON, 
-                            FormStructureChecksum = m.FormHash,
-                            VersionOwnerContactID = contact,
-                            VersionOwnerCompanyID = company,
-                            VersionUpdated = DateTime.UtcNow,
-                            VersionUpdatedBy = contact
-                        };
-                        d.Forms.AddObject(theForm);
-                    }
-                    else
-                    {
-                        if (m.FormHash != theForm.FormStructureChecksum || m.Recipients != theForm.FormActions)
-                        {
-                            theForm.FormStructureChecksum = m.FormHash;
-                            theForm.FormStructure = m.FormJSON;
-                            theForm.FormActions = m.Recipients;
-                            theForm.VersionUpdated = DateTime.UtcNow;
-                            theForm.VersionUpdatedBy = contact;
-                        }
-                    }
+                    Form theForm = d.Forms.Single(f=> f.FormID == m.id);                   
                     var formData = new FormData {
                         FormID = m.FormID, 
                         FormDataID = Guid.NewGuid(), 
@@ -655,23 +627,21 @@ namespace EXPEDIT.Share.Services {
 
         public IEnumerable<MyFormViewModel> GetFormResults(Guid formID)
         {
-
-            if (_orchardServices.Authorizer.Authorize(EXPEDIT.Share.Permissions.FormBuilder) || _orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) || _orchardServices.Authorizer.Authorize(StandardPermissions.AccessAdminPanel))
+            var isAdmin = _orchardServices.Authorizer.Authorize(EXPEDIT.Share.Permissions.FormBuilder) || _orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) || _orchardServices.Authorizer.Authorize(StandardPermissions.AccessAdminPanel);
+            var contact = _users.ContactID;
+            var company = _users.DefaultContactCompanyID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
             {
-                using (new TransactionScope(TransactionScopeOption.Suppress))
-                {
-                    var d = new NKDC(_users.ApplicationConnectionString, null);
-                    var m = (from o in d.FormDatas
-                             where o.FormID == formID
-                             select new MyFormViewModel
-                             {
-                                 FormData = o.FormContent,
-                                 Updated = o.VersionUpdated
-                             });
-                    return m.ToArray();
-                }
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                var m = (from o in d.FormDatas
+                            where o.FormID == formID && (o.VersionOwnerContactID == contact || isAdmin)
+                            select new MyFormViewModel
+                            {
+                                FormData = o.FormContent,
+                                Updated = o.VersionUpdated
+                            });
+                return m.ToArray();
             }
-            else return null;
 
         }
 
