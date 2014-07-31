@@ -123,6 +123,8 @@
     <Content Include="Images\trans.gif" />
     <Content Include="Scripts\ace\ace.js" />
     <Content Include="Scripts\ace\mode-javascript.js" />
+    <Content Include="Scripts\dataTables.responsive.js" />
+    <Content Include="Scripts\share-pickworkflow.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\formbuilderjs\.gitignore" />
     <Content Include="Scripts\bootstrapvalidator\dist\css\bootstrapValidator.css" />
@@ -237,6 +239,9 @@
     <Content Include="Scripts\offline.min.js" />
     <Content Include="Scripts\select2.js" />
     <Content Include="Scripts\select2.min.js" />
+    <Content Include="Scripts\tinymce\plugins\myworkflow\client.min.js" />
+    <Content Include="Scripts\tinymce\plugins\myworkflow\img\network.png" />
+    <Content Include="Scripts\tinymce\plugins\myworkflow\plugin.min.js" />
     <Content Include="Scripts\tinymce\plugins\locationpicker\img\globe_add.png" />
     <Content Include="Scripts\tinymce\plugins\myfilepicker\client.min.js" />
     <Content Include="Scripts\tinymce\plugins\myfilepicker\img\picture_add.png" />
@@ -1638,6 +1643,9 @@
     <Content Include="Scripts\formbuilderjs\vendor\fonts\fontawesome-webfont.ttf" />
     <Content Include="Scripts\formbuilderjs\vendor\fonts\fontawesome-webfont.woff" />
     <Content Include="Scripts\formbuilderjs\vendor\fonts\FontAwesome.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\PickWorkflow.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

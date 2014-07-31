@@ -16028,9 +16028,9 @@ var graphMixinLoaders = {
     this._loadMixin(NavigationMixin);
 
     // the clean function removes the button divs, this is done to remove the bindings.
-    this._cleanNavigation();
     if (this.constants.navigation.enabled == true) {
-      this._loadNavigationElements();
+        this._cleanNavigation();
+        this._loadNavigationElements();
     }
    },
 

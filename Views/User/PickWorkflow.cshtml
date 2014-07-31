@@ -1,0 +1,99 @@
+﻿@model EXPEDIT.Share.ViewModels.SearchViewModel
+@Html.Partial("Header")
+
+@{
+    Style.Require("Picker");
+    HtmlHelper.ClientValidationEnabled = true;
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+    Layout.Title = T("Pick Workflow").ToString();    
+}
+<link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Themes/MAS1/Styles/site.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/expedit-share.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/x-handlebars">    
+@using (Html.BeginForm("PickWorkflow", "User", new { area = "EXPEDIT.Share" }, FormMethod.Post, new { id = "form1", @class = "form" }))
+{
+<article class="content-item page" style="margin:11px;">
+    <fieldset>
+    @*<legend></legend>*@
+    <div class="editor-label">
+        <p><strong>Search:</strong>{{view Ember.TextField action='blur' valueBinding="q" type='text' placeholder="Workflow Name" classNames="searchbox capitalized" id="searchWorkflow"}}</p>
+    </div>   
+    <br />
+    {{outlet}}    
+    </fieldset>
+    @*<input type="submit" value="Submit" />*@
+    </article>
+}
+  </script>
+  <script type="text/x-handlebars" id="loading">
+      <div style="text-align:center;display:none;">
+          <h4>Loading...</h4>
+          <img src="@Url.Content("~/Modules/EXPEDIT.Share/Images/loading.gif")" />
+      </div>
+  </script>
+  <script type="text/x-handlebars" id="search">
+      <div style="margin-left:80px">
+            {{#each model.results}}
+                <p><a {{action 'selectToggle' this}} class="hlink">{{Title}}</a></p>
+            {{/each}}
+      </div>
+      <ul class="pager">
+         {{#if prev}}            
+            <li><a {{action 'transition' 'Previous'}}>Previous</a></li>
+         {{/if}}          
+         {{#if next}}
+        <li><a {{action 'transition' 'Next'}}>Next</a></li>
+         {{/if}}
+     </ul>       
+  </script>
+
+
+<script src="@Url.Content("~/Modules/EXPEDIT.Share/Scripts/share-pickworkflow.js")"></script>
+ <script type="text/javascript">
+  
+     $(document).ready(function () {
+         $('#form1').submit(function (e) {
+             // prevent default posting of form
+             e.preventDefault();
+             e.returnValue = false;
+             return false;
+         });
+     });
+
+     function pickWorkflow(item) {
+        //alert(refid + name);
+         //console.debug(props);
+         //for (var i = 0; i < viewModel.selection().length; i++) {
+         //    var selection = viewModel.selection()[i];
+         //    selectedData.push(selection.data);
+         //}
+        if (parent.$.colorbox) {
+            var selectedData = [];
+            selectedData.push({});
+            selectedData[0].refid = item.get('id');
+            selectedData[0].name = item.get('Title');
+            parent.$.colorbox.close();
+        };
+        parent.$.colorbox.selectedData = selectedData;
+        parent.$.colorbox.close();
+     }
+
+     $("#media-library-main-selection-select > .button-cancel").on('click', function () {
+         cancelPick();
+     });
+
+     function cancelPick() {
+         if (parent.$.colorbox) {
+             parent.$.colorbox.selectedData = null;
+             parent.$.colorbox.close();
+         };
+     }
+
+
+
+
+</script>
+
+

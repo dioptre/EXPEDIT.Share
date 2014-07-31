@@ -393,6 +393,15 @@ namespace EXPEDIT.Share.Controllers {
         //[ValidateAntiForgeryToken]
         [Themed(false)]
         //[Authorize]
+        public ActionResult PickWorkflow()
+        {
+            return View();
+        }
+
+        [ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        [Themed(false)]
+        //[Authorize]
         [HttpGet]
         [ActionName("MyLocations")]
         public ActionResult GetMyLocations(string q = "")
