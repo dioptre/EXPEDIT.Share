@@ -1088,7 +1088,7 @@ this["Formbuilder"]["templates"]["partials/options_field"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-tab-pane\' id=\'optionsField\'>\r\n  <h2 class=\'fb-options-field-wrapper\'>\r\n\r\n      <h2>Email</h2>\r\n      <p>Change who gets emailed on form submit!</p>\r\n      <input id="custom-emails" class="form-control">\r\n  </div>\r\n</div>\r\n';
+__p += '<div class=\'fb-tab-pane\' id=\'optionsField\'>\r\n  <div class=\'fb-options-field-wrapper\'>\r\n      <h2>Name</h2>\r\n      <p>Give your form a name.</p>\r\n      <input id="custom-heading" class="form-control">\r\n       <br />\r\n      <h2>Email</h2>\r\n      <p>Change who gets emailed on form submit!</p>\r\n      <input id="custom-emails" class="form-control">\r\n  </div>\r\n</div>\r\n';
 
 }
 return __p

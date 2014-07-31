@@ -58,13 +58,16 @@
         
       var setupData = [];
       var tags = '';
-      
+      var heading = '';
 
 	  if (typeof parent.$.colorbox !== 'undefined'){
 		  if (parent.$.colorbox.selectedData !== null && typeof parent.$.colorbox.selectedData !== 'undefined') {
 		      setupData = parent.$.colorbox.selectedData.fields;
 		      if (typeof parent.$.colorbox.selectedData.emails !== 'undefined') {
 		          tags = parent.$.colorbox.selectedData.emails;
+		      }
+		      if (typeof parent.$.colorbox.selectedData.heading !== 'undefined') {
+		          heading = parent.$.colorbox.selectedData.heading;
 		      }
 			  parent.$.colorbox.selectedData = null;
 		  };
@@ -84,6 +87,7 @@
       fb.on('save', function (payload) {     
           var json = JSON.parse(payload);
           json.emails = $("#custom-emails").val()
+          json.heading = $("#custom-heading").val()
           parent.$.colorbox.selectedData = json;
           parent.$.colorbox.close();
       })
@@ -114,6 +118,10 @@
       }).on('change', function () {
           //fb.trigger('save');
           //somehow have to tigger unsaving!!!
+          fb.mainView.handleFormUpdate();
+      });
+
+      $('#custom-heading').val(heading).on('keyup', function () {
           fb.mainView.handleFormUpdate();
       });
 
