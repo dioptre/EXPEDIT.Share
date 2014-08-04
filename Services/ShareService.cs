@@ -600,8 +600,10 @@ namespace EXPEDIT.Share.Services {
                         string trs = ""; //m.FormData
                         foreach (var tuple in m.Form.FormData) 
                             trs += string.Format("<tr><td><strong>{0}</strong></td><td>{1}</td></tr>", tuple.name.Value, tuple.value.Value);
-                        
-                        var body = string.Format(ConstantsHelper.FORM_BODY_TEMPLATE, theForm.FormName, trs, _orchardServices.WorkContext.CurrentUser.UserName, DateTime.UtcNow, m.id);
+                        var username = "";
+                        if (_orchardServices.WorkContext.CurrentUser != null)
+                            username = _orchardServices.WorkContext.CurrentUser.UserName;
+                        var body = string.Format(ConstantsHelper.FORM_BODY_TEMPLATE, theForm.FormName, trs, username, DateTime.UtcNow, m.id);
                         _users.EmailUsers(
                             theForm.FormActions.Split(','),
                             string.Format("{0} Form Submitted ({1})", theForm.FormName, m.id),

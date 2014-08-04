@@ -75,7 +75,7 @@ namespace EXPEDIT.Share.Helpers
               "<div width=500px><p>This email may contain advice, opinions and statements of various information providers. Mining Appstore does not represent or endorse the accuracy or reliability of any advice, opinion, statement or other information provided by any information provider, any User of this content or any other person or entity. Reliance upon any such advice, opinion, statement, or other information shall also be at the User&rsquo;s own risk.</p></div>"
               ;
         public static string EMAIL_FROM_NAME = "Mining Appstore";
-        public static string FORM_BODY_TEMPLATE = "<h3>New form submission recieved:</h3> <table><tr><td>Form name</td><td>{0}</td></tr> <tr><td>Submitted by</td><td>{2}</td></tr> <tr><td>Time</td><td>{3}</td></tr> <tr><td>Form ID</td><td>{4}</td></tr></table>  <h4>Data:</h4> <table border='1' cellpadding='4'>{1}</table><p></p>";
+        public static string FORM_BODY_TEMPLATE = "<h3>New form submission recieved:</h3> <table cellpadding='4'><tr><td><strong>Form name</strong></td><td id='formname'>{0}</td></tr> <tr><td><strong>Submitted by</strong></td><td id='updatedby'>{2}</td></tr> <tr><td><strong>Time</strong></td><td id='updated'>{3}</td></tr> <tr><td><strong>Form ID</strong></td><td id='formid'>{4}</td></tr></table>  <h4>Data:</h4> <table border='1' cellpadding='4' id='datatbl'>{1}</table><p></p>";
 
         private static string mailHost = null;
         public static string MailHost { get { if (mailHost == null) { mailHost = System.Configuration.ConfigurationManager.AppSettings["MailHost"] ?? "support.miningappstore.com"; } return mailHost; } }
