@@ -13,6 +13,10 @@ function getCookie(cname) {
     }
     return "";
 }
+function isLoggedIn() {
+    return getCookie('.ASPXAUTH').length > 0;
+}
+
 function deleteAllCookies() {
     var cookies = document.cookie.split(";");
 

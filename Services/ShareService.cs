@@ -589,19 +589,25 @@ namespace EXPEDIT.Share.Services {
                 m.FormData = JsonConvert.SerializeObject(m.Form.FormData);              
                 m.id = Guid.Parse(m.Form.FormJSON.id.Value);
                 m.FormOrigin = m.Form.FormJSON.origin.Value;
-                if (!string.IsNullOrWhiteSpace(m.Recipients))
-                {
-                    _users.EmailUsers(
-                        m.Recipients.Split(','),
-                        string.Format("Form Submitted ({0})", m.id),
-                        m.FormData);
-
-                }
 
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
                     var d = new NKDC(_users.ApplicationConnectionString, null);
-                    Form theForm = d.Forms.Single(f=> f.FormID == m.id);                   
+                    Form theForm = d.Forms.Single(f=> f.FormID == m.id && f.VersionDeletedBy == null && f.Version == 0);
+
+                    if (!string.IsNullOrWhiteSpace(theForm.FormActions))
+                    {
+                        string trs = ""; //m.FormData
+                        foreach (var tuple in m.Form.FormData) 
+                            trs += string.Format("<tr><td><strong>{0}</strong></td><td>{1}</td></tr>", tuple.name.Value, tuple.value.Value);
+                        
+                        var body = string.Format(ConstantsHelper.FORM_BODY_TEMPLATE, theForm.FormName, trs, _orchardServices.WorkContext.CurrentUser.UserName, DateTime.UtcNow, m.id);
+                        _users.EmailUsers(
+                            theForm.FormActions.Split(','),
+                            string.Format("{0} Form Submitted ({1})", theForm.FormName, m.id),
+                            body);
+                    }
+
                     var formData = new FormData {
                         FormID = m.FormID, 
                         FormDataID = Guid.NewGuid(), 
@@ -634,11 +640,14 @@ namespace EXPEDIT.Share.Services {
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
                 var m = (from o in d.FormDatas
-                            where o.FormID == formID && (o.VersionOwnerContactID == contact || isAdmin)
+                         join c in d.Contacts on o.VersionOwnerContactID equals c.ContactID into jc
+                        from contacts in jc.DefaultIfEmpty()
+                            where o.FormID == formID && (o.VersionOwnerContactID == contact || isAdmin) && o.VersionDeletedBy == null && o.Version == 0
                             select new MyFormViewModel
                             {
                                 FormData = o.FormContent,
-                                Updated = o.VersionUpdated
+                                Updated = o.VersionUpdated,
+                                UpdatedBy = contacts.Username 
                             });
                 return m.ToArray();
             }

@@ -27,6 +27,7 @@ namespace EXPEDIT.Share.ViewModels
         public HttpPostedFileBase[] Files { get; set; }
         public string FormOrigin { get; set; }
         public DateTime? Updated { get; set; }
+        public string UpdatedBy { get; set; }
 
     }
 }
