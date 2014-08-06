@@ -1271,7 +1271,7 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
     var selection, valuePath;
     if (arguments.length === 2) {
       valuePath = this.get('valuePath');
-      if (valuePath) {
+      if (valuePath && typeof this.get('options') !== 'undefined') {
         selection = this.get('options').findProperty(valuePath, value);
       }
       this.set('selection', selection || value);
