@@ -1,9 +1,11 @@
 function MapInitialize() {
-    if (drawing)
-        smap = SetupDrawingMap('map-search');
-    else
-        smap = SetupMap('map-search');
-    RedrawMap(smap);
+    if (typeof google !== 'undefined') {
+        if (drawing)
+            smap = SetupDrawingMap('map-search');
+        else
+            smap = SetupMap('map-search');
+        RedrawMap(smap);
+    }
 
 }
 
@@ -25,7 +27,7 @@ function OnMapUpdate(map, event, center, viewport) {
     }
     if (event.eventType == "MARKER_CLICKED" && !drawing && event.eventSource && event.eventSource.type === "marker") {
         if (typeof pickLocation !== 'undefined') 
-            pickLocation(event.eventSource.uniqueid, event.eventSource.title);
+            pickLocation(event.eventSource.uniqueid, event.eventSource.title, event.eventSource.position.lng() + ' ' + event.eventSource.position.lat());
     }    
 }
 
@@ -100,14 +102,20 @@ App.SearchRoute = Ember.Route.extend({
 
         if (model.results.content.length == 0) {
             alertify.log("Couldn't locate a match. You'll need to add a new location using the map tools.")
-            if (!smap.drawingManager)
+            if (typeof smap === 'undefined')
+                MapInitialize();
+            if (typeof smap === 'undefined') {
+                console.log('failed to initialize map');
+                return;
+            }
+            if (typeof smap.drawingManager === 'undefined' || !smap.drawingManager)
                 SetupDrawingMap(null, null, smap);
             ShowDrawingMap(smap);
             $("#updateLocation").show();
             drawing = true;
+            var guid = NewGUID();
+            $("#LocationID").val(guid)
             GetAddressLocation(model.params.keywords, function (latlng) {
-                var guid = NewGUID();
-                $("#LocationID").val(guid)
                 AddMarkerSingle(smap, latlng, true, model.params.keywords, guid);
                 RefocusMap(smap);
                 smap.setZoom(15);
@@ -150,7 +158,7 @@ App.SearchController = Ember.Controller.extend({
         },
         selectToggle: function (item) {
             item.set('Selected', !item.get('Selected'));
-            pickLocation(item.get('ReferenceID'), item.get('Title'));
+            pickLocation(item.get('ReferenceID'), item.get('Title'), item.get('Geography'));
         }
     }
 })
@@ -200,7 +208,7 @@ App.NewLocationView = Ember.View.extend({
                 //if success
                 alertify.log('Updated location.');
                 if (typeof pickLocation !== 'undefined')
-                    pickLocation($("#LocationID").val(), $("#LocationName").val());
+                    pickLocation($("#LocationID").val(), $("#LocationName").val(), $("#Geography").val());
             }, function (response) {
                 //if failure
                 m.deleteRecord();
