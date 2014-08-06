@@ -5,7 +5,7 @@
     Style.Require("Picker");
     HtmlHelper.ClientValidationEnabled = true;
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
-    Layout.Title = T("Pick Location").ToString();    
+    Layout.Title = T("Pick Location").ToString();
 }
 <link href="@Url.Content("~/Modules/EXPEDIT.Share/Styles/bootstrap.min.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Themes/MAS1/Styles/site.css")" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
 
 <script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.utils.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Modules/NKD/Scripts/NKD.maps.js")"></script>
-<script type="text/x-handlebars">    
+<script type="text/x-handlebars">
 @using (Html.BeginForm("PickLocation", "User", new { area = "EXPEDIT.Share" }, FormMethod.Post, new { id = "form1", @class = "form" }))
 {
 <article class="content-item page" style="margin:11px;">
@@ -21,6 +21,7 @@
     @*<legend></legend>*@
     <div class="editor-label">
         <p><strong>Search:</strong>{{view Ember.TextField action='blur' valueBinding="q" type='text' placeholder="Location Name" classNames="searchbox capitalized" id="searchLocation"}}</p>
+        <p><i>Enter a location in the search box above and then choose your location on the map to confirm your choice.</i></p>
     </div>
     <div class="editor-field">
         @Html.AntiForgeryToken()
@@ -50,11 +51,11 @@
       </div>
   </script>
   <script type="text/x-handlebars" id="search">
-     
+
       <ul class="pager">
-         {{#if prev}}            
+         {{#if prev}}
             <li><a {{action 'transition' 'Previous'}}>Previous</a></li>
-         {{/if}}          
+         {{/if}}
          {{#if next}}
         <li><a {{action 'transition' 'Next'}}>Next</a></li>
          {{/if}}
@@ -64,7 +65,7 @@
 
 <script src="@Url.Content("~/Modules/EXPEDIT.Share/Scripts/share-picklocation.js")"></script>
  <script type="text/javascript">
-  
+
      $(document).ready(function () {
          $('#form1').submit(function (e) {
              // prevent default posting of form

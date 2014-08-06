@@ -240,6 +240,7 @@
     <Content Include="Scripts\offline.min.js" />
     <Content Include="Scripts\select2.js" />
     <Content Include="Scripts\select2.min.js" />
+    <Content Include="Scripts\tinymce\plugins\locationpicker\client.min.js" />
     <Content Include="Scripts\tinymce\plugins\myworkflow\client.min.js" />
     <Content Include="Scripts\tinymce\plugins\myworkflow\img\network.png" />
     <Content Include="Scripts\tinymce\plugins\myworkflow\plugin.min.js" />
