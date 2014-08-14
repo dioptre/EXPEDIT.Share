@@ -253,6 +253,8 @@
     <Content Include="Scripts\tinymce\plugins\myformeditor\plugin.min.js" />
     <Content Include="Scripts\tinymce\plugins\tiny-mce-custom-render-helper.js" />
     <Content Include="Scripts\wysihtml5-0.3.0.js" />
+    <Content Include="Scripts\zoomerang.js" />
+    <Content Include="Styles\dataTables.responsive.css" />
     <Content Include="Styles\images\calendar-blue.gif" />
     <Content Include="Styles\images\calendar-green.gif" />
     <Content Include="Styles\images\calendar.gif" />
