@@ -8,6 +8,7 @@ using NKD.Module.BusinessObjects;
 using EXPEDIT.Share.ViewModels;
 using NKD.ViewModels;
 using NKD.Helpers;
+using Orchard.Security;
 
 namespace EXPEDIT.Share.Services
 {
@@ -61,6 +62,18 @@ namespace EXPEDIT.Share.Services
 
          [OperationContract]
          bool SubmitPhoto(HttpPostedFileBase file);
+
+         [OperationContract]
+         CaptchaViewModel RequestCaptcha(Guid cookie);
+
+         [OperationContract]
+         bool ValidateCaptcha(Guid cookie, string key);
+
+         [OperationContract]
+         IUser SignUp(UserSignupViewModel m);
+
+         [OperationContract]
+         bool VerifyUserUnicity(string userName, string email);
 
     }
 }

@@ -619,5 +619,38 @@ namespace EXPEDIT.Share.Controllers {
             return new HttpStatusCodeResult(System.Net.HttpStatusCode.NoContent);
         }
 
+        [Themed(false)]
+        [HttpGet]
+        [ActionName("Captcha")]
+        public ActionResult RequestCaptcha(string id)
+        {
+            Guid guid;
+            if (!Guid.TryParse(id, out guid))
+                return new HttpNotFoundResult();
+            return new JsonHelper.JsonNetResult(_share.RequestCaptcha(guid), JsonRequestBehavior.AllowGet);
+        }
+
+
+        [Themed(false)]
+        [HttpPost]
+        [ActionName("SignUp")]
+        public ActionResult SignUp(EXPEDIT.Share.ViewModels.UserSignupViewModel u)
+        {
+            if (_share.SignUp(u) != null) //include response in response
+                u.IsValid = true;
+            else
+                u.IsValid = false;
+            u.Password = null;
+            return new JsonHelper.JsonNetResult(u, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [Themed(false)]
+        [HttpPost]
+        public ActionResult DuplicateUser(EXPEDIT.Share.ViewModels.UserSignupViewModel u)
+        {          
+            return new JsonHelper.JsonNetResult(_share.VerifyUserUnicity(u.UserName, u.Email) , JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

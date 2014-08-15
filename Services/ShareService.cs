@@ -33,6 +33,7 @@ using Orchard.Environment.Configuration;
 using NKD.ViewModels;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using EntityFramework.Extensions;
 
 namespace EXPEDIT.Share.Services {
     
@@ -752,6 +753,93 @@ namespace EXPEDIT.Share.Services {
             return _users.GetMyInfo();
         }
 
+        public bool VerifyUserUnicity(string userName, string email)
+        {
+            return _users.VerifyUserUnicity(userName, email);
+        }
+
+        public IUser SignUp(UserSignupViewModel m)
+        {
+            if (!m.CaptchaCookie.HasValue)
+            {
+                m.Response = SignupResponse.NoCaptcha;
+                return null;
+            }
+            if (!ValidateCaptcha(m.CaptchaCookie.Value, m.CaptchaKey)) {
+                m.Response = SignupResponse.BadCaptcha;
+                return null;
+            }
+            return _users.Create(m.Email, m.UserName, m.Password);
+        }
+
+        public bool ValidateCaptcha(Guid cookie, string key)
+        {
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                var m = (from o in d.MetaDatas where o.MetaDataID == cookie select o).FirstOrDefault();
+                if (m == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    if (m.ContentToIndex != key)
+                        return false;
+                    else
+                    {
+                        d.DeleteObject(m);
+                        return true;
+                    }
+                }              
+
+            }
+        }
+
+        public CaptchaViewModel RequestCaptcha(Guid cookie)
+        {            
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                var m = (from o in d.MetaDatas where o.MetaDataID == cookie select o).FirstOrDefault();
+                var yesterday = DateTime.Now.AddDays(-1);
+                string k = null;
+                if (m == null)
+                {
+                    k = CaptchaHelper.CreateRandomText(4);
+                    m = new MetaData
+                    {
+                        ContentToIndex = k,
+                        MetaDataID = cookie,
+                        MetaDataType = ConstantsHelper.METADATA_CAPTCHA,
+                        VersionUpdated = DateTime.UtcNow
+
+                    };
+                    d.MetaDatas.AddObject(m);
+                    (from o in d.MetaDatas where o.MetaDataType == ConstantsHelper.METADATA_CAPTCHA && o.VersionUpdated < yesterday select o).Delete();
+                    d.SaveChanges();
+                }
+                else
+                {
+                    k = m.ContentToIndex;
+                }
+
+                string img = null;
+                using (var ms = new MemoryStream())
+                {
+                    new CaptchaHelper(k, 100, 40, FontFamily.GenericSansSerif).Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    img = Convert.ToBase64String(ms.ToArray());
+                }
+                return new CaptchaViewModel
+                {
+                    Cookie = cookie,
+                    IsValid = false,
+                    Image64 = img
+                };
+
+            } 
+        }
 
         public bool SubmitPhoto(HttpPostedFileBase file)
         {

@@ -34,6 +34,7 @@ namespace EXPEDIT.Share.Helpers
         public static string STAT_NAME_CHECKIN = "Checkin";
         public static string STAT_NAME_CLICKS_CONFIRM = "ClicksConfirm";
         public static string METADATA_ANTIFORGERY = "E_ANTIFORGERY";
+        public static string METADATA_CAPTCHA = "E_CAPTCHA";
         public static string REFERENCE_TYPE_LABOUR = "E_LABOUR";
         public static string REFERENCE_TYPE_CONTRACT = "X_Contract";
         public const decimal GST_AU = 0.1m;
