@@ -13,6 +13,12 @@ function getCookie(cname) {
     }
     return "";
 }
+
+function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
 function isLoggedIn() {
     return getCookie('.ASPXAUTH').length > 0;
 }
@@ -52,14 +58,14 @@ function refer(affiliateID) {
     }
     var title = ""; var summary = "";
     $('h1').each(function (index) { title += ((index>0) ? " - ": "") + $(this).text(); });
-    $('h2').each(function () { summary += $(this).text() + " "; });    
+    $('h2').each(function () { summary += $(this).text() + " "; });
     summary = "Check out the " + ((summary.length>0) ? summary + " on the " : "") + title.toLowerCase() + ". I think it could be really useful for everyone in our industry.";
     url = 'http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + '&summary=' + encodeURIComponent(summary);
     var w = 600;
-    var h = 450;    
+    var h = 450;
     var popup = popupWindow(url, title, w, h);
     checkPopup(popup);
-    
+
 }
 function popupWindow(url, title, w, h) {
     var left = (screen.width / 2) - (w / 2);
@@ -67,14 +73,14 @@ function popupWindow(url, title, w, h) {
     return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
 }
 function checkPopup(popup, url) {
-    if (!popup || popup.closed || (typeof popup.closed == 'undefined') || popup.outerHeight == 0 || popup.outerWidth == 0) {        
+    if (!popup || popup.closed || (typeof popup.closed == 'undefined') || popup.outerHeight == 0 || popup.outerWidth == 0) {
         if (typeof url != 'undefined' && url) {
             alert('Please enable popups. Attempting to redirect instead...');
             document.location.href = url;
         }
         else {
             alert('Please enable popups.');
-        }            
+        }
     }
 }
 var setupPager = false;

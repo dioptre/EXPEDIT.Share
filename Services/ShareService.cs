@@ -758,6 +758,12 @@ namespace EXPEDIT.Share.Services {
             return _users.VerifyUserUnicity(userName, email);
         }
 
+
+        public bool RequestLostPassword(string username)
+        {
+            return _users.RequestLostPassword(username);
+        }
+
         public IUser SignUp(UserSignupViewModel m)
         {
             if (!m.CaptchaCookie.HasValue)
@@ -789,6 +795,7 @@ namespace EXPEDIT.Share.Services {
                     else
                     {
                         d.DeleteObject(m);
+                        d.SaveChanges();
                         return true;
                     }
                 }              
@@ -802,7 +809,7 @@ namespace EXPEDIT.Share.Services {
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
                 var m = (from o in d.MetaDatas where o.MetaDataID == cookie select o).FirstOrDefault();
-                var yesterday = DateTime.Now.AddDays(-1);
+                var lastCheck = DateTime.Now.AddHours(-2);
                 string k = null;
                 if (m == null)
                 {
@@ -816,7 +823,7 @@ namespace EXPEDIT.Share.Services {
 
                     };
                     d.MetaDatas.AddObject(m);
-                    (from o in d.MetaDatas where o.MetaDataType == ConstantsHelper.METADATA_CAPTCHA && o.VersionUpdated < yesterday select o).Delete();
+                    (from o in d.MetaDatas where o.MetaDataType == ConstantsHelper.METADATA_CAPTCHA && o.VersionUpdated < lastCheck select o).Delete();
                     d.SaveChanges();
                 }
                 else

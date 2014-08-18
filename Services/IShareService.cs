@@ -75,5 +75,8 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          bool VerifyUserUnicity(string userName, string email);
 
+         [OperationContract]
+         bool RequestLostPassword(string username);
+
     }
 }

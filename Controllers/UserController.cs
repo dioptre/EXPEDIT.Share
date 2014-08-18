@@ -636,8 +636,15 @@ namespace EXPEDIT.Share.Controllers {
         [ActionName("SignUp")]
         public ActionResult SignUp(EXPEDIT.Share.ViewModels.UserSignupViewModel u)
         {
-            if (_share.SignUp(u) != null) //include response in response
+            var user = _share.SignUp(u);
+            if (user != null)
+            { //include response in response
                 u.IsValid = true;
+                u.Response = ViewModels.SignupResponse.Valid;
+                //_membershipService.ValidateUser(u.UserName, u.Password);
+                _authenticationService.SignIn(user, false);
+                _userEventHandler.LoggedIn(user);
+            }
             else
                 u.IsValid = false;
             u.Password = null;
@@ -651,6 +658,15 @@ namespace EXPEDIT.Share.Controllers {
         {          
             return new JsonHelper.JsonNetResult(_share.VerifyUserUnicity(u.UserName, u.Email) , JsonRequestBehavior.AllowGet);
         }
+
+        [Themed(false)]
+        [HttpPost]
+        public ActionResult RequestPassword(string id)
+        {
+            return new JsonHelper.JsonNetResult(_share.RequestLostPassword(id), JsonRequestBehavior.AllowGet);
+        }
+
+
 
     }
 }
