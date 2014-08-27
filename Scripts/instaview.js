@@ -84,6 +84,7 @@ InstaView.conf =
 
 // define constants
 InstaView.BLOCK_IMAGE = new RegExp('^\\[\\['+InstaView.conf.locale.image+':.*?\\|.*?(?:frame|thumbnail|thumb|none|right|left|center)', 'i');
+InstaView.IMAGE = new RegExp('^(' + InstaView.conf.locale.image + '|File):(?!.*\.ogv.*)', 'i');
 
 InstaView.dump = function(from, to)
 {
@@ -130,7 +131,8 @@ InstaView.convert = function(wiki)
         }
         return str;
     }
-
+    
+    wiki = filter(wiki, 'stack', '{', '}', 2);
     wiki = filter(wiki, 'persondata', '{', '}', 2);
     wiki = filter(wiki, 'authority', '{', '}', 2);
     wiki = filter(wiki, 'infobox', '{', '}', 2);
@@ -253,6 +255,20 @@ InstaView.convert = function(wiki)
 		for (var i=prev.length-1; i>=0; i--)
 			ps(f('</?>', (prev.charAt(i)=='*')? 'ul': ((prev.charAt(i)=='#')? 'ol': 'dl')))
 	}
+
+	function parse_gallery() {
+	    endl('<p>')
+	    for (; remain() ;) if ($('</gallery>')) {
+	        endl('</p>'); return;
+	    }
+	    else {
+	        var fn = sh();
+	        if (fn.match(InstaView.IMAGE)) {
+	            ps(parse_image(fn));
+	            endl('<br/><br/>');
+	        }
+	    }
+	}
 	
 	function parse_table()
 	{
@@ -329,7 +345,7 @@ InstaView.convert = function(wiki)
 	function parse_image(str)
 	{
 		// get what's in between "[[Image:" and "]]"
-		var tag = str.substring(str.indexOf(':') + 1, str.length - 2);
+		var tag = str.substring(str.indexOf(':') + 1, str.length - 1);
 		
 		var width;
 		var attr = [], filename, caption = '';
@@ -485,7 +501,7 @@ InstaView.convert = function(wiki)
 		var loop, close, open, wiki, html;
 		
 		while (-1 != (start=str.indexOf('[[', substart))) {
-		    if (str.substr(start + 2).match(RegExp('^(' + InstaView.conf.locale.image + '|File):(?!.*\.ogv.*)', 'i'))) {
+		    if (str.substr(start + 2).match(InstaView.IMAGE)) {
 				loop=true;
 				substart=start;
 				do {
@@ -656,7 +672,11 @@ InstaView.convert = function(wiki)
 		p=0
 		parse_block_image()
 		
-	} else {
+	} else if ($(/<gallery>/ig)) {
+	    p = 0
+	    parse_gallery();
+	}
+	else {
 		
 		// handle paragraphs
 		if ($$('')) {
