@@ -483,7 +483,7 @@ InstaView.convert = function(wiki)
 		var loop, close, open, wiki, html;
 		
 		while (-1 != (start=str.indexOf('[[', substart))) {
-			if(str.substr(start+2).match(RegExp('^(' + InstaView.conf.locale.image + '|File):','i'))) {
+		    if (str.substr(start + 2).match(RegExp('^(' + InstaView.conf.locale.image + '|File):.*?<!ogv$', 'i'))) {
 				loop=true;
 				substart=start;
 				do {
