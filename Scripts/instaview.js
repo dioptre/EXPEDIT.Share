@@ -131,6 +131,8 @@ InstaView.convert = function(wiki)
         return str;
     }
 
+    wiki = filter(wiki, 'persondata', '{', '}', 2);
+    wiki = filter(wiki, 'authority', '{', '}', 2);
     wiki = filter(wiki, 'infobox', '{', '}', 2);
     wiki = filter(wiki, 'weather', '{', '}', 2);
     wiki = filter(wiki, 'overlay', '{', '}', 2);
@@ -483,7 +485,7 @@ InstaView.convert = function(wiki)
 		var loop, close, open, wiki, html;
 		
 		while (-1 != (start=str.indexOf('[[', substart))) {
-		    if (str.substr(start + 2).match(RegExp('^(' + InstaView.conf.locale.image + '|File):.*?<!ogv$', 'i'))) {
+		    if (str.substr(start + 2).match(RegExp('^(' + InstaView.conf.locale.image + '|File):(?!.*\.ogv.*)', 'i'))) {
 				loop=true;
 				substart=start;
 				do {
