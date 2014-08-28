@@ -509,7 +509,8 @@ InstaView.convert = function(wiki)
 		filename = filename.replace(/ /g, '_');
 		
 		caption = strip_inline_wiki(caption);
-		
+		caption = caption.replace(/<ref.*<\/ref>/ig, '');
+
 		var md5 = hex_md5(filename);
 		
 		var source = md5.charAt(0) + '/' + md5.substr(0,2) + '/' + filename;
