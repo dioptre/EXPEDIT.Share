@@ -132,6 +132,12 @@ InstaView.convert = function(wiki)
         return str;
     }
     
+    //Unsupported at this stage TODO
+    //wiki = filter(wiki, 'legend', '{', '}', 2);
+    wiki = filter(wiki, 'navboxes', '{', '}', 2);
+    wiki = filter(wiki, 'letter', '{', '}', 2);
+    wiki = filter(wiki, 'charmap', '{', '}', 2);
+    wiki = filter(wiki, 'taxobox', '{', '}', 2);
     wiki = filter(wiki, 'stack', '{', '}', 2);
     wiki = filter(wiki, 'persondata', '{', '}', 2);
     wiki = filter(wiki, 'authority', '{', '}', 2);
@@ -180,10 +186,11 @@ InstaView.convert = function(wiki)
 	// compare current line against a string or regexp
 	// if passed a string it will compare only the first string.length characters
 	// if passed a regexp the result is stored in $r
-	function $(c) { return (typeof c == 'string') ? (ll[0].substr(0,c.length)==c) : ($r = ll[0].match(c)) }
-	
-	function $$(c) { return ll[0]==c } // compare current line against a string
+	function $(c) { return (typeof c == 'string') ? (ll[0].substr(0,c.length)==c) : ($r = ll[0].match(c)) }	
+	function $$(c) { return ll[0] == c } // compare current line against a string
+	function $$$(c) { return (typeof c == 'string') ? (ll[0].trim().substr(0, c.length) == c) : ($r = ll[0].match(c)) } //trimmed
 	function _(p) { return ll[0].charAt(p) } // return char at pos p
+	function __(p) { return ll[0].trim().charAt(p) } // return char at pos p
 	
 	function endl(s) { ps(s); sh() }
 	
@@ -274,12 +281,12 @@ InstaView.convert = function(wiki)
 	{
 		endl(f('<table?>', $(/^\{\|( .*)$/)? $r[1]: ''))
 		
-		for (;remain();) if ($('|')) switch (_(1)) {
+		for (;remain();) if ($$$('|')) switch (__(1)) {
 			case '}': endl('</table>'); return
-			case '-': endl(f('<tr ?>', $(/\|-*(.*)/)[1])); break
+			case '-': endl(f('<tr ?>', $$$(/\|-*(.*)/)[1])); break
 			default: parse_table_data()
 		}
-		else if ($('!')) parse_table_data()
+		else if ($$$('!')) parse_table_data()
 		else sh()
 	}
 	
@@ -291,7 +298,7 @@ InstaView.convert = function(wiki)
 		// 2: ??
 		// 3: attributes ??
 		// TODO: finish commenting this regexp
-		var td_match = sh().match(/^(\|\+|\||!)((?:([^[|]*?)\|(?!\|))?(.*))$/)
+		var td_match = sh().match(/^\s?(\|\+|\||!)((?:([^[|]*?)\|(?!\|))?(.*))$/)
 		
 		if (td_match[1] == '|+') ps('<caption');
 		else ps('<t' + ((td_match[1]=='|')?'d':'h'))
@@ -320,14 +327,28 @@ InstaView.convert = function(wiki)
 		var tc = 0, td = []
 		
 		for (;remain(); td.push(sh()))
-		if ($('|')) {
+		if ($$$('|')) {
 			if (!tc) break // we're at the outer-most level (no nested tables), skip to td parse
-			else if (_(1)=='}') tc--
+			else if (_(1)=='}' || _(1)==' }') tc--
 		}
-		else if (!tc && $('!')) break
-		else if ($('{|')) tc++
+		else if (!tc && ($$$('!'))) break
+		else if ($$$('{|')) tc++
 		
-		if (td.length) ps(InstaView.convert(td))
+		if (td.length)
+		    ps(InstaView.convert(td));
+
+        //Added to close tags
+		if (td_match[1] == '|+') ps('<caption');
+		else ps('</t' + ((td_match[1] == '|') ? 'd' : 'h'))
+
+		if (typeof td_match[3] != 'undefined') {
+
+		    ps(' ' + td_match[3])
+		    match_i = 4
+
+		} else match_i = 2
+
+		ps('>')
 	}
 	
 	function parse_pre()
@@ -344,9 +365,11 @@ InstaView.convert = function(wiki)
 
 	function parse_image(str)
 	{
-		// get what's in between "[[Image:" and "]]"
-		var tag = str.substring(str.indexOf(':') + 1, str.length - 1);
-		
+	    // get what's in between "[[Image:" and "]]"
+	    var tag = str.match(/^.*:(.*).]$/);
+	    if (!tag)
+	        return;
+	    tag = tag[1];		
 		var width;
 		var attr = [], filename, caption = '';
 		var thumb=0, frame=0, center=0;
@@ -550,17 +573,18 @@ InstaView.convert = function(wiki)
 	// but since most browsers can handle it I'll save myself the hassle
 	function parse_inline_formatting(str)
 	{
-		var em,st,i,li,o='';
+	    var em, st, i, li, o = '';
+        var last
 		while ((i=str.indexOf("''",li))+1) {
 			o += str.substring(li,i);
 			li=i+2;
 			if (str.charAt(i+2)=="'") {
 				li++;
-				st=!st;
-				o+=st?'<strong>':'</strong>';
+			    em=!em;		//TODO replace with st	
+				o+=em?'<em>':'</em>'; //TODO Breaks rendering <strong>/</strong> as ''bob'''s beer doesnt work
 			} else {
 				em=!em;
-				o+=em?'<em>':'</em>';
+				o+=em?'<em>':'</em>'; //TODO change back to <em>
 			}
 		}
 		return o+str.substr(li);
@@ -596,6 +620,12 @@ InstaView.convert = function(wiki)
 			replace(/~{5}(?!~)/g, date).
 			replace(/~{4}(?!~)/g, InstaView.conf.user.name + ' ' + date).
 			replace(/~{3}(?!~)/g, InstaView.conf.user.name).
+
+            //Remove links with no ending ]]
+            replace(/^.\[.*:.*[^\]]$/, '').
+
+            //Remove links with no start
+            replace(/^[^\[].*.]$/, '').
 
 			// [[:Category:...]], [[:Image:...]], etc...
 			replace(RegExp('\\[\\[:((?:' + InstaView.conf.locale.category + '|' + InstaView.conf.locale.image + '|' + InstaView.conf.wiki.interwiki + '):.*?)\\]\\]', 'gi'), "<a href='" + InstaView.conf.paths.articles + "$1'>$1</a>").
@@ -707,7 +737,7 @@ InstaView.convert = function(wiki)
         .replace(/columns\-list([0-9]|\s|\|)*/g, '')
     	.replace(/<li>;/g, '')
         .replace(/<p>\s*<\/p>/g, '')
-        + "<div style='text-align:right;'><br/><br/><br/><a href='https://donate.wikimedia.org/w/index.php?title=Special:FundraiserLandingPage&utm_source=flowpro' target='_blank'>Donate to Wikipedia</a></div>"
+        + "<div style='text-align:right;'><br/><br/><br/><a href='https://donate.wikimedia.org/w/index.php?title=Special:FundraiserLandingPage&utm_source=flowpro%2Eio' target='_blank'>Donate to Wikipedia</a></div>"
     ;
 }
 
