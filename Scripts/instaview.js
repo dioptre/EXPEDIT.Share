@@ -84,7 +84,8 @@ InstaView.conf =
 
 // define constants
 InstaView.BLOCK_IMAGE = new RegExp('^\\[\\['+InstaView.conf.locale.image+':.*?\\|.*?(?:frame|thumbnail|thumb|none|right|left|center)', 'i');
-InstaView.IMAGE = new RegExp('^(' + InstaView.conf.locale.image + '|File):(?!.*\.ogv.*)', 'i');
+InstaView.IMAGE = new RegExp('(?!.*\.ogv.*)^(' + InstaView.conf.locale.image + '|File):(.*)', 'i');
+InstaView.IMAGE_TAG = new RegExp('.*(' + InstaView.conf.locale.image + '|File):(.*?)(\]*?)$', 'i'); //#[2]
 
 InstaView.dump = function(from, to)
 {
@@ -134,6 +135,8 @@ InstaView.convert = function(wiki)
     
     //Unsupported at this stage TODO
     //wiki = filter(wiki, 'legend', '{', '}', 2);
+    wiki = filter(wiki, 'speciesbox', '{', '}', 2);
+    wiki = filter(wiki, 'harvnb', '{', '}', 2);
     wiki = filter(wiki, 'navboxes', '{', '}', 2);
     wiki = filter(wiki, 'letter', '{', '}', 2);
     wiki = filter(wiki, 'charmap', '{', '}', 2);
@@ -270,7 +273,8 @@ InstaView.convert = function(wiki)
 	    }
 	    else {
 	        var fn = sh();
-	        if (fn.match(InstaView.IMAGE)) {
+	        var matches = fn.match(InstaView.IMAGE);
+	        if (matches && matches[2]) {
 	            ps(parse_image(fn));
 	            endl('<br/><br/>');
 	        }
@@ -366,10 +370,10 @@ InstaView.convert = function(wiki)
 	function parse_image(str)
 	{
 	    // get what's in between "[[Image:" and "]]"
-	    var tag = str.match(/^.*:(.*).]$/);
-	    if (!tag)
-	        return;
-	    tag = tag[1];		
+	    var tag = str.match(InstaView.IMAGE_TAG);
+	    if (!tag || !tag[2])
+	        return '';
+	    tag = tag[2];		
 		var width;
 		var attr = [], filename, caption = '';
 		var thumb=0, frame=0, center=0;
