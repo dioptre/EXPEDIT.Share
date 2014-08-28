@@ -136,6 +136,7 @@ InstaView.convert = function(wiki)
     //Unsupported at this stage TODO
     //wiki = filter(wiki, 'legend', '{', '}', 2);
     wiki = filter(wiki, 'speciesbox', '{', '}', 2);
+    wiki = filter(wiki, 'chembox', '{', '}', 2);
     wiki = filter(wiki, 'harvnb', '{', '}', 2);
     wiki = filter(wiki, 'navboxes', '{', '}', 2);
     wiki = filter(wiki, 'letter', '{', '}', 2);
