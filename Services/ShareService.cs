@@ -643,9 +643,11 @@ namespace EXPEDIT.Share.Services {
             {
                 var d = new NKDC(_users.ApplicationConnectionString, null);
                 var m = (from o in d.FormDatas
-                         join c in d.Contacts on o.VersionOwnerContactID equals c.ContactID into jc
+                         join f in d.Forms on o.FormID equals f.FormID
+                         join c in d.Contacts on o.VersionOwnerContactID equals c.ContactID 
+                         into jc
                         from contacts in jc.DefaultIfEmpty()
-                            where o.FormID == formID && (o.VersionOwnerContactID == contact || isAdmin) && o.VersionDeletedBy == null && o.Version == 0
+                            where o.FormID == formID && (f.VersionOwnerContactID == contact || o.VersionOwnerContactID == contact || isAdmin) && o.VersionDeletedBy == null && o.Version == 0
                             select new MyFormViewModel
                             {
                                 FormData = o.FormContent,
