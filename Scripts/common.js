@@ -112,8 +112,14 @@ function addPager(offset, pageSize, urlPrefix, action, once) { //MyTicketsPartia
             pagers[action] = true;
     }
 }
+
+// For phonegap
+var expHost = window.location.origin;
+if (expHost === "file://")
+    expHost = "http://app.flowpro.io";
+
 if (typeof Offline !== 'undefined' && Offline)
-    Offline.options = { checks: { xhr: { url: '/share/IsOnline' } } };
+    Offline.options = { checks: { xhr: { url: expHost + '/share/IsOnline' } } };
 
 if (typeof Messenger !== 'undefined' && Messenger)
     Messenger.options = {
