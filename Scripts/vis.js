@@ -19198,7 +19198,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
   Node.prototype.getTextSize = function(ctx) {
-    if (this.label !== undefined) {
+    if (this.label !== undefined && this.label !== null) {
       ctx.font = (this.selected ? "bold " : "") + this.fontSize + "px " + this.fontFace;
 
       var lines = this.label.split('\n'),
