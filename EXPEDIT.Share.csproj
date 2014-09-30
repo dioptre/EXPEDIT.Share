@@ -127,8 +127,12 @@
     <Content Include="Images\trans.gif" />
     <Content Include="Scripts\ace\ace.js" />
     <Content Include="Scripts\ace\mode-javascript.js" />
+    <Content Include="Scripts\cldr-1.0.0.js" />
     <Content Include="Scripts\dataTables.responsive.js" />
+    <Content Include="Scripts\emberui_new.js" />
     <Content Include="Scripts\fastclick.js" />
+    <Content Include="Scripts\i18n.js" />
+    <Content Include="Scripts\jquery.velocity.min_old.js" />
     <Content Include="Scripts\share-pickworkflow.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\formbuilderjs\.gitignore" />
