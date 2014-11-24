@@ -7,6 +7,12 @@ namespace EXPEDIT.Share.Helpers
 {
     public class ConstantsHelper
     {
+        public static Guid PROJECT_TYPE_FLOWPRO = new Guid("0536822f-7fea-47b7-beb3-443a17af324c");
+        public static Guid TRIGGER_TYPE_SEND_SMS = new Guid("70cdc18f-a3bd-4926-96cb-00d7a38b4071");
+        public static Guid TRIGGER_TYPE_SEND_EMAIL = new Guid("caf50d10-0c7f-4fa9-948d-4224e4f1ea7a");
+        public static Guid TRIGGER_TYPE_WORKFLOW_CANCEL = new Guid("0863c911-9098-4f4a-a72d-4b11779d523d");
+        public static Guid TRIGGER_TYPE_WORKFLOW_INSTANTIATE = new Guid("ce40a5aa-b27b-496b-8c7e-798d13833044");
+        public static Guid TRIGGER_TYPE_WORKFLOW_TRANSITION = new Guid("22bae812-e943-4844-9543-c6440a32bbff");
         public static Guid LOCATION_TYPE_UNCLASSIFIED = new Guid("dab2d152-398e-40f8-86ef-7431a20efa19");
         public static Guid WORK_TYPE_FEEDBACK_MODEL = new Guid("4E796115-62B0-441A-B29C-4652E7A1557C");
         public static Guid WORK_TYPE_SUPPORT_REGARDING = new Guid("57ebd6b8-980f-4116-90f5-574765c9766d");
