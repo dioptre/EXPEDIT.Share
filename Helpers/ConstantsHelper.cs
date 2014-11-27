@@ -7,6 +7,10 @@ namespace EXPEDIT.Share.Helpers
 {
     public class ConstantsHelper
     {
+        public static int WORKFLOW_INSTANCE_TIMEOUT_IDLE_SECONDS = 3600;
+        public static int WORKFLOW_INSTANCE_TIMEOUT_EXECUTION_SECONDS = 3600;
+        public static int WORKFLOW_INSTANCE_RESUME_ATTEMPTS_LEFT = 2;
+        public static string REFERENCE_TYPE_PROJECTPLANTASKRESPONSE = "X_ProjectPlanTaskResponse";
         public static Guid WORKFLOW_APP_FLOWPRO = new Guid("71a2e288-6271-4b6b-9862-6de9f0749594");
         public static Guid PROJECT_TYPE_FLOWPRO = new Guid("0536822f-7fea-47b7-beb3-443a17af324c");
         public static Guid TRIGGER_TYPE_SEND_SMS = new Guid("70cdc18f-a3bd-4926-96cb-00d7a38b4071");
