@@ -5,16 +5,16 @@
 // list of conventions:
 // 1. Main object needs :
 //   data-json: 'this is the place to store the settings for the object (custom sturcture for each plugin'
-//   class: need to contain .tiny and a class prefixed with tiny like .tiny-form 
+//   class: need to contain .tiny and a class prefixed with tiny like .tiny-form
 //   type: the same name as the prefixed class. this is important to set correctly as it will be used to identiy what render function will be used
 //   Example: <div data-json="{}" class="tiny tiny-form mceNonEditable disable-user-select" type="tiny-form"></div>
 // 2. Different type of functions necessary for rendering
 //   a) 'tiny-form' - main one used for the template (no js, just template)
 //   b) 'tiny-form-trigger' - used to setup additional click helpers, this is rendered by default
-//   c) 'tiny-form-editor' - additonal template code and click handlers to 
+//   c) 'tiny-form-editor' - additonal template code and click handlers to
 
 (function () {
-    
+
     // Removing the content of all .tiny object & any helper divs identified by .tiny-popover
     window.cleanFunctions = function (selected) {
         $selected = $(selected);
@@ -39,7 +39,7 @@
 
 
 
-    // Rendering all templates 
+    // Rendering all templates
     //if (typeof window.renderFunctions === 'undefined') {
         window.renderFunctions = function (selector) {
             if (typeof selector === 'undefined')
@@ -47,18 +47,32 @@
             selector.find('*').andSelf().filter('.tiny').each(function () {
                 var $this = $(this)
                 var type = $this.attr('type');
-                window.renderFunction[type]($this);
-                var trigFn = window.renderFunction[type + '-trigger'];
-                if (typeof trigFn !== 'undefined') {
-                    trigFn($this);
-                }
+                // if (type != "tiny-live-form") {
+                    window.renderFunction[type]($this);
+                    var trigFn = window.renderFunction[type + '-trigger'];
+                    if (typeof trigFn !== 'undefined') {
+                        trigFn($this);
+                    }
+                // }
             });
         }
     //}
 
+    // window.renderLiveFunctions = function (selector) {
+    //     if (typeof selector === 'undefined')
+    //         selector = $('.tiny'); //in the case undefined is passed through select any tinys possible HACK
+
+    //     selector.find('*').andSelf().filter('.tiny').each(function () {
+    //         var $this = $(this)
+    //         var type = $this.attr('type');
+    //         window.renderLiveFunction[type]($this);
+    //     });
+    // }
 
     // Setup global renderFunction object
     //if (typeof window.renderFunction === 'undefined')
         window.renderFunction = {};
+
+        window.renderLiveFunction = {};
 
 })()
