@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace EXPEDIT.Share.Helpers
 {
     public class ConstantsHelper
     {
+        public static Regex REGEX_JS_CLEANER = new Regex(@"function|;/ig", RegexOptions.Compiled);
         public static int WORKFLOW_INSTANCE_TIMEOUT_IDLE_SECONDS = 3600;
         public static int WORKFLOW_INSTANCE_TIMEOUT_EXECUTION_SECONDS = 3600;
         public static int WORKFLOW_INSTANCE_RESUME_ATTEMPTS_LEFT = 2;
