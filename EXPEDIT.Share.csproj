@@ -249,6 +249,11 @@
     <Content Include="Scripts\select2.js" />
     <Content Include="Scripts\select2.min.js" />
     <Content Include="Scripts\tinymce\plugins\locationpicker\client.min.js" />
+    <Content Include="Scripts\tinymce\plugins\myliveformeditor\client.min.js" />
+    <Content Include="Scripts\tinymce\plugins\myliveformeditor\img\magic-alt.png" />
+    <Content Include="Scripts\tinymce\plugins\myliveformeditor\img\magic.png" />
+    <Content Include="Scripts\tinymce\plugins\myliveformeditor\img\picture_add.png" />
+    <Content Include="Scripts\tinymce\plugins\myliveformeditor\plugin.min.js" />
     <Content Include="Scripts\tinymce\plugins\myworkflow\client.min.js" />
     <Content Include="Scripts\tinymce\plugins\myworkflow\img\network.png" />
     <Content Include="Scripts\tinymce\plugins\myworkflow\plugin.min.js" />
