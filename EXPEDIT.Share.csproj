@@ -128,11 +128,18 @@
     <Content Include="Scripts\ace\ace.js" />
     <Content Include="Scripts\ace\mode-javascript.js" />
     <Content Include="Scripts\cldr-1.0.0.js" />
+    <Content Include="Scripts\d3.min.js" />
     <Content Include="Scripts\dataTables.responsive.js" />
+    <Content Include="Scripts\ember-1.8.js" />
+    <Content Include="Scripts\ember-charts.js" />
+    <Content Include="Scripts\ember-data-beta12.js" />
+    <Content Include="Scripts\emberui-4.js" />
     <Content Include="Scripts\emberui_new.js" />
     <Content Include="Scripts\fastclick.js" />
     <Content Include="Scripts\i18n.js" />
     <Content Include="Scripts\jquery.velocity.min_old.js" />
+    <Content Include="Scripts\liquid-fire-0.15.0.js" />
+    <Content Include="Scripts\list-view-latest.js" />
     <Content Include="Scripts\share-pickworkflow.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\formbuilderjs\.gitignore" />
@@ -268,6 +275,9 @@
     <Content Include="Scripts\wysihtml5-0.3.0.js" />
     <Content Include="Scripts\zoomerang.js" />
     <Content Include="Styles\dataTables.responsive.css" />
+    <Content Include="Styles\ember-charts.css" />
+    <Content Include="Styles\emberui-default-theme_old.css" />
+    <Content Include="Styles\emberui_old.css" />
     <Content Include="Styles\images\calendar-blue.gif" />
     <Content Include="Styles\images\calendar-green.gif" />
     <Content Include="Styles\images\calendar.gif" />
@@ -1468,6 +1478,15 @@
     <Content Include="Styles\jquery.fileupload-ui-noscript.css" />
     <Content Include="Styles\jquery.fileupload-ui.css" />
     <Content Include="Styles\jquery.fileupload.css" />
+    <Content Include="Styles\line-icons-webfont\fonts\Simple-Line-Icons.dev.svg" />
+    <Content Include="Styles\line-icons-webfont\fonts\Simple-Line-Icons.svg" />
+    <Content Include="Styles\line-icons-webfont\icons-lte-ie7.js" />
+    <Content Include="Styles\line-icons-webfont\index.html" />
+    <Content Include="Styles\line-icons-webfont\License.txt" />
+    <Content Include="Styles\line-icons-webfont\Readme.txt" />
+    <Content Include="Styles\line-icons-webfont\simple-line-icons.css" />
+    <Content Include="Styles\line-icons-webfont\style.css" />
+    <Content Include="Styles\liquid-fire-0.15.0.css" />
     <Content Include="Styles\messenger-spinner.css" />
     <Content Include="Styles\messenger-theme-air.css" />
     <Content Include="Styles\messenger-theme-block.css" />
@@ -1671,6 +1690,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\PickWorkflow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\line-icons-webfont\fonts\Simple-Line-Icons.eot" />
+    <Content Include="Styles\line-icons-webfont\fonts\Simple-Line-Icons.ttf" />
+    <Content Include="Styles\line-icons-webfont\fonts\Simple-Line-Icons.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
