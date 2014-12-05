@@ -25,6 +25,18 @@ namespace EXPEDIT.Share.Services
          SelectListItem[] GetCompanies(string startsWith);
 
          [OperationContract]
+         SelectListItem[] GetUsernames(Guid[] contactIDs);
+
+         [OperationContract]
+         SelectListItem[] GetCompanies(Guid[] companyIDs);
+
+         [OperationContract]
+         SelectListItem[] GetContacts(string startsWith);
+
+         [OperationContract]
+         SelectListItem[] GetContacts(Guid[] contactIDs);
+
+         [OperationContract]
          Affiliate UpdateAffiliate(Guid? childAffiliateID = default(Guid?), Guid? parentAffiliateID = default(Guid?), string requestIPAddress = null, bool referral=false, bool checkin=false, string reference=null);
 
          [OperationContract]

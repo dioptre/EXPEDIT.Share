@@ -99,6 +99,69 @@ namespace EXPEDIT.Share.Services
             }
         }
 
+        public SelectListItem[] GetContacts(string startsWith)
+        {
+
+            if (startsWith == null || startsWith.Length == 1)
+                return new SelectListItem[] { };
+            var application = _users.ApplicationID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.Contacts
+                        where o.Username.StartsWith(startsWith)
+                        orderby o.Username ascending
+                        select o).Take(20).AsEnumerable()
+                        .Select(f =>
+                             new SelectListItem { Text = f.Username, Value = string.Format("{0}", f.ContactID) })
+                             .ToArray()
+                        ;
+            }
+        }
+
+
+        public SelectListItem[] GetContacts(Guid[] contactIDs)
+        {
+
+            if (contactIDs == null || contactIDs.Length == 0)
+                return new SelectListItem[] { };
+            var application = _users.ApplicationID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.Contacts
+                        where contactIDs.Contains(o.ContactID)
+                        orderby o.Username ascending
+                        select o).AsEnumerable()
+                        .Select(f =>
+                             new SelectListItem { Text = f.Username, Value = string.Format("{0}", f.ContactID) })
+                             .ToArray()
+                        ;
+            }
+        }
+
+        public SelectListItem[] GetUsernames(Guid[] userIDs)
+        {
+
+            if (userIDs == null || userIDs.Length == 0)
+                return new SelectListItem[] { };
+            var application = _users.ApplicationID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.Users
+                        where userIDs.Contains(o.UserId)
+                        orderby o.UserName ascending
+                        select o).AsEnumerable()
+                        .Select(f =>
+                             new SelectListItem { Text = f.UserName, Value = string.Format("{0}", f.UserId) })
+                             .ToArray()
+                        ;
+            }
+        }
 
         public SelectListItem[] GetCompanies(string startsWith)
         {
@@ -114,6 +177,27 @@ namespace EXPEDIT.Share.Services
                         where o.CompanyName.StartsWith(startsWith)
                         orderby o.CompanyName ascending
                         select o).Take(20).AsEnumerable()
+                        .Select(f =>
+                             new SelectListItem { Text = f.CompanyName, Value = string.Format("{0}", f.CompanyID) })
+                             .ToArray()
+                        ;
+            }
+        }
+
+        public SelectListItem[] GetCompanies(Guid[] companyIDs)
+        {
+
+            if (companyIDs == null || companyIDs.Length == 0)
+                return new SelectListItem[] { };
+            var application = _users.ApplicationID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.Companies
+                        where companyIDs.Contains(o.CompanyID)
+                        orderby o.CompanyName ascending
+                        select o).AsEnumerable()
                         .Select(f =>
                              new SelectListItem { Text = f.CompanyName, Value = string.Format("{0}", f.CompanyID) })
                              .ToArray()

@@ -202,7 +202,41 @@ namespace EXPEDIT.Share.Controllers {
         {
             if (string.IsNullOrWhiteSpace(id))
                 return Json(new SelectListItem[] { }, JsonRequestBehavior.AllowGet);
+            Guid tid;
+            if (id.Contains(',') || Guid.TryParse(id, out tid))
+            {
+                List<Guid> lid = new List<Guid>();
+                var ids = id.Split(',');
+                foreach (var gid in ids)
+                {
+                    if (Guid.TryParse(gid, out tid))
+                        lid.Add(tid);
+                    return Json(_content.GetUsernames(lid.ToArray()), JsonRequestBehavior.AllowGet);
+                }
+            }
             return Json(_content.GetUsernames(id), JsonRequestBehavior.AllowGet);
+        }
+
+        [ValidateInput(false)]
+        [Authorize]
+        [Themed(false)]
+        public JsonResult GetContacts(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return Json(new SelectListItem[] { }, JsonRequestBehavior.AllowGet);
+            Guid tid;           
+            if (id.Contains(',') || Guid.TryParse(id, out tid))
+            {
+                List<Guid> lid = new List<Guid>();
+                var ids = id.Split(',');
+                foreach (var gid in ids)
+                {
+                    if (Guid.TryParse(gid, out tid))
+                        lid.Add(tid);
+                }
+                return Json(_content.GetContacts(lid.ToArray()), JsonRequestBehavior.AllowGet);
+            }
+            return Json(_content.GetContacts(id), JsonRequestBehavior.AllowGet);
         }
 
 
@@ -213,6 +247,18 @@ namespace EXPEDIT.Share.Controllers {
         {
             if (string.IsNullOrWhiteSpace(id))
                 return Json(new SelectListItem[] { }, JsonRequestBehavior.AllowGet);
+            Guid tid;
+            if (id.Contains(',') || Guid.TryParse(id, out tid))
+            {
+                List<Guid> lid = new List<Guid>();
+                var ids = id.Split(',');
+                foreach (var gid in ids)
+                {
+                    if (Guid.TryParse(gid, out tid))
+                        lid.Add(tid);
+                    return Json(_content.GetCompanies(lid.ToArray()), JsonRequestBehavior.AllowGet);
+                }
+            }
             return Json(_content.GetCompanies(id), JsonRequestBehavior.AllowGet);
         }
 

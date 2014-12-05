@@ -316,6 +316,21 @@ namespace EXPEDIT.Share
                 new RouteDescriptor {
                         Priority = 5,
                         Route = new Route(
+                            "share/GetContacts",
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"},
+                                {"controller", "User"},
+                                {"action", "GetContacts"}
+                            },
+                            null,
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"}
+                            },
+                            new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                        Priority = 5,
+                        Route = new Route(
                             "share/uploadphoto",
                             new RouteValueDictionary {
                                 {"area", "EXPEDIT.Share"},
