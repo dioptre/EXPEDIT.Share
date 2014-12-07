@@ -17,6 +17,8 @@
 
     // Removing the content of all .tiny object & any helper divs identified by .tiny-popover
     window.cleanFunctions = function (selected) {
+        //if (!selected.match(/^\s*\</ig))
+        //    selected = "<div>" + selected + "</div>";
         $selected = $(selected);
 
         TraverseDom($selected, function (e) {
