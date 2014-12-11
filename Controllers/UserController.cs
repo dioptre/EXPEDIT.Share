@@ -243,6 +243,15 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         [Authorize]
         [Themed(false)]
+        public JsonResult GetMyCompanies()
+        {
+
+            return Json(_content.GetMyCompanies(), JsonRequestBehavior.AllowGet);
+        }
+
+        [ValidateInput(false)]
+        [Authorize]
+        [Themed(false)]
         public JsonResult GetCompanies(string id)
         {
             if (string.IsNullOrWhiteSpace(id))

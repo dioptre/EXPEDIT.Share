@@ -25,6 +25,9 @@ namespace EXPEDIT.Share.Services
          SelectListItem[] GetCompanies(string startsWith);
 
          [OperationContract]
+         SelectListItem[] GetMyCompanies();
+
+         [OperationContract]
          SelectListItem[] GetUsernames(Guid[] contactIDs);
 
          [OperationContract]

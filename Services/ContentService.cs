@@ -184,6 +184,22 @@ namespace EXPEDIT.Share.Services
             }
         }
 
+        public SelectListItem[] GetMyCompanies()
+        {
+            var contact = _users.ContactID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                d.ContextOptions.LazyLoadingEnabled = false;
+                return (from o in d.Companies
+                        join my in d.E_UDF_ContactCompanies(contact) on o.CompanyID equals my select o).ToArray()
+                        .Select(f=>
+                         new SelectListItem { Text = f.CompanyName, Value = string.Format("{0}", f.CompanyID) })
+                             .ToArray()
+                        ;
+            }
+        }
+
         public SelectListItem[] GetCompanies(Guid[] companyIDs)
         {
 
