@@ -32,6 +32,9 @@ using System.Globalization;
 using Orchard.Security;
 using Orchard.Users.Services;
 using Orchard.Users.Events;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using System.Net;
 
 
 namespace EXPEDIT.Share.Controllers {
@@ -220,8 +223,23 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         [Authorize]
         [Themed(false)]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public JsonResult GetContacts(string id)
         {
+            if (Request.HttpMethod.ToLowerInvariant() == "post")
+            {
+                try
+                {
+                    using (StreamReader sr = new StreamReader(Request.InputStream))
+                        id = ((dynamic)JObject.Parse(sr.ReadToEnd())).id.Value;
+                }
+                catch
+                {
+                    return Json(new SelectListItem[] { }, JsonRequestBehavior.AllowGet);
+                }
+                
+            }
+            
             if (string.IsNullOrWhiteSpace(id))
                 return Json(new SelectListItem[] { }, JsonRequestBehavior.AllowGet);
             Guid tid;           
@@ -722,6 +740,12 @@ namespace EXPEDIT.Share.Controllers {
         }
 
 
+        [Themed(false)]
+        [HttpPost]
+        public ActionResult DuplicateCompany(string id)
+        {
+            return new JsonHelper.JsonNetResult(_share.DuplicateCompany(HttpUtility.UrlDecode(id)), JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

@@ -877,6 +877,15 @@ namespace EXPEDIT.Share.Services {
             return false;
             
         }
+
+        public bool DuplicateCompany(string companyName)
+        {
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var d = new NKDC(_users.ApplicationConnectionString, null, false);
+                return d.Companies.Where(f => f.Version == 0 && f.VersionDeletedBy == null && f.CompanyName == companyName || f.CompanyName == (companyName ?? "") + "*").Any();
+            }
+        }
       
        
     }

@@ -78,5 +78,7 @@ namespace EXPEDIT.Share.Services
          [OperationContract]
          bool RequestLostPassword(string username);
 
+         [OperationContract]
+         bool DuplicateCompany(string companyName);
     }
 }
