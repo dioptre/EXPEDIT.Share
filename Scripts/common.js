@@ -147,3 +147,41 @@ function queryParamsLookup(name) {
     else
         return results[1];
 }
+
+function JSON2CSV(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+
+    var str = '';
+    var line = '';
+
+    var head = array[0];
+    for (var index in array[0]) {
+        line += index + '\t';
+    }
+
+    line = line.slice(0, -1);
+    str += line + '\r\n';
+    
+
+    for (var i = 0; i < array.length; i++) {
+        var line = '';
+
+        for (var index in array[i]) {
+            line += array[i][index] + '\t';
+        }
+
+        line = line.slice(0, -1);
+        str += line + '\r\n';
+    }
+    return str;
+
+}
+
+function Download(str) {
+    window.open("data:text/csv;charset=utf-8," + escape(str))
+}
+
+function DownloadCSV(objArray) {
+    var csv = JSON2CSV(objArray);
+    Download(csv);
+}
