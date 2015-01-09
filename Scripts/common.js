@@ -185,3 +185,22 @@ function DownloadCSV(objArray) {
     var csv = JSON2CSV(objArray);
     Download(csv);
 }
+
+String.prototype.hashCode = function () {
+    var hash = 0, i, chr, len;
+    if (this.length == 0) return hash;
+    for (i = 0, len = this.length; i < len; i++) {
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
+
+function ToColor(str) {
+    if (!str)
+        return '#111111';
+    var color = parseInt(Math.abs(str.hashCode()), 10).toString(16).replace(/[defDEF]/ig, '3');
+    color += '222222';
+    return '#' + color.substr(0, 6);
+}
