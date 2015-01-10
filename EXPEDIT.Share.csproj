@@ -138,6 +138,7 @@
     <Content Include="Scripts\fastclick.js" />
     <Content Include="Scripts\i18n.js" />
     <Content Include="Scripts\jquery.velocity.min_old.js" />
+    <Content Include="Scripts\JsBarcode.all.min.js" />
     <Content Include="Scripts\liquid-fire-0.15.0.js" />
     <Content Include="Scripts\list-view-latest.js" />
     <Content Include="Scripts\share-pickworkflow.js" />
