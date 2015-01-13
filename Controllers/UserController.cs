@@ -261,10 +261,11 @@ namespace EXPEDIT.Share.Controllers {
         [ValidateInput(false)]
         [Authorize]
         [Themed(false)]
-        public JsonResult GetMyCompanies()
+        public JsonResult GetMyCompanies(string id)
         {
-
-            return Json(_content.GetMyCompanies(), JsonRequestBehavior.AllowGet);
+            if (string.IsNullOrWhiteSpace(id))
+                return Json(_content.GetMyCompanies(), JsonRequestBehavior.AllowGet);
+            else return GetCompanies(id);
         }
 
         [ValidateInput(false)]
