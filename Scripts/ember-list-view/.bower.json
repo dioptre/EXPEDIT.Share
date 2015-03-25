@@ -1,0 +1,14 @@
+{
+  "name": "ember-list-view",
+  "_cacheHeaders": {
+    "ETag": "\"5da3c22fe3387b31a935bad5233b08a9\"",
+    "Last-Modified": "Mon, 04 Aug 2014 03:37:02 GMT",
+    "Content-Length": "39701",
+    "Content-Type": ""
+  },
+  "_release": "e-tag:5da3c22fe",
+  "main": "index.js",
+  "_source": "http://builds.emberjs.com/list-view/list-view-latest.js",
+  "_target": "*",
+  "_originalSource": "http://builds.emberjs.com/list-view/list-view-latest.js"
+}

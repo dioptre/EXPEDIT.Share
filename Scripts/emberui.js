@@ -1,6 +1,6 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.eui=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 "use strict";
-$.velocity.Sequences.euiModalCloseDefault = function(element, options) {
+$.Velocity.Redirects.euiModalCloseDefault = function(element, options) {
   var calls;
   calls = [
     {
@@ -25,12 +25,12 @@ $.velocity.Sequences.euiModalCloseDefault = function(element, options) {
     }
   ];
   return $.each(calls, function(i, call) {
-    return jQuery.velocity.animate(call.element[0], call.properties, call.options);
+    return $.Velocity.animate(call.element[0], call.properties, call.options);
   });
 };
 },{}],2:[function(_dereq_,module,exports){
 "use strict";
-$.velocity.Sequences.euiModalCloseFull = function(element, options) {
+$.Velocity.Redirects.euiModalCloseFull = function(element, options) {
   var calls;
   calls = [
     {
@@ -55,12 +55,12 @@ $.velocity.Sequences.euiModalCloseFull = function(element, options) {
     }
   ];
   return $.each(calls, function(i, call) {
-    return jQuery.velocity.animate(call.element[0], call.properties, call.options);
+    return $.Velocity.animate(call.element[0], call.properties, call.options);
   });
 };
 },{}],3:[function(_dereq_,module,exports){
 "use strict";
-jQuery.velocity.Sequences.euiModalOpenDefault = function(element, options) {
+$.Velocity.Redirects.euiModalOpenDefault = function(element, options) {
   var calls;
   calls = [
     {
@@ -85,12 +85,12 @@ jQuery.velocity.Sequences.euiModalOpenDefault = function(element, options) {
     }
   ];
   return jQuery.each(calls, function(i, call) {
-    return jQuery.velocity.animate(call.element[0], call.properties, call.options);
+    return $.Velocity.animate(call.element[0], call.properties, call.options);
   });
 };
 },{}],4:[function(_dereq_,module,exports){
 "use strict";
-jQuery.velocity.Sequences.euiModalOpenFull = function(element, options) {
+$.Velocity.Redirects.euiModalOpenFull = function(element, options) {
   var calls;
   calls = [
     {
@@ -115,13 +115,15 @@ jQuery.velocity.Sequences.euiModalOpenFull = function(element, options) {
     }
   ];
   return jQuery.each(calls, function(i, call) {
-    return jQuery.velocity.animate(call.element[0], call.properties, call.options);
+    return $.Velocity.animate(call.element[0], call.properties, call.options);
   });
 };
 },{}],5:[function(_dereq_,module,exports){
 "use strict";
-$.velocity.Sequences.euiPopcalCloseDefault = function(element, options) {
-  return $.velocity.animate(element, {
+$.Velocity.Redirects.euiPopcalCloseDefault = function(element, options) {
+  var component;
+  component = $(element).find('.eui-component');
+  return $.Velocity.animate(component, {
     opacity: [0, 1],
     scaleX: [0, 1],
     scaleY: [0, 1],
@@ -146,8 +148,10 @@ $.velocity.Sequences.euiPopcalCloseDefault = function(element, options) {
 };
 },{}],6:[function(_dereq_,module,exports){
 "use strict";
-$.velocity.Sequences.euiPopcalOpenDefault = function(element, options) {
-  return $.velocity.animate(element, {
+$.Velocity.Redirects.euiPopcalOpenDefault = function(element, options) {
+  var component;
+  component = $(element).find('.eui-component');
+  return $.Velocity.animate(component, {
     opacity: [1, 0],
     scaleX: [1, 0.7],
     scaleY: [1, 0.7]
@@ -157,8 +161,10 @@ $.velocity.Sequences.euiPopcalOpenDefault = function(element, options) {
 };
 },{}],7:[function(_dereq_,module,exports){
 "use strict";
-$.velocity.Sequences.euiPoplistCloseDefault = function(element, options) {
-  return $.velocity.animate(element, {
+$.Velocity.Redirects.euiPoplistCloseDefault = function(element, options) {
+  var component;
+  component = $(element).find('.eui-component');
+  return $.Velocity.animate(component, {
     opacity: [0, 1],
     marginTop: ["6px", "-4px"]
   }, {
@@ -168,8 +174,10 @@ $.velocity.Sequences.euiPoplistCloseDefault = function(element, options) {
 };
 },{}],8:[function(_dereq_,module,exports){
 "use strict";
-$.velocity.Sequences.euiPoplistCloseFlyin = function(element, options) {
-  return $.velocity.animate(element, {
+$.Velocity.Redirects.euiPoplistCloseFlyin = function(element, options) {
+  var component;
+  component = $(element).find('.eui-component');
+  return $.Velocity.animate(component, {
     opacity: [0, 1],
     scaleX: [0, 1],
     scaleY: [0, 1],
@@ -178,8 +186,8 @@ $.velocity.Sequences.euiPoplistCloseFlyin = function(element, options) {
       if (!options.target) {
         return ["0px", "0px"];
       }
-      offset = $(element).height() / 2 + options.target.height();
-      popcalOffset = $(element).offset().top;
+      offset = component.height() / 2 + options.target.height();
+      popcalOffset = component.offset().top;
       buttonOffset = options.target.offset().top;
       direction = '+';
       if ((buttonOffset - popcalOffset) < 1) {
@@ -194,8 +202,10 @@ $.velocity.Sequences.euiPoplistCloseFlyin = function(element, options) {
 };
 },{}],9:[function(_dereq_,module,exports){
 "use strict";
-$.velocity.Sequences.euiPoplistOpenDefault = function(element, options) {
-  return $.velocity.animate(element, {
+$.Velocity.Redirects.euiPoplistOpenDefault = function(element, options) {
+  var component;
+  component = $(element).find('.eui-component');
+  return $.Velocity.animate(component, {
     opacity: [1, 0],
     marginTop: ["-4px", "-14px"]
   }, {
@@ -204,8 +214,10 @@ $.velocity.Sequences.euiPoplistOpenDefault = function(element, options) {
 };
 },{}],10:[function(_dereq_,module,exports){
 "use strict";
-$.velocity.Sequences.euiPoplistOpenFlyin = function(element, options) {
-  return $.velocity.animate(element, {
+$.Velocity.Redirects.euiPoplistOpenFlyin = function(element, options) {
+  var component;
+  component = $(element).find('.eui-component');
+  return $.Velocity.animate(component, {
     opacity: [1, 0],
     scaleX: [1, 0.7],
     scaleY: [1, 0.7]
@@ -215,17 +227,19 @@ $.velocity.Sequences.euiPoplistOpenFlyin = function(element, options) {
 };
 },{}],11:[function(_dereq_,module,exports){
 "use strict";
-var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
-var sizeSupport = _dereq_("../mixins/size-support")["default"] || _dereq_("../mixins/size-support");
+var className = _dereq_("../mixins/class-name")["default"] || _dereq_("../mixins/class-name");
 var disabledSupport = _dereq_("../mixins/disabled-support")["default"] || _dereq_("../mixins/disabled-support");
 var widthSupport = _dereq_("../mixins/width-support")["default"] || _dereq_("../mixins/width-support");
 var button;
 
-button = Em.Component.extend(styleSupport, sizeSupport, disabledSupport, widthSupport, {
-  classNameBindings: [':eui-button', 'loading:eui-loading', 'icon:eui-icon', 'label::eui-no-label', 'class'],
+button = Em.Component.extend(className, disabledSupport, widthSupport, {
+  classNameBindings: ['loading:eui-loading', 'icon:eui-icon', 'label::eui-no-label', 'class'],
+  baseClass: 'button',
   tagName: 'eui-button',
+  style: 'default',
+  size: 'medium',
   label: null,
-  icon: null,
+  leadingIcon: null,
   trailingIcon: null,
   loading: null,
   disabled: null,
@@ -233,6 +247,8 @@ button = Em.Component.extend(styleSupport, sizeSupport, disabledSupport, widthSu
   "class": null,
   type: 'button',
   width: 'auto',
+  ariaOwns: null,
+  ariaHaspopup: null,
   click: function(event) {
     event.preventDefault();
     return this.sendAction('action', this.get('context'));
@@ -240,14 +256,15 @@ button = Em.Component.extend(styleSupport, sizeSupport, disabledSupport, widthSu
 });
 
 exports["default"] = button;
-},{"../mixins/disabled-support":25,"../mixins/size-support":27,"../mixins/style-support":28,"../mixins/width-support":30}],12:[function(_dereq_,module,exports){
+},{"../mixins/class-name":27,"../mixins/disabled-support":28,"../mixins/width-support":35}],12:[function(_dereq_,module,exports){
 "use strict";
-var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
+var className = _dereq_("../mixins/class-name")["default"] || _dereq_("../mixins/class-name");
 var calendar;
 
-calendar = Em.Component.extend(styleSupport, {
+calendar = Em.Component.extend(className, {
   tagName: 'eui-calendar',
-  classNames: 'eui-calendar',
+  baseClass: 'calendar',
+  style: 'default',
   showNextMonth: true,
   showPrevMonth: false,
   disabledDates: null,
@@ -477,16 +494,20 @@ calendar = Em.Component.extend(styleSupport, {
 });
 
  exports["default"] = calendar;
-},{"../mixins/style-support":28}],13:[function(_dereq_,module,exports){
+},{"../mixins/class-name":27}],13:[function(_dereq_,module,exports){
 "use strict";
 var errorSupport = _dereq_("../mixins/error-support")["default"] || _dereq_("../mixins/error-support");
-var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
-var sizeSupport = _dereq_("../mixins/size-support")["default"] || _dereq_("../mixins/size-support");
+var className = _dereq_("../mixins/class-name")["default"] || _dereq_("../mixins/class-name");
 var checkbox;
 
-checkbox = Em.Component.extend(errorSupport, styleSupport, sizeSupport, {
+checkbox = Em.Component.extend(errorSupport, className, {
   classNameBindings: [':eui-checkbox', 'value:eui-checked', 'disabled:eui-disabled', 'class'],
+  attributeBindings: ['role', 'value:aria-checked', 'disabled:aria-disabled'],
+  baseClass: 'checkbox',
+  style: 'default',
+  size: 'medium',
   tagName: 'eui-checkbox',
+  role: 'checkbox',
   value: false,
   disabled: false,
   click: function() {
@@ -497,7 +518,7 @@ checkbox = Em.Component.extend(errorSupport, styleSupport, sizeSupport, {
 });
 
 exports["default"] = checkbox;
-},{"../mixins/error-support":26,"../mixins/size-support":27,"../mixins/style-support":28}],14:[function(_dereq_,module,exports){
+},{"../mixins/class-name":27,"../mixins/error-support":29}],14:[function(_dereq_,module,exports){
 "use strict";
 var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
 var sizeSupport = _dereq_("../mixins/size-support")["default"] || _dereq_("../mixins/size-support");
@@ -506,7 +527,6 @@ var dropbutton;
 
 dropbutton = Em.Component.extend(styleSupport, sizeSupport, {
   tagName: 'eui-dropbutton',
-  classNameBindings: ['primaryAction:eui-groupbutton:eui-singlebutton'],
   poplistIsOpen: false,
   listWidth: 'auto',
   primaryAction: Em.computed('options', function() {
@@ -547,23 +567,33 @@ dropbutton = Em.Component.extend(styleSupport, sizeSupport, {
 });
 
 exports["default"] = dropbutton;
-},{"../components/eui-poplist":19,"../mixins/size-support":27,"../mixins/style-support":28}],15:[function(_dereq_,module,exports){
+},{"../components/eui-poplist":19,"../mixins/size-support":32,"../mixins/style-support":33}],15:[function(_dereq_,module,exports){
 "use strict";
+var className = _dereq_("../mixins/class-name")["default"] || _dereq_("../mixins/class-name");
 var errorSupport = _dereq_("../mixins/error-support")["default"] || _dereq_("../mixins/error-support");
 var textSupport = _dereq_("../mixins/text-support")["default"] || _dereq_("../mixins/text-support");
-var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
-var sizeSupport = _dereq_("../mixins/size-support")["default"] || _dereq_("../mixins/size-support");
 var widthSupport = _dereq_("../mixins/width-support")["default"] || _dereq_("../mixins/width-support");
 var input;
 
-input = Em.Component.extend(errorSupport, textSupport, styleSupport, sizeSupport, widthSupport, {
-  classNameBindings: [':eui-input'],
+input = Em.Component.extend(errorSupport, textSupport, className, widthSupport, {
   tagName: 'eui-input',
-  maxlength: null
+  baseClass: 'input',
+  style: 'default',
+  size: 'medium',
+  maxlength: null,
+  type: 'text',
+  action: null,
+  actions: {
+    enter: function(context) {
+      if (this.get('action')) {
+        return this.sendAction('action', context);
+      }
+    }
+  }
 });
 
 exports["default"] = input;
-},{"../mixins/error-support":26,"../mixins/size-support":27,"../mixins/style-support":28,"../mixins/text-support":29,"../mixins/width-support":30}],16:[function(_dereq_,module,exports){
+},{"../mixins/class-name":27,"../mixins/error-support":29,"../mixins/text-support":34,"../mixins/width-support":35}],16:[function(_dereq_,module,exports){
 "use strict";
 var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
 var animationSupport = _dereq_("../mixins/animation-support")["default"] || _dereq_("../mixins/animation-support");
@@ -571,7 +601,7 @@ var modalLayout = _dereq_("../templates/eui-modal")["default"] || _dereq_("../te
 var modal;
 
 modal = Em.Component.extend(styleSupport, animationSupport, {
-  layout: modalLayout,
+  layout: 'eui-modal',
   tagName: 'eui-modal',
   classNames: ['eui-modal'],
   classNameBindings: ['class'],
@@ -583,10 +613,14 @@ modal = Em.Component.extend(styleSupport, animationSupport, {
   programmatic: false,
   isClosing: false,
   renderModal: false,
+  enforceModality: false,
   open: Ember.computed(function(key, value) {
     if (arguments.length === 2) {
       if (value) {
         this.set('renderModal', value);
+        Em.run.next(this, function() {
+          return this.setup();
+        });
       } else if (this.get('renderModal')) {
         this.hide();
       }
@@ -610,11 +644,6 @@ modal = Em.Component.extend(styleSupport, animationSupport, {
       return this.setup();
     }
   },
-  didOpenModal: (function() {
-    if (this.get('renderModal')) {
-      return this.setup();
-    }
-  }).observes('renderModal'),
   setup: function() {
     this.animateIn();
     this.set('previousFocus', $(document.activeElement));
@@ -663,11 +692,15 @@ modal = Em.Component.extend(styleSupport, animationSupport, {
   },
   keyDown: function(event) {
     if (event.keyCode === 9) {
-      this.constrainTabNavigationToModal(event);
+      return this.constrainTabNavigationToModal(event);
     }
+  },
+  keyUp: function(event) {
     if (event.keyCode === 27) {
       this.sendAction('cancel');
-      return this.hide();
+      if (!this.get('enforceModality')) {
+        return this.hide();
+      }
     }
   }
 });
@@ -679,6 +712,7 @@ modal.reopenClass({
     }
     options.renderModal = true;
     options.programmatic = true;
+    options.layout = modalLayout;
     modal = this.create(options);
     modal.container = modal.get('targetObject.container');
     modal.appendTo('body');
@@ -687,11 +721,28 @@ modal.reopenClass({
 });
 
 exports["default"] = modal;
-},{"../mixins/animation-support":24,"../mixins/style-support":28,"../templates/eui-modal":36}],17:[function(_dereq_,module,exports){
+},{"../mixins/animation-support":26,"../mixins/style-support":33,"../templates/eui-modal":41}],17:[function(_dereq_,module,exports){
 "use strict";
-var DATE_SLOT_HBS, containsDate, forEachSlot, month;
+var DATE_SLOT_HBS, containsDate, forEachSlot, month, precompileTemplate;
 
-DATE_SLOT_HBS = Handlebars.compile('<li class="{{classNames}}" data-date="{{jsonDate}}">' + '{{date}}' + '</li>');
+precompileTemplate = Handlebars.compile;
+
+DATE_SLOT_HBS = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<li class=\"");
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "classNames", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push("\" data-date=\"");
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "jsonDate", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push("\"> ");
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "date", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push(" </li>");
+  return buffer;
+  
+});
 
 containsDate = function(dates, date) {
   if (!dates || !Em.get(dates, 'length')) {
@@ -738,6 +789,8 @@ month = Em.Component.extend({
   month: null,
   selection: null,
   disabledDates: null,
+  maxPastDate: null,
+  maxFutureDate: null,
   init: function() {
     this._super();
     if (!this.get('selection')) {
@@ -781,12 +834,16 @@ month = Em.Component.extend({
     return this.setSelection();
   },
   render: function(buff) {
-    var renderSlot, view;
+    var data, renderSlot, view;
     month = this.get('month');
     view = this;
     if (!month) {
       return;
     }
+    data = {
+      buffer: buff,
+      view: view
+    };
     renderSlot = function(slot) {
       attrs;
       var attrs;
@@ -798,7 +855,9 @@ month = Em.Component.extend({
         };
         view.applyOptionsForDate(attrs, slot);
         attrs.classNames = attrs.classNames.join(' ');
-        return buff.push(DATE_SLOT_HBS(attrs));
+        return buff.push(DATE_SLOT_HBS(attrs, {
+          data: data
+        }));
       } else {
         return buff.push('<li class="eui-slot eui-empty"></li>');
       }
@@ -808,13 +867,15 @@ month = Em.Component.extend({
     });
   },
   applyOptionsForDate: function(options, date) {
-    var disabledDates, selection;
+    var disabledDates, maxFutureDate, maxPastDate, selection;
     disabledDates = this.get('disabledDates');
     selection = this.get('selection');
+    maxPastDate = this.get('maxPastDate');
+    maxFutureDate = this.get('maxFutureDate');
     if (moment().isSame(date, 'day')) {
       options.classNames.push('eui-today');
     }
-    if (disabledDates && containsDate(disabledDates, date)) {
+    if ((disabledDates && containsDate(disabledDates, date)) || (maxPastDate && date.isBefore(maxPastDate, 'day')) || (maxFutureDate && date.isAfter(maxFutureDate, 'day'))) {
       options.classNames.push('eui-disabled');
     }
     if (selection && containsDate(selection, date)) {
@@ -829,9 +890,10 @@ exports["default"] = month;
 var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
 var animationSupport = _dereq_("../mixins/animation-support")["default"] || _dereq_("../mixins/animation-support");
 var popcalLayout = _dereq_("../templates/eui-popcal")["default"] || _dereq_("../templates/eui-popcal");
+var preventPageScroll = _dereq_("../mixins/prevent-page-scroll")["default"] || _dereq_("../mixins/prevent-page-scroll");
 var popcal;
 
-popcal = Em.Component.extend(styleSupport, animationSupport, {
+popcal = Em.Component.extend(styleSupport, animationSupport, preventPageScroll, {
   layout: popcalLayout,
   classNames: ['eui-popcal'],
   attributeBindings: ['tabindex'],
@@ -854,31 +916,20 @@ popcal = Em.Component.extend(styleSupport, animationSupport, {
     this.set('previousFocus', $(document.activeElement));
     this.set('isOpen', true);
     this.set('_selection', this.get('selection'));
-    this.$().position({
+    this.$().find('.eui-component').position({
       my: "center top",
       at: "center bottom",
       of: this.get('targetObject').$(),
       collision: 'flipfit'
     });
-    Ember.run.next(this, function() {
-      return $(window).on('click.emberui', (function(_this) {
-        return function(event) {
-          if (!$(event.target).parents('.eui-popcal').length) {
-            event.preventDefault();
-            $(window).off(event);
-            return _this.hide();
-          }
-        };
-      })(this));
-    });
     this.$().focus();
-    return $('body').addClass('eui-popcal-open');
+    return this.disablePageScroll();
   }).on('didInsertElement'),
   breakdown: function() {
     var _ref;
     this.get('previousFocus').focus();
     this.set('isOpen', false);
-    $('body').removeClass('eui-popcal-open');
+    this.enablePageScroll();
     if (!(this.get('dateRange') && ((_ref = this.get('_selection')) != null ? _ref.get('length') : void 0) === 1)) {
       this.set('selection', this.get('_selection'));
     }
@@ -896,9 +947,12 @@ popcal = Em.Component.extend(styleSupport, animationSupport, {
       } else if (selection) {
         return this.hide();
       }
+    },
+    hidePopcal: function() {
+      return this.hide();
     }
   },
-  keyDown: function(event) {
+  keyUp: function(event) {
     if (event.keyCode === 27) {
       return this.hide();
     }
@@ -918,24 +972,34 @@ popcal.reopenClass({
 });
 
 exports["default"] = popcal;
-},{"../mixins/animation-support":24,"../mixins/style-support":28,"../templates/eui-popcal":37}],19:[function(_dereq_,module,exports){
+},{"../mixins/animation-support":26,"../mixins/prevent-page-scroll":31,"../mixins/style-support":33,"../templates/eui-popcal":42}],19:[function(_dereq_,module,exports){
 "use strict";
-var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
+var className = _dereq_("../mixins/class-name")["default"] || _dereq_("../mixins/class-name");
 var animationSupport = _dereq_("../mixins/animation-support")["default"] || _dereq_("../mixins/animation-support");
+var mobileDetection = _dereq_("../mixins/mobile-detection")["default"] || _dereq_("../mixins/mobile-detection");
+var preventPageScroll = _dereq_("../mixins/prevent-page-scroll")["default"] || _dereq_("../mixins/prevent-page-scroll");
 var poplistLayout = _dereq_("../templates/eui-poplist")["default"] || _dereq_("../templates/eui-poplist");
 var itemViewClassTemplate = _dereq_("../templates/eui-poplist-option")["default"] || _dereq_("../templates/eui-poplist-option");
 var poplist;
 
-poplist = Em.Component.extend(styleSupport, animationSupport, {
+poplist = Em.Component.extend(className, animationSupport, mobileDetection, preventPageScroll, {
   layout: poplistLayout,
   classNames: ['eui-poplist'],
-  classNameBindings: ['isOpen::eui-closing'],
-  attributeBindings: ['tabindex'],
+  classNameBindings: ['isOpen::eui-closing', 'isMobileDevice:eui-touch'],
   tagName: 'eui-poplist',
+  baseClass: 'poplist',
+  style: 'default',
   animationClass: 'euiPoplist',
   listWidth: null,
   listHeight: '80',
-  listRowHeight: '20',
+  listRowHeight: Ember.computed('isMobileDevice', function() {
+    if (this.get('isMobileDevice')) {
+      return '30';
+    } else {
+      return '20';
+    }
+  }),
+  modalOnMobile: false,
   labelPath: 'label',
   options: null,
   searchString: null,
@@ -964,37 +1028,40 @@ poplist = Em.Component.extend(styleSupport, animationSupport, {
     });
   },
   setup: (function() {
-    this.setPoplistWidth();
-    Em.run.next(this, function() {
-      return this.$().position({
-        my: "right top",
-        at: "right bottom",
-        of: this.get('targetObject').$(),
-        collision: 'flipfit'
+    var component;
+    this.setPoplistMinWidth();
+    component = this.$().find('.eui-component');
+    if (this.get('isMobileDevice') && this.get('modalOnMobile')) {
+      Em.run.next(this, function() {
+        return component.position({
+          my: "center center",
+          at: "center center",
+          of: $(window)
+        });
       });
-    });
+    } else {
+      Em.run.next(this, function() {
+        return component.position({
+          my: "right top",
+          at: "right bottom",
+          of: this.get('targetObject').$(),
+          collision: 'flipfit'
+        });
+      });
+    }
     this.animateIn();
     this.set('isOpen', true);
     this.set('previousFocus', $(document.activeElement));
-    Ember.run.next(this, function() {
-      return this.focusOnSearch();
-    });
+    if (!this.get('isMobileDevice')) {
+      Ember.run.next(this, function() {
+        return this.focusOnSearch();
+      });
+    }
     this.updateListWidthCss();
     Ember.run.next(this, function() {
       return this.scrollToSelection(this.get('options').indexOf(this.get('selection')), true);
     });
-    $('body').addClass('eui-poplist-open');
-    return Ember.run.next(this, function() {
-      return $(window).on('click.emberui', (function(_this) {
-        return function(event) {
-          if (!$(event.target).parents('.eui-poplist').length) {
-            event.preventDefault();
-            $(window).off(event);
-            return _this.hide();
-          }
-        };
-      })(this));
-    });
+    return this.disablePageScroll();
   }).on('didInsertElement'),
   breakdown: function() {
     this.setProperties({
@@ -1002,23 +1069,28 @@ poplist = Em.Component.extend(styleSupport, animationSupport, {
       highlightedIndex: -1
     });
     this.get('previousFocus').focus();
-    $('body').removeClass('eui-poplist-open');
+    this.enablePageScroll();
     return this.destroy();
   },
-  setPoplistWidth: function() {
+  setPoplistMinWidth: function() {
     var element, elementWidthMinuspoplistPadding, poplistElement;
     element = this.get('targetObject').$();
-    poplistElement = this.$();
+    poplistElement = this.$().find('.eui-component');
     elementWidthMinuspoplistPadding = element.width() - parseFloat(poplistElement.css('paddingLeft')) - parseFloat(poplistElement.css('paddingRight'));
     return poplistElement.css('min-width', elementWidthMinuspoplistPadding);
   },
+  updateListWidthCss: function() {
+    var component, listWidth;
+    component = this.$().find('.eui-component');
+    if (this.get('isMobileDevice') && this.get('modalOnMobile')) {
+      return component.css('width', '80%');
+    } else {
+      listWidth = this.get('listWidth');
+      return component.css('width', listWidth);
+    }
+  },
   focusOnSearch: function() {
     return this.$().find('input:first').focus();
-  },
-  updateListWidthCss: function() {
-    var listWidth;
-    listWidth = this.get('listWidth');
-    return this.$().css('width', listWidth);
   },
   searchStringDidChange: (function() {
     if (this.get('searchString')) {
@@ -1092,6 +1164,8 @@ poplist = Em.Component.extend(styleSupport, animationSupport, {
     method = keyMap[event.which];
     if (method) {
       return (_ref = this.get(method)) != null ? _ref.apply(this, arguments) : void 0;
+    } else {
+      return this.focusOnSearch();
     }
   },
   escapePressed: function(event) {
@@ -1109,6 +1183,11 @@ poplist = Em.Component.extend(styleSupport, animationSupport, {
   upArrowPressed: function(event) {
     event.preventDefault();
     return this.adjustHighlight(-1);
+  },
+  actions: {
+    hidePoplist: function() {
+      return this.hide();
+    }
   },
   adjustHighlight: function(indexAdjustment) {
     var highlightedIndex, newIndex, options, optionsLength;
@@ -1132,11 +1211,14 @@ poplist = Em.Component.extend(styleSupport, animationSupport, {
     return this.set('highlightedIndex', newIndex);
   },
   listView: Ember.ListView.extend({
+    attributeBindings: ['role', 'tabindex'],
+    role: 'menu',
+    tabindex: '-1',
     css: {
       position: 'relative',
-      overflow: 'auto',
       '-webkit-overflow-scrolling': 'touch',
-      'overflow-scrolling': 'touch'
+      'overflow-scrolling': 'touch',
+      overflow: 'auto'
     },
     classNames: ['eui-options'],
     height: Ember.computed.alias('controller.listHeight'),
@@ -1160,6 +1242,21 @@ poplist = Em.Component.extend(styleSupport, animationSupport, {
       classNames: ['eui-option'],
       classNameBindings: ['isHighlighted:eui-hover', 'isSelected:eui-selected'],
       template: itemViewClassTemplate,
+      attributeBindings: ['role', 'tabindex'],
+      role: 'menuitem',
+      tabindex: '0',
+      isHighlightedDidChange: (function() {
+        return Ember.run.next((function(_this) {
+          return function() {
+            if (_this.get('isHighlighted')) {
+              return _this.$().focus();
+            }
+          };
+        })(this));
+      }).observes('isHighlighted'),
+      initializeIsHighlighted: (function() {
+        return this.isHighlightedDidChange();
+      }).on('init'),
       labelPathDidChange: (function() {
         var labelPath;
         labelPath = this.get('controller.labelPath');
@@ -1207,7 +1304,7 @@ poplist.reopenClass({
 });
 
 exports["default"] = poplist;
-},{"../mixins/animation-support":24,"../mixins/style-support":28,"../templates/eui-poplist":39,"../templates/eui-poplist-option":38}],20:[function(_dereq_,module,exports){
+},{"../mixins/animation-support":26,"../mixins/class-name":27,"../mixins/mobile-detection":30,"../mixins/prevent-page-scroll":31,"../templates/eui-poplist":44,"../templates/eui-poplist-option":43}],20:[function(_dereq_,module,exports){
 "use strict";
 var poplistComponent = _dereq_("../components/eui-poplist")["default"] || _dereq_("../components/eui-poplist");
 var disabledSupport = _dereq_("../mixins/disabled-support")["default"] || _dereq_("../mixins/disabled-support");
@@ -1217,8 +1314,8 @@ var select;
 
 select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
   tagName: 'eui-select',
-  classNames: ['eui-select'],
   classNameBindings: ['isDisabled:eui-disabled', 'selection::eui-placeholder', 'class'],
+  baseClass: 'select',
   style: 'default',
   size: 'medium',
   poplistIsOpen: false,
@@ -1227,6 +1324,18 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
   labelPath: 'label',
   valuePath: 'value',
   _selection: null,
+  selectClass: Ember.computed('size', 'style', function() {
+    var baseClass, size, style;
+    baseClass = this.get('baseClass');
+    size = this.get('size');
+    style = this.get('style');
+    return "eui-" + baseClass + "-button-" + size + "-" + style;
+  }),
+  ariaHasPopup: true,
+  ariaOwns: (function() {
+    return this.get('poplist.elementId');
+  }).property('poplist'),
+  poplist: null,
   listWidth: 'auto',
   nullValue: new Object(),
   optionsWithBlank: (function() {
@@ -1239,20 +1348,14 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
     return paddedOptions;
   }).property('options.@each', 'required'),
   label: (function() {
-      var labelPath;
+    var labelPath;
     labelPath = this.get('labelPath');
     return this.get("selection." + labelPath) || this.get('placeholder');
   }).property('selection', 'placeholder', 'labelPath'),
-  selection: Ember.computed('_selection', function (key, value) {
+  selection: Ember.computed('_selection', function(key, value) {
     var nullValue, selection;
     if (arguments.length === 2) {
-        this.set('_selection', value);
-        //var _this = this;
-        //$.each(_this.options, function (i, a) {
-        //    a.addObserver('this.name', _this, function () {
-        //        alert('asdasd'); //return _this.notifyPropertyChange('selection');
-        //    });
-        //    });
+      this.set('_selection', value);
       return value;
     } else {
       selection = this.get('_selection');
@@ -1264,14 +1367,11 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
       }
     }
   }),
-  //optionsTriggerz: function () {
-  //    alert('hi')
-  //}.observes('options.@each.name.length'),
   value: Ember.computed('selection', 'valuePath', function(key, value) {
     var selection, valuePath;
     if (arguments.length === 2) {
       valuePath = this.get('valuePath');
-      if (valuePath && typeof this.get('options') !== 'undefined') {
+      if (valuePath) {
         selection = this.get('options').findProperty(valuePath, value);
       }
       this.set('selection', selection || value);
@@ -1304,19 +1404,20 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
   }).on('init'),
   click: function() {
     if (!this.get('poplistIsOpen')) {
-      return poplistComponent.show({
+      return this.set('poplist', poplistComponent.show({
         targetObject: this,
         isOpenBinding: 'targetObject.poplistIsOpen',
         selectionBinding: 'targetObject._selection',
         optionsBinding: 'targetObject.optionsWithBlank',
         labelPathBinding: 'targetObject.labelPath',
         style: 'flyin',
+        modalOnMobile: true,
         listWidth: this.get('listWidth'),
         animationStyle: this.get('animationStyle')
-      });
+      }));
     }
   },
-  keyDown: function(event) {
+  keyUp: function(event) {
     if (event.which === 40) {
       event.preventDefault();
       return this.click();
@@ -1326,7 +1427,7 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
 });
 
 exports["default"] = select;
-},{"../components/eui-poplist":19,"../mixins/disabled-support":25,"../mixins/error-support":26,"../mixins/width-support":30}],21:[function(_dereq_,module,exports){
+},{"../components/eui-poplist":19,"../mixins/disabled-support":28,"../mixins/error-support":29,"../mixins/width-support":35}],21:[function(_dereq_,module,exports){
 "use strict";
 var disabledSupport = _dereq_("../mixins/disabled-support")["default"] || _dereq_("../mixins/disabled-support");
 var widthSupport = _dereq_("../mixins/width-support")["default"] || _dereq_("../mixins/width-support");
@@ -1336,13 +1437,20 @@ var select;
 
 select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
   tagName: 'eui-selectdate',
-  classNames: ['eui-selectdate'],
   classNameBindings: ['isDisabled:eui-disabled', 'isPlaceholder::eui-placeholder', 'class'],
+  baseClass: 'select',
   style: 'default',
   size: 'medium',
   calendarStyle: 'default',
   popcalIsOpen: false,
   dateRange: false,
+  selectClass: Ember.computed('size', 'style', function() {
+    var baseClass, size, style;
+    baseClass = this.get('baseClass');
+    size = this.get('size');
+    style = this.get('style');
+    return "eui-" + baseClass + "-button-" + size + "-" + style;
+  }),
   formatting: {
     yearFormat: "YYYY",
     monthFormat: "MMMM",
@@ -1414,7 +1522,7 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
       }
     }
   },
-  keyDown: function(event) {
+  keyUp: function(event) {
     if (event.keyCode === 27) {
       this.send('closeCalendar', {
         forceClose: true
@@ -1472,18 +1580,19 @@ select = Em.Component.extend(disabledSupport, errorSupport, widthSupport, {
 });
 
 exports["default"] = select;
-},{"../components/eui-popcal":18,"../mixins/disabled-support":25,"../mixins/error-support":26,"../mixins/width-support":30}],22:[function(_dereq_,module,exports){
+},{"../components/eui-popcal":18,"../mixins/disabled-support":28,"../mixins/error-support":29,"../mixins/width-support":35}],22:[function(_dereq_,module,exports){
 "use strict";
+var className = _dereq_("../mixins/class-name")["default"] || _dereq_("../mixins/class-name");
 var errorSupport = _dereq_("../mixins/error-support")["default"] || _dereq_("../mixins/error-support");
 var textSupport = _dereq_("../mixins/text-support")["default"] || _dereq_("../mixins/text-support");
-var styleSupport = _dereq_("../mixins/style-support")["default"] || _dereq_("../mixins/style-support");
-var sizeSupport = _dereq_("../mixins/size-support")["default"] || _dereq_("../mixins/size-support");
 var textarea;
 
-textarea = Em.Component.extend(errorSupport, textSupport, styleSupport, sizeSupport, {
-  classNameBindings: [':eui-textarea'],
+textarea = Em.Component.extend(errorSupport, textSupport, className, {
   attributeBindings: ['computedWidthAndHeight:style'],
   tagName: 'eui-textarea',
+  baseClass: 'input',
+  style: 'default',
+  size: 'medium',
   height: null,
   computedWidthAndHeight: Em.computed('size', 'width', 'height', function() {
     var height, heights, width, widths;
@@ -1506,7 +1615,7 @@ textarea = Em.Component.extend(errorSupport, textSupport, styleSupport, sizeSupp
 });
 
 exports["default"] = textarea;
-},{"../mixins/error-support":26,"../mixins/size-support":27,"../mixins/style-support":28,"../mixins/text-support":29}],23:[function(_dereq_,module,exports){
+},{"../mixins/class-name":27,"../mixins/error-support":29,"../mixins/text-support":34}],23:[function(_dereq_,module,exports){
 "use strict";
 /*!
 EmberUI (c) 2014 Jaco Joubert
@@ -1549,9 +1658,89 @@ var EuiCalendarTemplate = _dereq_("./templates/eui-calendar")["default"] || _der
 var EuiPopcalComponent = _dereq_("./components/eui-popcal")["default"] || _dereq_("./components/eui-popcal");
 var EuiPopcalTemplate = _dereq_("./templates/eui-popcal")["default"] || _dereq_("./templates/eui-popcal");
 
-_dereq_("./utilities/tabbable-selector");_dereq_("./utilities/position");_dereq_("./animations/popcal-close-default");_dereq_("./animations/popcal-open-default");_dereq_("./animations/modal-close-default");_dereq_("./animations/modal-open-default");_dereq_("./animations/modal-close-full");_dereq_("./animations/modal-open-full");_dereq_("./animations/poplist-close-default");_dereq_("./animations/poplist-open-default");_dereq_("./animations/poplist-close-flyin");_dereq_("./animations/poplist-open-flyin");
+var EuiInitializer = _dereq_("./initializers/eui-initializer")["default"] || _dereq_("./initializers/eui-initializer");
+var EuiWaiAriaInitializer = _dereq_("./initializers/eui-wai-aria-initializer")["default"] || _dereq_("./initializers/eui-wai-aria-initializer");
 
-Ember.Application.initializer({
+
+Ember.Application.initializer(EuiInitializer);
+Ember.Application.initializer(EuiWaiAriaInitializer);
+
+Ember.libraries.register("EmberUI", "0.5.0");
+
+Ember.TextSupport.reopen({
+    attributeBindings: [
+      'aria-expanded',
+      'aria-autocomplete',
+      'aria-owns',
+      'aria-activedescendant'
+    ]
+});
+
+exports.EuiButtonComponent = EuiButtonComponent;
+exports.EuiButtonTemplate = EuiButtonTemplate;
+exports.EuiCheckboxComponent = EuiCheckboxComponent;
+exports.EuiCheckboxTemplate = EuiCheckboxTemplate;
+exports.EuiDropbuttonComponent = EuiDropbuttonComponent;
+exports.EuiDropbuttonTemplate = EuiDropbuttonTemplate;
+exports.EuiInputComponent = EuiInputComponent;
+exports.EuiInputTemplate = EuiInputTemplate;
+exports.EuiModalComponent = EuiModalComponent;
+exports.EuiPoplistComponent = EuiPoplistComponent;
+exports.EuiPoplistTemplate = EuiPoplistTemplate;
+exports.EuiPoplistOptionTemplate = EuiPoplistOptionTemplate;
+exports.EuiSelectComponent = EuiSelectComponent;
+exports.EuiSelectTemplate = EuiSelectTemplate;
+exports.EuiSelectDateComponent = EuiSelectDateComponent;
+exports.EuiSelectDateTemplate = EuiSelectDateTemplate;
+exports.EuiTextareaComponent = EuiTextareaComponent;
+exports.EuiTextareaTemplate = EuiTextareaTemplate;
+exports.EuiMonthComponent = EuiMonthComponent;
+exports.EuiCalendarComponent = EuiCalendarComponent;
+exports.EuiCalendarTemplate = EuiCalendarTemplate;
+exports.EuiPopcalComponent = EuiPopcalComponent;
+exports.EuiPopcalTemplate = EuiPopcalTemplate;
+exports.EuiInitializer = EuiInitializer;
+exports.EuiWaiAriaInitializer = EuiWaiAriaInitializer;
+},{"./components/eui-button":11,"./components/eui-calendar":12,"./components/eui-checkbox":13,"./components/eui-dropbutton":14,"./components/eui-input":15,"./components/eui-modal":16,"./components/eui-month":17,"./components/eui-popcal":18,"./components/eui-poplist":19,"./components/eui-select":20,"./components/eui-selectdate":21,"./components/eui-textarea":22,"./initializers/eui-initializer":24,"./initializers/eui-wai-aria-initializer":25,"./templates/eui-button":36,"./templates/eui-calendar":37,"./templates/eui-checkbox":38,"./templates/eui-dropbutton":39,"./templates/eui-input":40,"./templates/eui-modal":41,"./templates/eui-popcal":42,"./templates/eui-poplist":44,"./templates/eui-poplist-option":43,"./templates/eui-select":45,"./templates/eui-selectdate":46,"./templates/eui-textarea":47}],24:[function(_dereq_,module,exports){
+"use strict";
+_dereq_("../utilities/tabbable-selector");_dereq_("../utilities/position");_dereq_("../animations/popcal-close-default");_dereq_("../animations/popcal-open-default");_dereq_("../animations/modal-close-default");_dereq_("../animations/modal-open-default");_dereq_("../animations/modal-close-full");_dereq_("../animations/modal-open-full");_dereq_("../animations/poplist-close-default");_dereq_("../animations/poplist-open-default");_dereq_("../animations/poplist-close-flyin");_dereq_("../animations/poplist-open-flyin");
+var EuiButtonComponent = _dereq_("../components/eui-button")["default"] || _dereq_("../components/eui-button");
+var EuiButtonTemplate = _dereq_("../templates/eui-button")["default"] || _dereq_("../templates/eui-button");
+
+var EuiCheckboxComponent = _dereq_("../components/eui-checkbox")["default"] || _dereq_("../components/eui-checkbox");
+var EuiCheckboxTemplate = _dereq_("../templates/eui-checkbox")["default"] || _dereq_("../templates/eui-checkbox");
+
+var EuiDropbuttonComponent = _dereq_("../components/eui-dropbutton")["default"] || _dereq_("../components/eui-dropbutton");
+var EuiDropbuttonTemplate = _dereq_("../templates/eui-dropbutton")["default"] || _dereq_("../templates/eui-dropbutton");
+
+var EuiInputComponent = _dereq_("../components/eui-input")["default"] || _dereq_("../components/eui-input");
+var EuiInputTemplate = _dereq_("../templates/eui-input")["default"] || _dereq_("../templates/eui-input");
+
+var EuiModalComponent = _dereq_("../components/eui-modal")["default"] || _dereq_("../components/eui-modal");
+var EuiModalTemplate = _dereq_("../templates/eui-modal")["default"] || _dereq_("../templates/eui-modal");
+
+var EuiPoplistComponent = _dereq_("../components/eui-poplist")["default"] || _dereq_("../components/eui-poplist");
+var EuiPoplistTemplate = _dereq_("../templates/eui-poplist")["default"] || _dereq_("../templates/eui-poplist");
+var EuiPoplistOptionTemplate = _dereq_("../templates/eui-poplist-option")["default"] || _dereq_("../templates/eui-poplist-option");
+
+var EuiSelectComponent = _dereq_("../components/eui-select")["default"] || _dereq_("../components/eui-select");
+var EuiSelectTemplate = _dereq_("../templates/eui-select")["default"] || _dereq_("../templates/eui-select");
+
+var EuiSelectDateComponent = _dereq_("../components/eui-selectdate")["default"] || _dereq_("../components/eui-selectdate");
+var EuiSelectDateTemplate = _dereq_("../templates/eui-selectdate")["default"] || _dereq_("../templates/eui-selectdate");
+
+var EuiTextareaComponent = _dereq_("../components/eui-textarea")["default"] || _dereq_("../components/eui-textarea");
+var EuiTextareaTemplate = _dereq_("../templates/eui-textarea")["default"] || _dereq_("../templates/eui-textarea");
+
+var EuiMonthComponent = _dereq_("../components/eui-month")["default"] || _dereq_("../components/eui-month");
+
+var EuiCalendarComponent = _dereq_("../components/eui-calendar")["default"] || _dereq_("../components/eui-calendar");
+var EuiCalendarTemplate = _dereq_("../templates/eui-calendar")["default"] || _dereq_("../templates/eui-calendar");
+
+var EuiPopcalComponent = _dereq_("../components/eui-popcal")["default"] || _dereq_("../components/eui-popcal");
+var EuiPopcalTemplate = _dereq_("../templates/eui-popcal")["default"] || _dereq_("../templates/eui-popcal");
+
+exports["default"] = {
   name: 'emberui',
 
   initialize: function(container) {
@@ -1591,24 +1780,26 @@ Ember.Application.initializer({
     container.register('template:components/eui-calendar', EuiCalendarTemplate);
     container.register('component:eui-calendar', EuiCalendarComponent);
   }
-});
+};
+},{"../animations/modal-close-default":1,"../animations/modal-close-full":2,"../animations/modal-open-default":3,"../animations/modal-open-full":4,"../animations/popcal-close-default":5,"../animations/popcal-open-default":6,"../animations/poplist-close-default":7,"../animations/poplist-close-flyin":8,"../animations/poplist-open-default":9,"../animations/poplist-open-flyin":10,"../components/eui-button":11,"../components/eui-calendar":12,"../components/eui-checkbox":13,"../components/eui-dropbutton":14,"../components/eui-input":15,"../components/eui-modal":16,"../components/eui-month":17,"../components/eui-popcal":18,"../components/eui-poplist":19,"../components/eui-select":20,"../components/eui-selectdate":21,"../components/eui-textarea":22,"../templates/eui-button":36,"../templates/eui-calendar":37,"../templates/eui-checkbox":38,"../templates/eui-dropbutton":39,"../templates/eui-input":40,"../templates/eui-modal":41,"../templates/eui-popcal":42,"../templates/eui-poplist":44,"../templates/eui-poplist-option":43,"../templates/eui-select":45,"../templates/eui-selectdate":46,"../templates/eui-textarea":47,"../utilities/position":48,"../utilities/tabbable-selector":49}],25:[function(_dereq_,module,exports){
+"use strict";
+var Ember = window.Ember["default"] || window.Ember;
 
-Ember.libraries.register('EmberUI', '0.1.0');
+exports["default"] = {
+  name: 'emberui-wai-aria',
 
-exports.EuiButtonComponent = EuiButtonComponent;
-exports.EuiCheckboxComponent = EuiCheckboxComponent;
-exports.EuiDropbuttonComponent = EuiDropbuttonComponent;
-exports.EuiInputComponent = EuiInputComponent;
-exports.EuiInputTemplate = EuiInputTemplate;
-exports.EuiModalComponent = EuiModalComponent;
-exports.EuiPoplistComponent = EuiPoplistComponent;
-exports.EuiSelectComponent = EuiSelectComponent;
-exports.EuiSelectDateComponent = EuiSelectDateComponent;
-exports.EuiTextareaComponent = EuiTextareaComponent;
-exports.EuiMonthComponent = EuiMonthComponent;
-exports.EuiCalendarComponent = EuiCalendarComponent;
-exports.EuiPopcalComponent = EuiPopcalComponent;
-},{"./animations/modal-close-default":1,"./animations/modal-close-full":2,"./animations/modal-open-default":3,"./animations/modal-open-full":4,"./animations/popcal-close-default":5,"./animations/popcal-open-default":6,"./animations/poplist-close-default":7,"./animations/poplist-close-flyin":8,"./animations/poplist-open-default":9,"./animations/poplist-open-flyin":10,"./components/eui-button":11,"./components/eui-calendar":12,"./components/eui-checkbox":13,"./components/eui-dropbutton":14,"./components/eui-input":15,"./components/eui-modal":16,"./components/eui-month":17,"./components/eui-popcal":18,"./components/eui-poplist":19,"./components/eui-select":20,"./components/eui-selectdate":21,"./components/eui-textarea":22,"./templates/eui-button":31,"./templates/eui-calendar":32,"./templates/eui-checkbox":33,"./templates/eui-dropbutton":34,"./templates/eui-input":35,"./templates/eui-modal":36,"./templates/eui-popcal":37,"./templates/eui-poplist":39,"./templates/eui-poplist-option":38,"./templates/eui-select":40,"./templates/eui-selectdate":41,"./templates/eui-textarea":42,"./utilities/position":43,"./utilities/tabbable-selector":44}],24:[function(_dereq_,module,exports){
+  initialize: function(container) {
+    Ember.TextSupport.reopen({
+      attributeBindings: [
+        'aria-expanded',
+        'aria-autocomplete',
+        'aria-owns',
+        'aria-activedescendant'
+      ]
+    });
+  }
+};
+},{}],26:[function(_dereq_,module,exports){
 "use strict";
 var animationSupport;
 
@@ -1624,7 +1815,7 @@ animationSupport = Em.Mixin.create({
     }
     style = "" + component + "Open" + style;
     backupStyle = "" + component + "OpenDefault";
-    if ($.velocity.Sequences.hasOwnProperty(style)) {
+    if ($.Velocity.Redirects.hasOwnProperty(style)) {
       return style;
     } else {
       return backupStyle;
@@ -1639,7 +1830,7 @@ animationSupport = Em.Mixin.create({
     }
     style = "" + component + "Close" + style;
     backupStyle = "" + component + "CloseDefault";
-    if ($.velocity.Sequences.hasOwnProperty(style)) {
+    if ($.Velocity.Redirects.hasOwnProperty(style)) {
       return style;
     } else {
       return backupStyle;
@@ -1678,22 +1869,42 @@ animationSupport = Em.Mixin.create({
 });
 
 exports["default"] = animationSupport;
-},{}],25:[function(_dereq_,module,exports){
+},{}],27:[function(_dereq_,module,exports){
+"use strict";
+var classname;
+
+classname = Em.Mixin.create({
+  classNameBindings: ['className'],
+  className: Em.computed('size', 'style', function() {
+    var baseClass, size, style;
+    baseClass = this.get('baseClass');
+    size = this.get('size');
+    style = this.get('style');
+    if (size) {
+      return "eui-" + baseClass + "-" + size + "-" + style;
+    } else {
+      return "eui-" + baseClass + "-" + style;
+    }
+  })
+});
+
+exports["default"] = classname;
+},{}],28:[function(_dereq_,module,exports){
 "use strict";
 var disabledsupport;
 
 disabledsupport = Em.Mixin.create({
   classNameBindings: ['isDisabled:eui-disabled'],
   disabled: false,
-  isDisabled: Em.computed('disabled', 'loading', function() {
-    if (this.get('disabled') || this.get('loading')) {
+  isDisabled: Em.computed('disabled', function() {
+    if (this.get('disabled')) {
       return true;
     }
   })
 });
 
 exports["default"] = disabledsupport;
-},{}],26:[function(_dereq_,module,exports){
+},{}],29:[function(_dereq_,module,exports){
 "use strict";
 var errorSupport;
 
@@ -1738,7 +1949,39 @@ errorSupport = Em.Mixin.create({
 });
 
 exports["default"] = errorSupport;
-},{}],27:[function(_dereq_,module,exports){
+},{}],30:[function(_dereq_,module,exports){
+"use strict";
+var mobileDetection;
+
+mobileDetection = Em.Mixin.create({
+  isMobileDevice: (function() {
+    if (window.innerWidth <= 540 || window.innerHeight <= 540) {
+      return true;
+    }
+  }).property()
+});
+
+exports["default"] = mobileDetection;
+},{}],31:[function(_dereq_,module,exports){
+"use strict";
+var preventPageScroll;
+
+preventPageScroll = Em.Mixin.create({
+  disablePageScroll: function() {
+    var net;
+    net = this.$().find('.eui-scroller--net');
+    net.scrollTop(5000).scrollLeft(5000).addClass('eui-enabled');
+    return net.scroll(function() {
+      return $(this).scrollTop(5000).scrollLeft(5000);
+    });
+  },
+  enablePageScroll: function() {
+    return this.$().find('.eui-scroller--net').unbind('scroll');
+  }
+});
+
+exports["default"] = preventPageScroll;
+},{}],32:[function(_dereq_,module,exports){
 "use strict";
 var sizesupport;
 
@@ -1751,7 +1994,7 @@ sizesupport = Em.Mixin.create({
 });
 
 exports["default"] = sizesupport;
-},{}],28:[function(_dereq_,module,exports){
+},{}],33:[function(_dereq_,module,exports){
 "use strict";
 var stylesupport;
 
@@ -1764,7 +2007,7 @@ stylesupport = Em.Mixin.create({
 });
 
 exports["default"] = stylesupport;
-},{}],29:[function(_dereq_,module,exports){
+},{}],34:[function(_dereq_,module,exports){
 "use strict";
 var textsupport;
 
@@ -1795,7 +2038,7 @@ textsupport = Em.Mixin.create({
 });
 
 exports["default"] = textsupport;
-},{}],30:[function(_dereq_,module,exports){
+},{}],35:[function(_dereq_,module,exports){
 "use strict";
 var widthsupport;
 
@@ -1815,7 +2058,7 @@ widthsupport = Em.Mixin.create({
 });
 
 exports["default"] = widthsupport;
-},{}],31:[function(_dereq_,module,exports){
+},{}],36:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -1828,7 +2071,7 @@ function program1(depth0,data) {
   var buffer = '';
   data.buffer.push("\n        <b ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'class': ("icon")
+    'class': (":eui-leading-icon leadingIcon")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push("></b>\n      ");
   return buffer;
@@ -1836,16 +2079,26 @@ function program1(depth0,data) {
 
 function program3(depth0,data) {
   
+  var buffer = '', stack1;
+  data.buffer.push("\n        <div class=\"eui-label-value\">");
+  stack1 = helpers._triageMustache.call(depth0, "label", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div>\n      ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
   var buffer = '';
   data.buffer.push("\n        <b ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'class': ("trailingIcon")
+    'class': (":eui-trailing-icon trailingIcon")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push("></b>\n      ");
   return buffer;
   }
 
-function program5(depth0,data) {
+function program7(depth0,data) {
   
   
   data.buffer.push("\n      <ul class=\"eui-loading-animation\">\n        <li></li>\n        <li></li>\n        <li></li>\n      </ul>\n    ");
@@ -1854,25 +2107,28 @@ function program5(depth0,data) {
   data.buffer.push("<button ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'disabled': ("isDisabled"),
-    'type': ("type")
-  },hashTypes:{'disabled': "STRING",'type': "STRING"},hashContexts:{'disabled': depth0,'type': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push("></button>\n\n<div class=\"eui-button-form\">\n  <div class=\"eui-wrapper\">\n    <i>\n      ");
-  stack1 = helpers['if'].call(depth0, "icon", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+    'type': ("type"),
+    'aria-owns': ("ariaOwns"),
+    'aria-haspopup': ("ariaHaspopup"),
+    'aria-label': ("label")
+  },hashTypes:{'disabled': "STRING",'type': "STRING",'aria-owns': "STRING",'aria-haspopup': "STRING",'aria-label': "ID"},hashContexts:{'disabled': depth0,'type': depth0,'aria-owns': depth0,'aria-haspopup': depth0,'aria-label': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push("></button>\n\n<div class=\"eui-component\">\n  <div class=\"eui-component-wrapper\">\n    <div class=\"eui-label\">\n      ");
+  stack1 = helpers['if'].call(depth0, "leadingIcon", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n      ");
-  stack1 = helpers._triageMustache.call(depth0, "label", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "label", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n      ");
-  stack1 = helpers['if'].call(depth0, "trailingIcon", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "trailingIcon", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n    </i>\n\n    ");
-  stack1 = helpers['if'].call(depth0, "loading", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
+  data.buffer.push("\n    </div>\n\n    ");
+  stack1 = helpers['if'].call(depth0, "loading", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n  </div>\n</div>\n");
   return buffer;
   
 });
-},{}],32:[function(_dereq_,module,exports){
+},{}],37:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -1891,8 +2147,10 @@ function program1(depth0,data) {
     'month': ("prevMonth"),
     'selection': ("_selection"),
     'disabledDates': ("disabledDates"),
+    'maxPastDate': ("maxPastDate"),
+    'maxFutureDate': ("maxFutureDate"),
     'select': ("dateSelected")
-  },hashTypes:{'month': "ID",'selection': "ID",'disabledDates': "ID",'select': "STRING"},hashContexts:{'month': depth0,'selection': depth0,'disabledDates': depth0,'select': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-month", options))));
+  },hashTypes:{'month': "ID",'selection': "ID",'disabledDates': "ID",'maxPastDate': "ID",'maxFutureDate': "ID",'select': "STRING"},hashContexts:{'month': depth0,'selection': depth0,'disabledDates': depth0,'maxPastDate': depth0,'maxFutureDate': depth0,'select': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-month", options))));
   data.buffer.push("\n      </div>\n    </div>\n  ");
   return buffer;
   }
@@ -1908,13 +2166,15 @@ function program3(depth0,data) {
     'month': ("nextMonth"),
     'selection': ("_selection"),
     'disabledDates': ("disabledDates"),
+    'maxPastDate': ("maxPastDate"),
+    'maxFutureDate': ("maxFutureDate"),
     'select': ("dateSelected")
-  },hashTypes:{'month': "ID",'selection': "ID",'disabledDates': "ID",'select': "STRING"},hashContexts:{'month': depth0,'selection': depth0,'disabledDates': depth0,'select': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-month", options))));
+  },hashTypes:{'month': "ID",'selection': "ID",'disabledDates': "ID",'maxPastDate': "ID",'maxFutureDate': "ID",'select': "STRING"},hashContexts:{'month': depth0,'selection': depth0,'disabledDates': depth0,'maxPastDate': depth0,'maxFutureDate': depth0,'select': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-month", options))));
   data.buffer.push("\n      </div>\n    </div>\n  ");
   return buffer;
   }
 
-  data.buffer.push("<div class=\"eui-calendar-wrapper\">\n  <button ");
+  data.buffer.push("<div class=\"eui-component-wrapper\">\n  <button ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "prev", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
   data.buffer.push(" ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
@@ -1937,8 +2197,10 @@ function program3(depth0,data) {
     'month': ("month"),
     'selection': ("_selection"),
     'disabledDates': ("disabledDates"),
+    'maxPastDate': ("maxPastDate"),
+    'maxFutureDate': ("maxFutureDate"),
     'select': ("dateSelected")
-  },hashTypes:{'month': "ID",'selection': "ID",'disabledDates': "ID",'select': "STRING"},hashContexts:{'month': depth0,'selection': depth0,'disabledDates': depth0,'select': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-month", options))));
+  },hashTypes:{'month': "ID",'selection': "ID",'disabledDates': "ID",'maxPastDate': "ID",'maxFutureDate': "ID",'select': "STRING"},hashContexts:{'month': depth0,'selection': depth0,'disabledDates': depth0,'maxPastDate': depth0,'maxFutureDate': depth0,'select': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-month", options))));
   data.buffer.push("\n    </div>\n  </div>\n\n  ");
   stack1 = helpers['if'].call(depth0, "showNextMonth", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -1946,7 +2208,7 @@ function program3(depth0,data) {
   return buffer;
   
 });
-},{}],33:[function(_dereq_,module,exports){
+},{}],38:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -1971,9 +2233,9 @@ function program1(depth0,data) {
   },hashTypes:{'checked': "ID",'disabled': "ID"},hashContexts:{'checked': depth0,'disabled': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(" />\n\n<div ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
-    'class': (":eui-checkbox-form disabled:eui-disabled:eui-enabled")
+    'class': (":eui-component disabled:eui-disabled:eui-enabled")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push(">\n  <div class=\"eui-wrapper\">\n    <i class=\"eui-icon\"></i>\n  </div>\n</div>\n\n");
+  data.buffer.push(">\n  <div class=\"eui-component-wrapper\">\n    <i class=\"eui-icon\"></i>\n  </div>\n</div>\n\n");
   stack1 = helpers._triageMustache.call(depth0, "label", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n");
@@ -1983,7 +2245,7 @@ function program1(depth0,data) {
   return buffer;
   
 });
-},{}],34:[function(_dereq_,module,exports){
+},{}],39:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -1999,22 +2261,22 @@ function program1(depth0,data) {
     'label': ("primaryAction.label"),
     'style': ("view.style"),
     'size': ("view.size"),
-    'icon': ("view.icon"),
+    'leadingIcon': ("view.icon"),
     'loading': ("view.loading"),
     'disabled': ("view.disabled"),
-    'class': ("eui-primaryaction"),
+    'class': ("eui-dropbutton--primary-action"),
     'action': ("primaryAction")
-  },hashTypes:{'label': "ID",'style': "ID",'size': "ID",'icon': "ID",'loading': "ID",'disabled': "ID",'class': "STRING",'action': "STRING"},hashContexts:{'label': depth0,'style': depth0,'size': depth0,'icon': depth0,'loading': depth0,'disabled': depth0,'class': depth0,'action': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
+  },hashTypes:{'label': "ID",'style': "ID",'size': "ID",'leadingIcon': "ID",'loading': "ID",'disabled': "ID",'class': "STRING",'action': "STRING"},hashContexts:{'label': depth0,'style': depth0,'size': depth0,'leadingIcon': depth0,'loading': depth0,'disabled': depth0,'class': depth0,'action': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
   data.buffer.push("\n\n  ");
   data.buffer.push(escapeExpression((helper = helpers['eui-button'] || (depth0 && depth0['eui-button']),options={hash:{
     'style': ("view.style"),
     'size': ("view.size"),
-    'icon': ("fa fa-caret-down"),
+    'leadingIcon': ("fa fa-angle-down"),
     'loading': (false),
     'disabled': ("view.disabled"),
-    'classBinding': (":eui-trigger poplistIsOpen:eui-active"),
+    'classBinding': (":eui-dropbutton--trigger poplistIsOpen:eui-active"),
     'action': ("toggleWindow")
-  },hashTypes:{'style': "ID",'size': "ID",'icon': "STRING",'loading': "BOOLEAN",'disabled': "ID",'classBinding': "STRING",'action': "STRING"},hashContexts:{'style': depth0,'size': depth0,'icon': depth0,'loading': depth0,'disabled': depth0,'classBinding': depth0,'action': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
+  },hashTypes:{'style': "ID",'size': "ID",'leadingIcon': "STRING",'loading': "BOOLEAN",'disabled': "ID",'classBinding': "STRING",'action': "STRING"},hashContexts:{'style': depth0,'size': depth0,'leadingIcon': depth0,'loading': depth0,'disabled': depth0,'classBinding': depth0,'action': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
   data.buffer.push("\n\n");
   return buffer;
   }
@@ -2027,13 +2289,13 @@ function program3(depth0,data) {
     'label': ("view.label"),
     'style': ("view.style"),
     'size': ("view.size"),
-    'icon': ("view.icon"),
-    'trailingIcon': ("fa fa-caret-down"),
+    'leadingIcon': ("view.icon"),
+    'trailingIcon': ("fa fa-angle-down"),
     'loading': ("view.loading"),
     'disabled': ("view.disabled"),
     'classBinding': ("poplistIsOpen:eui-active"),
     'action': ("toggleWindow")
-  },hashTypes:{'label': "ID",'style': "ID",'size': "ID",'icon': "ID",'trailingIcon': "STRING",'loading': "ID",'disabled': "ID",'classBinding': "STRING",'action': "STRING"},hashContexts:{'label': depth0,'style': depth0,'size': depth0,'icon': depth0,'trailingIcon': depth0,'loading': depth0,'disabled': depth0,'classBinding': depth0,'action': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
+  },hashTypes:{'label': "ID",'style': "ID",'size': "ID",'leadingIcon': "ID",'trailingIcon': "STRING",'loading': "ID",'disabled': "ID",'classBinding': "STRING",'action': "STRING"},hashContexts:{'label': depth0,'style': depth0,'size': depth0,'leadingIcon': depth0,'trailingIcon': depth0,'loading': depth0,'disabled': depth0,'classBinding': depth0,'action': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
   data.buffer.push("\n\n");
   return buffer;
   }
@@ -2044,7 +2306,7 @@ function program3(depth0,data) {
   return buffer;
   
 });
-},{}],35:[function(_dereq_,module,exports){
+},{}],40:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -2076,7 +2338,7 @@ function program3(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"eui-wrapper\">\n  ");
+  data.buffer.push("<div class=\"eui-component-wrapper\">\n  ");
   stack1 = helpers['if'].call(depth0, "placeholderVisible", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n  ");
@@ -2086,8 +2348,9 @@ function program3(depth0,data) {
     'name': ("name"),
     'disabled': ("disabled"),
     'maxlength': ("maxlength"),
-    'tabindex': ("tabindex")
-  },hashTypes:{'type': "ID",'value': "ID",'name': "ID",'disabled': "ID",'maxlength': "ID",'tabindex': "ID"},hashContexts:{'type': depth0,'value': depth0,'name': depth0,'disabled': depth0,'maxlength': depth0,'tabindex': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+    'tabindex': ("tabindex"),
+    'action': ("enter")
+  },hashTypes:{'type': "ID",'value': "ID",'name': "ID",'disabled': "ID",'maxlength': "ID",'tabindex': "ID",'action': "STRING"},hashContexts:{'type': depth0,'value': depth0,'name': depth0,'disabled': depth0,'maxlength': depth0,'tabindex': depth0,'action': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n</div>\n\n");
   stack1 = helpers['if'].call(depth0, "errorMessage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -2095,7 +2358,7 @@ function program3(depth0,data) {
   return buffer;
   
 });
-},{}],36:[function(_dereq_,module,exports){
+},{}],41:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -2117,8 +2380,8 @@ function program2(depth0,data) {
   var buffer = '';
   data.buffer.push("\n              ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "contentViewClass", {hash:{
-    'contentBinding': ("content")
-  },hashTypes:{'contentBinding': "STRING"},hashContexts:{'contentBinding': depth0},contexts:[depth0],types:["ID"],data:data})));
+    'content': ("content")
+  },hashTypes:{'content': "ID"},hashContexts:{'content': depth0},contexts:[depth0],types:["ID"],data:data})));
   data.buffer.push("\n            ");
   return buffer;
   }
@@ -2139,7 +2402,7 @@ function program4(depth0,data) {
   return buffer;
   
 });
-},{}],37:[function(_dereq_,module,exports){
+},{}],42:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -2148,9 +2411,10 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
+  data.buffer.push("<div class=\"eui-component\">\n  ");
   data.buffer.push(escapeExpression((helper = helpers['eui-calendar'] || (depth0 && depth0['eui-calendar']),options={hash:{
     'selection': ("_selection"),
-    'allowMultipleBinding': ("dateRange"),
+    'allowMultiple': ("dateRange"),
     'selectAction': ("closeCalendar"),
     'disablePast': ("disablePast"),
     'disableFuture': ("disableFuture"),
@@ -2158,12 +2422,14 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'maxFutureDate': ("maxFutureDate"),
     'disabledDates': ("disabledDates"),
     'style': ("style")
-  },hashTypes:{'selection': "ID",'allowMultipleBinding': "STRING",'selectAction': "STRING",'disablePast': "ID",'disableFuture': "ID",'maxPastDate': "ID",'maxFutureDate': "ID",'disabledDates': "ID",'style': "ID"},hashContexts:{'selection': depth0,'allowMultipleBinding': depth0,'selectAction': depth0,'disablePast': depth0,'disableFuture': depth0,'maxPastDate': depth0,'maxFutureDate': depth0,'disabledDates': depth0,'style': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-calendar", options))));
-  data.buffer.push("\n");
+  },hashTypes:{'selection': "ID",'allowMultiple': "ID",'selectAction': "STRING",'disablePast': "ID",'disableFuture': "ID",'maxPastDate': "ID",'maxFutureDate': "ID",'disabledDates': "ID",'style': "ID"},hashContexts:{'selection': depth0,'allowMultiple': depth0,'selectAction': depth0,'disablePast': depth0,'disableFuture': depth0,'maxPastDate': depth0,'maxFutureDate': depth0,'disabledDates': depth0,'style': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-calendar", options))));
+  data.buffer.push("\n</div>\n\n<div class=\"eui-scroller\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "hidePopcal", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n  <div class=\"eui-scroller--net\">\n    <div class=\"eui-scroller--net-content\"></div>\n  </div>\n</div>\n");
   return buffer;
   
 });
-},{}],38:[function(_dereq_,module,exports){
+},{}],43:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -2178,7 +2444,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   return buffer;
   
 });
-},{}],39:[function(_dereq_,module,exports){
+},{}],44:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -2189,38 +2455,42 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  data.buffer.push("\n    <div class=\"eui-nooptions\">No results found.</div>\n  ");
+  data.buffer.push("\n      <div class=\"eui-nooptions\">No results found.</div>\n    ");
   }
 
 function program3(depth0,data) {
   
   var buffer = '';
-  data.buffer.push("\n    ");
+  data.buffer.push("\n      ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "listView", {hash:{
-    'contentBinding': ("filteredOptions")
-  },hashTypes:{'contentBinding': "STRING"},hashContexts:{'contentBinding': depth0},contexts:[depth0],types:["ID"],data:data})));
-  data.buffer.push("\n  ");
+    'content': ("filteredOptions")
+  },hashTypes:{'content': "ID"},hashContexts:{'content': depth0},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push("\n    ");
   return buffer;
   }
 
-  data.buffer.push("<div class=\"eui-poplistwrapper\">\n  <div ");
+  data.buffer.push("<div class=\"eui-component\">\n  <div class=\"eui-component-wrapper\">\n    <div ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":eui-search-wrapper searchString:eui-active")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push(">\n    ");
+  data.buffer.push(">\n      ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'class': ("eui-search"),
-    'valueBinding': ("searchString"),
-    'size': ("1")
-  },hashTypes:{'class': "STRING",'valueBinding': "STRING",'size': "STRING"},hashContexts:{'class': depth0,'valueBinding': depth0,'size': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n  </div>\n\n  ");
+    'value': ("searchString"),
+    'size': ("1"),
+    'ariaRole': ("combobox"),
+    'aria-autocomplete': ("list")
+  },hashTypes:{'class': "STRING",'value': "ID",'size': "STRING",'ariaRole': "STRING",'aria-autocomplete': "STRING"},hashContexts:{'class': depth0,'value': depth0,'size': depth0,'ariaRole': depth0,'aria-autocomplete': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n    </div>\n\n    ");
   stack1 = helpers['if'].call(depth0, "hasNoOptions", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</div>\n");
+  data.buffer.push("\n  </div>\n</div>\n\n<div class=\"eui-scroller\" ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "hidePoplist", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(">\n  <div class=\"eui-scroller--net\">\n    <div class=\"eui-scroller--net-content\"></div>\n  </div>\n</div>\n");
   return buffer;
   
 });
-},{}],40:[function(_dereq_,module,exports){
+},{}],45:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -2244,9 +2514,11 @@ function program1(depth0,data) {
     'style': ("style"),
     'size': ("size"),
     'width': ("100%"),
-    'classBinding': (":eui-select poplistIsOpen:eui-active"),
-    'icon': ("eui-icon")
-  },hashTypes:{'label': "ID",'disabled': "ID",'style': "ID",'size': "ID",'width': "STRING",'classBinding': "STRING",'icon': "STRING"},hashContexts:{'label': depth0,'disabled': depth0,'style': depth0,'size': depth0,'width': depth0,'classBinding': depth0,'icon': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
+    'classBinding': (":eui-select selectClass poplistIsOpen:eui-active"),
+    'trailingIcon': ("eui-icon"),
+    'ariaOwns': ("ariaOwns"),
+    'ariaHaspopup': ("ariaHasPopup")
+  },hashTypes:{'label': "ID",'disabled': "ID",'style': "ID",'size': "ID",'width': "STRING",'classBinding': "STRING",'trailingIcon': "STRING",'ariaOwns': "ID",'ariaHaspopup': "ID"},hashContexts:{'label': depth0,'disabled': depth0,'style': depth0,'size': depth0,'width': depth0,'classBinding': depth0,'trailingIcon': depth0,'ariaOwns': depth0,'ariaHaspopup': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
   data.buffer.push("\n\n");
   stack1 = helpers['if'].call(depth0, "errorMessage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -2254,7 +2526,7 @@ function program1(depth0,data) {
   return buffer;
   
 });
-},{}],41:[function(_dereq_,module,exports){
+},{}],46:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -2278,10 +2550,10 @@ function program1(depth0,data) {
     'style': ("style"),
     'size': ("size"),
     'width': ("100%"),
-    'classBinding': (":eui-select popcalIsOpen:eui-active"),
+    'classBinding': (":eui-select selectClass popcalIsOpen:eui-active"),
     'action': ("openCalendar"),
-    'icon': ("eui-icon")
-  },hashTypes:{'label': "ID",'disabled': "ID",'style': "ID",'size': "ID",'width': "STRING",'classBinding': "STRING",'action': "STRING",'icon': "STRING"},hashContexts:{'label': depth0,'disabled': depth0,'style': depth0,'size': depth0,'width': depth0,'classBinding': depth0,'action': depth0,'icon': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
+    'trailingIcon': ("eui-icon")
+  },hashTypes:{'label': "ID",'disabled': "ID",'style': "ID",'size': "ID",'width': "STRING",'classBinding': "STRING",'action': "STRING",'trailingIcon': "STRING"},hashContexts:{'label': depth0,'disabled': depth0,'style': depth0,'size': depth0,'width': depth0,'classBinding': depth0,'action': depth0,'trailingIcon': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "eui-button", options))));
   data.buffer.push("\n\n");
   stack1 = helpers['if'].call(depth0, "errorMessage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -2289,7 +2561,7 @@ function program1(depth0,data) {
   return buffer;
   
 });
-},{}],42:[function(_dereq_,module,exports){
+},{}],47:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 exports["default"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -2321,7 +2593,7 @@ function program3(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"eui-wrapper\">\n  ");
+  data.buffer.push("<div class=\"eui-component-wrapper\">\n  ");
   stack1 = helpers['if'].call(depth0, "placeholderVisible", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n  ");
@@ -2340,7 +2612,7 @@ function program3(depth0,data) {
   return buffer;
   
 });
-},{}],43:[function(_dereq_,module,exports){
+},{}],48:[function(_dereq_,module,exports){
 "use strict";
 /*! jQuery UI - v1.10.4 - 2014-04-28
 * http://jqueryui.com
@@ -2838,7 +3110,7 @@ $.ui.position = {
 })();
 
 }( jQuery ) );
-},{}],44:[function(_dereq_,module,exports){
+},{}],49:[function(_dereq_,module,exports){
 "use strict";
 /*!
  * Copied from ic-modal which is adapted from jQuery UI core
