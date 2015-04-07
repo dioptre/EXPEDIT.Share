@@ -273,6 +273,7 @@
     <Content Include="Scripts\tinymce\plugins\myformeditor\img\picture_add.png" />
     <Content Include="Scripts\tinymce\plugins\myformeditor\plugin.min.js" />
     <Content Include="Scripts\tinymce\plugins\tiny-mce-custom-render-helper.js" />
+    <Content Include="Scripts\vis-new.js" />
     <Content Include="Scripts\wysihtml5-0.3.0.js" />
     <Content Include="Scripts\zoomerang.js" />
     <Content Include="Styles\dataTables.responsive.css" />
@@ -1696,6 +1697,9 @@
     <Content Include="Styles\line-icons-webfont\fonts\Simple-Line-Icons.eot" />
     <Content Include="Styles\line-icons-webfont\fonts\Simple-Line-Icons.ttf" />
     <Content Include="Styles\line-icons-webfont\fonts\Simple-Line-Icons.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\vis.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
