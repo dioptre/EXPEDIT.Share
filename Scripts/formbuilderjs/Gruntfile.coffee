@@ -20,7 +20,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-release')
-  grunt.loadNpmTasks('grunt-karma')
+  # grunt.loadNpmTasks('grunt-karma')
 
   grunt.initConfig
 
@@ -56,23 +56,23 @@ module.exports = (grunt) ->
       all:
         files:
           '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
-          '<%= vendorFolder %>/js/vendor.js': [
-            'bower_components/ie8-node-enum/index.js'
-            'bower_components/jquery/jquery.js'
-            'bower_components/jquery-ui/ui/jquery.ui.core.js'
-            'bower_components/jquery-ui/ui/jquery.ui.widget.js'
-            'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
-            'bower_components/jquery-ui/ui/jquery.ui.draggable.js'
-            'bower_components/jquery-ui/ui/jquery.ui.droppable.js'
-            'bower_components/jquery-ui/ui/jquery.ui.sortable.js'
-            'bower_components/jquery.scrollWindowTo/index.js'
-            'bower_components/underscore/underscore-min.js'
-            'bower_components/underscore.mixin.deepExtend/index.js'
-            'bower_components/rivets/dist/rivets.js'
-            'bower_components/backbone/backbone.js'
-            'bower_components/backbone-deep-model/src/deep-model.js',
-            'bower_components/select2/select2.js'
-          ]
+          # '<%= vendorFolder %>/js/vendor.js': [
+          #   'bower_components/ie8-node-enum/index.js'
+          #   'bower_components/jquery/jquery.js'
+          #   'bower_components/jquery-ui/ui/jquery.ui.core.js'
+          #   'bower_components/jquery-ui/ui/jquery.ui.widget.js'
+          #   'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
+          #   'bower_components/jquery-ui/ui/jquery.ui.draggable.js'
+          #   'bower_components/jquery-ui/ui/jquery.ui.droppable.js'
+          #   'bower_components/jquery-ui/ui/jquery.ui.sortable.js'
+          #   'bower_components/jquery.scrollWindowTo/index.js'
+          #   'bower_components/underscore/underscore-min.js'
+          #   'bower_components/underscore.mixin.deepExtend/index.js'
+          #   'bower_components/rivets/dist/rivets.js'
+          #   'bower_components/backbone/backbone.js'
+          #   'bower_components/backbone-deep-model/src/deep-model.js',
+          #   'bower_components/select2/select2.js'
+          # ]
       mobile_friendly:
         files:
           '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
@@ -88,15 +88,15 @@ module.exports = (grunt) ->
       dist:
         files:
           '<%= distFolder %>/formbuilder-min.css': '<%= distFolder %>/formbuilder.css'
-          '<%= vendorFolder %>/css/vendor.css': [
-            'bower_components/font-awesome/css/font-awesome.css',
-            
-            'bower_components/bootstrap/dist/css/bootstrap.css',
-            'bower_components/bootstrap/dist/css/bootstrap-theme.css',
-            'bower_components/select2/select2.css',
-            'bower_components/select2/select2-bootstrap.css'
+          # '<%= vendorFolder %>/css/vendor.css': [
+          #   'bower_components/font-awesome/css/font-awesome.css',
 
-          ]
+          #   'bower_components/bootstrap/dist/css/bootstrap.css',
+          #   'bower_components/bootstrap/dist/css/bootstrap-theme.css',
+          #   'bower_components/select2/select2.css',
+          #   'bower_components/select2/select2-bootstrap.css'
+
+          # ]
 
     stylus:
       all:
@@ -122,9 +122,9 @@ module.exports = (grunt) ->
     release:
       npm: false
 
-    karma:
-      unit:
-        configFile: '<%= testFolder %>/karma.conf.coffee'
+    # karma:
+    #   unit:
+    #     configFile: '<%= testFolder %>/karma.conf.coffee'
 
 
   grunt.registerTask 'default', ALL_TASKS
