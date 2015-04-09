@@ -901,6 +901,7 @@ namespace EXPEDIT.Share.Services {
                         TableType = null,
                         ReferenceID = contact,
                         FileTypeID = null, //TODO give type
+                        FileBytes = f,
                         FileName = name,
                         FileLength = f.Length,
                         MimeType = "image/png",
