@@ -28,7 +28,8 @@ namespace EXPEDIT.Share.Helpers
         public static Guid WORK_TYPE_TICKET_CLOSED = new Guid("dfe87d2c-e577-4060-becb-ffbda6bee547");
         public static string DOCUMENT_TYPE_CONTENT_SUBMISSION = "Content Submission";
         public static string DOCUMENT_TYPE_SOFTWARE_SUBMISSION = "Software Submission";
-        public static string DOCUMENT_TYPE_TICKET_SUBMISSION = "Ticket Submission";       
+        public static string DOCUMENT_TYPE_TICKET_SUBMISSION = "Ticket Submission";
+        public static string DOCUMENT_TYPE_BASE64PNG = "Base64 PNG";    
         public static string DOCUMENT_TYPE_INVOICE = "Invoice";
         public static Guid COMPANY_DEFAULT = new Guid("6887ABC9-E2D8-4A2D-B143-6C3E5245C565");
         public static Guid ACCOUNT_TYPE_ONLINE = new Guid("5C329B8D-007D-435E-8261-4FA72D7DF28A");

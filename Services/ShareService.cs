@@ -909,7 +909,7 @@ namespace EXPEDIT.Share.Services {
                         VersionUpdated = DateTime.UtcNow,
                         VersionAntecedentID = id,
                         VersionUpdatedBy = contact,
-                        DocumentType = ConstantsHelper.DOCUMENT_TYPE_CONTENT_SUBMISSION
+                        DocumentType = ConstantsHelper.DOCUMENT_TYPE_BASE64PNG
                     };
                     file.FileChecksum = file.FileBytes.ComputeHash();
                     d.FileDatas.AddObject(file);
