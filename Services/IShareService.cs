@@ -80,5 +80,8 @@ namespace EXPEDIT.Share.Services
 
          [OperationContract]
          bool DuplicateCompany(string companyName);
+
+         [OperationContract]
+         bool SubmitBase64PNG(Guid id, string data, string name);
     }
 }

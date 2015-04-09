@@ -634,6 +634,14 @@ namespace EXPEDIT.Share.Controllers {
             return new JsonHelper.JsonNetResult( true, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        [Themed(Enabled = false)]
+        public virtual ActionResult UploadBase64PNG(Guid id, string data, string name)
+        {
+            _share.SubmitBase64PNG(id, data, name);
+            return new JsonHelper.JsonNetResult(true, JsonRequestBehavior.AllowGet);
+        }
+
         [Themed(false)]
         [HttpGet]
         [ActionName("MyInfo")]

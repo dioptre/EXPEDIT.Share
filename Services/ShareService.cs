@@ -878,6 +878,53 @@ namespace EXPEDIT.Share.Services {
             
         }
 
+        public bool SubmitBase64PNG(Guid id, string data, string name)
+        {
+
+            if (string.IsNullOrWhiteSpace(data))
+                return false;
+            byte[] f = System.Convert.FromBase64String(data);
+            //MemoryStream ms = new MemoryStream(data);
+            //Image img = Image.FromStream(ms);
+            var contact = _users.ContactID;
+            var company = _users.DefaultContactCompanyID;
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+
+                var d = new NKDC(_users.ApplicationConnectionString, null);
+                if (contact.HasValue)
+                {
+                    var m = (from o in d.Contacts where o.ContactID == contact && o.Version == 0 && o.VersionDeletedBy == null select o).Single();
+                    var file = new FileData
+                    {
+                        FileDataID = id,
+                        TableType = null,
+                        ReferenceID = contact,
+                        FileTypeID = null, //TODO give type
+                        FileName = name,
+                        FileLength = f.Length,
+                        MimeType = "image/png",
+                        VersionOwnerContactID = contact,
+                        VersionOwnerCompanyID = company,
+                        VersionUpdated = DateTime.UtcNow,
+                        VersionAntecedentID = id,
+                        VersionUpdatedBy = contact,
+                        DocumentType = ConstantsHelper.DOCUMENT_TYPE_CONTENT_SUBMISSION
+                    };
+                    file.FileChecksum = file.FileBytes.ComputeHash();
+                    d.FileDatas.AddObject(file);
+                    d.SaveChanges();
+                    var cacheKey = string.Format("{0}-img-{1}", id, CacheHelper.CacheType.Preview);
+                    CacheHelper.Cache.Remove(cacheKey);
+                    return true;
+                }
+
+
+            }
+            return false;
+
+        }
+
         public bool DuplicateCompany(string companyName)
         {
             using (new TransactionScope(TransactionScopeOption.Suppress))

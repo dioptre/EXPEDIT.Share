@@ -136,6 +136,21 @@ namespace EXPEDIT.Share
                 new RouteDescriptor {
                         Priority = 5,
                         Route = new Route(
+                            "share/uploadbase64png",
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"},
+                                {"controller", "User"},
+                                {"action", "uploadbase64png"}
+                            },
+                            null,
+                            new RouteValueDictionary {
+                                {"area", "EXPEDIT.Share"}
+                            },
+                            new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                        Priority = 5,
+                        Route = new Route(
                             "share/pickfile",
                             new RouteValueDictionary {
                                 {"area", "EXPEDIT.Share"},
