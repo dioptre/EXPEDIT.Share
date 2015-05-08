@@ -124,6 +124,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\qmark.jpg" />
     <Content Include="Images\trans.gif" />
     <Content Include="Scripts\ace\ace.js" />
     <Content Include="Scripts\ace\mode-javascript.js" />

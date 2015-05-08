@@ -445,6 +445,7 @@ namespace EXPEDIT.Share.Controllers {
                 query = null;
             bool pFound = int.TryParse(Request.Params["page"], out page);
             bool psFound = int.TryParse(Request.Params["pageSize"], out pageSize);
+
             return new JsonHelper.JsonNetResult(new { myFiles = _share.GetFiles(query, (pFound && psFound) ? (page * pageSize) + 1 : default(int?), psFound ? pageSize : default(int?) ) }, JsonRequestBehavior.AllowGet);
         }
 
