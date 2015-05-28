@@ -8,6 +8,7 @@ namespace EXPEDIT.Share.Helpers
 {
     public class ConstantsHelper
     {
+        public static string API_KEY_GOOGLE = "AIzaSyA7mP-819Mgz4dy6X0NIlQ6SjyzDn5QEJA";
         public static Regex REGEX_JS_CLEANER = new Regex(@"function|;/ig", RegexOptions.Compiled);
         public static int WORKFLOW_INSTANCE_TIMEOUT_IDLE_SECONDS = 3600;
         public static int WORKFLOW_INSTANCE_TIMEOUT_EXECUTION_SECONDS = 3600;
@@ -150,6 +151,23 @@ namespace EXPEDIT.Share.Helpers
                     _productCategoriesChecked = true;
                 }
                 return _productCategories;
+            }
+        }
+
+        private static bool _gcmAuthChecked = false;
+        private static string _gcmAuth = null;
+        public static string GcmAuth
+        {
+            get
+            {
+                if (!_gcmAuthChecked)
+                {
+                    _gcmAuth = string.Format("{0}", System.Configuration.ConfigurationManager.AppSettings["GcmAuth"]);
+                    if (string.IsNullOrWhiteSpace(_gcmAuth))
+                        _gcmAuth = API_KEY_GOOGLE;
+                    _gcmAuthChecked = true;
+                }
+                return _gcmAuth;
             }
         }
 
