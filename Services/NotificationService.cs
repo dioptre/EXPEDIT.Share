@@ -125,6 +125,8 @@ namespace EXPEDIT.Share.Services
         {
             if (contacts == null || contacts.Length == 0)
                 return false;
+            else 
+                contacts = contacts.Distinct().ToArray();
             bool succeeded = false;
             NotificationDevice[] devices = new NotificationDevice[0];
             using (new TransactionScope(TransactionScopeOption.Suppress))
@@ -133,7 +135,7 @@ namespace EXPEDIT.Share.Services
                 var deviceExpiry = DateTime.UtcNow.AddDays(-365);
                 devices = (from o in d.NotificationDevices
                            where
-                               (contacts != null && (!o.Notification.ContactID.HasValue || contacts.Contains(o.Notification.ContactID.Value))) &&
+                               (!o.Notification.ContactID.HasValue || contacts.Contains(o.Notification.ContactID.Value)) &&
                                o.LastRegistered > deviceExpiry &&
                                o.Notification.Version == 0 &&
                                o.Notification.VersionDeletedBy == null &&
