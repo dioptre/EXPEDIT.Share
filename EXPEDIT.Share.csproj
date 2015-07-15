@@ -97,6 +97,15 @@
     <Reference Include="PdfSharp.Charting">
       <HintPath>..\..\..\..\lib\pdfsharp\PdfSharp.Charting.dll</HintPath>
     </Reference>
+    <Reference Include="PushSharp.Android">
+      <HintPath>..\..\..\..\lib\pushsharp\PushSharp.Android\bin\Debug\PushSharp.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="PushSharp.Apple">
+      <HintPath>..\..\..\..\lib\pushsharp\PushSharp.Apple\bin\Debug\PushSharp.Apple.dll</HintPath>
+    </Reference>
+    <Reference Include="PushSharp.Core">
+      <HintPath>..\..\..\..\lib\pushsharp\PushSharp.Core\bin\Debug\PushSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -1592,6 +1601,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web.csproj">
+      <Project>{50b779ea-ec00-4699-84c0-03b395c365d2}</Project>
+      <Name>Orchard.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NKD\NKD.csproj">
       <Project>{1b5a2a6b-28e0-4a54-9ca4-147c925f3bbb}</Project>
       <Name>NKD</Name>
@@ -1616,6 +1629,8 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Route.cs" />
+    <Compile Include="Services\INotificationService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\WorkflowService.cs" />
     <Compile Include="Services\ContentService.cs" />
     <Compile Include="Services\IWorkflowService.cs" />

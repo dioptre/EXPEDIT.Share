@@ -477,6 +477,51 @@ namespace EXPEDIT.Share
                                 {"area", "EXPEDIT.Share"}
                             },
                             new MvcRouteHandler())
+                },
+                 new RouteDescriptor {
+                    Priority = 15,
+                    Route = new Route(
+                        "share/RegisterDevice/{deviceType}/{timezone}/{id}",
+                        new RouteValueDictionary {
+                            {"area", "EXPEDIT.Share"},
+                            {"controller", "User"},
+                            {"action", "registerDevice"}
+                        },
+                        null,
+                        new RouteValueDictionary {
+                            {"area", "EXPEDIT.Share"}
+                        },
+                        new MvcRouteHandler())
+                },
+                 new RouteDescriptor {
+                    Priority = 15,
+                    Route = new Route(
+                        "share/Chat/{username}/{message}",
+                        new RouteValueDictionary {
+                            {"area", "EXPEDIT.Share"},
+                            {"controller", "User"},
+                            {"action", "chat"}
+                        },
+                        null,
+                        new RouteValueDictionary {
+                            {"area", "EXPEDIT.Share"}
+                        },
+                        new MvcRouteHandler())
+                },
+                 new RouteDescriptor {
+                    Priority = 5,
+                    Route = new Route(
+                        "share/Chat",
+                        new RouteValueDictionary {
+                            {"area", "EXPEDIT.Share"},
+                            {"controller", "User"},
+                            {"action", "chat"}
+                        },
+                        null,
+                        new RouteValueDictionary {
+                            {"area", "EXPEDIT.Share"}
+                        },
+                        new MvcRouteHandler())
                 }
 
             };

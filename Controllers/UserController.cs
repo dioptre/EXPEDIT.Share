@@ -48,6 +48,7 @@ namespace EXPEDIT.Share.Controllers {
         public IOrchardServices Services { get; set; }
         private IShareService _share { get; set; }
         private IContentService _content { get; set; }
+        private INotificationService _notifications { get; set; }
         public ILogger Logger { get; set; }
         private readonly ISearchService _searchService;
         private readonly IContentManager _contentManager;
@@ -64,10 +65,12 @@ namespace EXPEDIT.Share.Controllers {
             IUserService userService,
             IMembershipService membershipService,
             IAuthenticationService authenticationService,
-            IUserEventHandler userEventHandler
+            IUserEventHandler userEventHandler,
+            INotificationService notifications
             )
         {
             _share = share;
+            _notifications = notifications;
             Services = services;
             _content = content;
             T = NullLocalizer.Instance;
@@ -755,6 +758,30 @@ namespace EXPEDIT.Share.Controllers {
         public ActionResult DuplicateCompany(string id)
         {
             return new JsonHelper.JsonNetResult(_share.DuplicateCompany(HttpUtility.UrlDecode(id)), JsonRequestBehavior.AllowGet);
+        }
+
+        [Authorize]
+        [Themed(false)]
+        [HttpGet]
+        [ActionName("RegisterDevice")]
+        public ActionResult RegisterDevice(string deviceType, int? timezone, string id)
+        {
+            if (_notifications.RegisterDevice(deviceType, id, timezone))
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.OK);
+            else
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Authorize]
+        [Themed(false)]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
+        [ActionName("Chat")]
+        public ActionResult Chat(string username, string message)
+        {
+            if (_notifications.Chat(username, message))
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.OK);
+            else
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
         }
 
     }

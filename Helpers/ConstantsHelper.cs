@@ -8,6 +8,8 @@ namespace EXPEDIT.Share.Helpers
 {
     public class ConstantsHelper
     {
+        public const string NOTIFICATION_APPLE = "apple";
+        public const string NOTIFICATION_ANDROID = "android";
         public static string API_KEY_GOOGLE = "AIzaSyA7mP-819Mgz4dy6X0NIlQ6SjyzDn5QEJA";
         public static Regex REGEX_JS_CLEANER = new Regex(@"function|;/ig", RegexOptions.Compiled);
         public static int WORKFLOW_INSTANCE_TIMEOUT_IDLE_SECONDS = 3600;
@@ -39,6 +41,7 @@ namespace EXPEDIT.Share.Helpers
         public static Guid ROUTE_TYPE_STORE_EXTERNAL = new Guid("7c9f3a25-011b-4f5e-8b1e-d345da13f8b1");
         public static Guid UNIT_SI_SECONDS = new Guid("5AF72C77-A76E-4234-A16E-3F7898799EEA");
         public static Guid UNIT_SI_UNARY = new Guid("9D3C7BDA-AA32-44EB-9BCA-EFB86C65A2FA");
+        public static Guid UNIT_MONTH = new Guid("3C09E690-0739-4A56-A420-FB46FE051914");
         public static Guid CONTRACT_PARTNER = new Guid("e8ed2f94-1100-43a2-90cd-206d228090e2");
         public static Guid PAYMENT_PROVIDER_DEFAULT = new Guid("5445D30E-BCD5-4F66-82C6-20CE53C47000");
         public static int SQL_MAX_INT = 2147483647;
