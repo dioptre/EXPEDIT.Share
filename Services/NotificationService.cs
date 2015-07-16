@@ -126,7 +126,7 @@ namespace EXPEDIT.Share.Services
             }
             if (isNew)
             {
-                var jsJoined = string.Format("{{ \"message\":\"Welcome to {0}.\", \"title\": \"You added a device to {0}.\", \"msgcnt\" : \"1\" }}", _services.WorkContext.CurrentSite.SiteName, Guid.NewGuid());
+                var jsJoined = string.Format("{{ \"TYP\" : \"R\", \"message\":\"Welcome to {0}.\", \"title\": \"You added a device to {0}.\", \"msgcnt\" : \"1\" }}", _services.WorkContext.CurrentSite.SiteName, Guid.NewGuid());
                 SendNotification(new Guid[] {contact.Value}, jsJoined, tableType, notification.NotificationID);
             }
             return true;
@@ -249,7 +249,7 @@ namespace EXPEDIT.Share.Services
                 if (message.Length > 255)
                     message = message.Substring(0, 255);
                 message = message.Replace("\"", "\\\"");
-                var js = string.Format("{{ \"message\":\"{1}\", \"title\": \"{0} message from {1}.\", \"msgcnt\" : \"1\" }}", _services.WorkContext.CurrentSite.SiteName, _services.WorkContext.CurrentUser.UserName, message);
+                var js = string.Format("{{ \"TYP\" : \"C\", \"message\":\"{2}\", \"title\": \"{0} message from {1}.\", \"msgcnt\" : \"1\" }}", _services.WorkContext.CurrentSite.SiteName, _services.WorkContext.CurrentUser.UserName, message);
                 return SendNotification(new Guid[] {recipientID}, js, d.GetTableName(typeof(Contact)), contact.Value);
             }
         }
