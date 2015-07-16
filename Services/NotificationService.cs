@@ -11,13 +11,17 @@ using Orchard.Logging;
 using Orchard.Localization;
 using JetBrains.Annotations;
 using Orchard;
+using Orchard.Environment;
 
 namespace EXPEDIT.Share.Services
 {
 
     [UsedImplicitly]
-    public class NotificationService : INotificationService
+    public class NotificationService : INotificationService, IOrchardShellEvents
     {
+        private static PushBroker _pushBroker = new PushBroker();
+        public static PushBroker PushBroker { get { return _pushBroker; } }
+
         private readonly IUsersService _users;
         public ILogger Logger { get; set; }
         private readonly IOrchardServices _services;
@@ -35,6 +39,14 @@ namespace EXPEDIT.Share.Services
 
         public Localizer T { get; set; }
 
+        public void Activated() {
+
+        }
+
+        public void Terminating()
+        {
+            _pushBroker.StopAllServices();
+        }
 
 
         public bool RegisterDevice(string deviceType, string id, int? timezone)
@@ -142,6 +154,8 @@ namespace EXPEDIT.Share.Services
                                o.Version == 0 &&
                                o.VersionDeletedBy == null
                            select o).ToArray();
+                if (devices.Length == 0)
+                    return false;
                 if (devices.Length > 0 && devices[0].NotificationID.HasValue)
                 {
                     var history = new NotificationData
@@ -158,11 +172,11 @@ namespace EXPEDIT.Share.Services
             PushSharp.Core.IPushService aSvc = null;
             if (devices.Any(f => f.DeviceType == EXPEDIT.Share.Helpers.ConstantsHelper.NOTIFICATION_ANDROID))
             {
-                aSvc = Orchard.Web.MvcApplication.PushBroker.GetRegistrations<GcmNotification>().FirstOrDefault();
+                aSvc = PushBroker.GetRegistrations<GcmNotification>().FirstOrDefault();
                 if (aSvc == null)
                 {
-                    Orchard.Web.MvcApplication.PushBroker.RegisterGcmService(new GcmPushChannelSettings(EXPEDIT.Share.Helpers.ConstantsHelper.GcmAuth));
-                    aSvc = Orchard.Web.MvcApplication.PushBroker.GetRegistrations<GcmNotification>().First();
+                    PushBroker.RegisterGcmService(new GcmPushChannelSettings(EXPEDIT.Share.Helpers.ConstantsHelper.GcmAuth));
+                    aSvc = PushBroker.GetRegistrations<GcmNotification>().First();
                 }
             }
             var ewhs = new EventWaitHandle[devices.Length];
@@ -197,7 +211,7 @@ namespace EXPEDIT.Share.Services
                         };
                         aSvc.OnNotificationSent += msgSent;
                         aSvc.OnNotificationFailed += msgFailed;
-                        Orchard.Web.MvcApplication.PushBroker.QueueNotification(notification);
+                        PushBroker.QueueNotification(notification);
                         break;
                     case EXPEDIT.Share.Helpers.ConstantsHelper.NOTIFICATION_APPLE:
                         //var appleCert = File.ReadAllBytes("ApnsSandboxCert.p12"));
